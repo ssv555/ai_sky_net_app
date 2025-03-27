@@ -2,6 +2,8 @@ const tg = window.Telegram?.WebApp;
 
 if (!tg) {
   console.error('Telegram WebApp is not initialized');
+} else {
+  console.log('Telegram WebApp initialized:', tg);
 }
 
 export const useTelegram = () => {
@@ -10,6 +12,9 @@ export const useTelegram = () => {
   };
 
   const onToggleButton = () => {
+    console.log('Toggle button clicked');
+    console.log('MainButton exists:', !!tg?.MainButton);
+    console.log('MainButton is visible:', tg?.MainButton?.isVisible());
     tg?.MainButton?.toggle();
   };
 

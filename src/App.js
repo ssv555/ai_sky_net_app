@@ -24,7 +24,7 @@ function App() {
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
       <br/>Body of the app of {user?.username}.
-      <br/>tg.MainButton: {tg?.MainButton}
+      <br/>tg.MainButton: {tg?.MainButton === undefined ? 'undefined' : 'defined'}
     </div>
   );
 }

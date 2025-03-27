@@ -11,9 +11,6 @@ function App() {
   useEffect(() => {
     if (tg) {  
       tg.ready();
-      tg.onEvent('online', () => {  
-        tg.MainButton.show(); // Отображаем кнопку после инициализации  
-      });
       tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана
     }
   }, [tg]);

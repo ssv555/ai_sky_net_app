@@ -2,6 +2,8 @@ import './App.css';
 import { useEffect, useState } from 'react';
 import { useTelegram } from './hooks/useTelegram';
 import Button from './components/button/Button';
+import Header from './components/header/Header';
+
 
 function App() {
   const { tg, user, onToggleButton } = useTelegram();
@@ -23,6 +25,7 @@ function App() {
 
   return (
     <div className="App">
+      <Header />
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
       Body of the app of {user?.username}.

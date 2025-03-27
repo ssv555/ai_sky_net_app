@@ -12,9 +12,9 @@ function App() {
     if (tg) {  
       tg.ready();
       tg.onEvent('online', () => {  
-        tg.MainButton.show(); // Отображаем кнопку после инициализации  
-      });  
-      tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана  
+        tg.BottomButton.show(); // Отображаем кнопку после инициализации  
+      });
+      tg.BottomButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана
     }
   }, [tg]);
 
@@ -24,7 +24,8 @@ function App() {
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
       <br/>Body of the app of {user?.username}.
-      <br/>tg.MainButton: {tg?.MainButton === undefined ? 'undefined' : 'defined'}
+      <br/>tg.BottomButton: {tg?.BottomButton === undefined ? 'undefined' : 'defined'}
+      <br/>tg.BottomButton.isVisible(): {tg?.BottomButton?.isVisible() === undefined ? 'undefined' : 'defined'}
     </div>
   );
 }

@@ -7,7 +7,8 @@ export const useTelegram = () => {
   };
 
   const onToggleButton = () => {
-    tg?.MainButton?.toggle();
+    //tg?.MainButton?.toggle();
+    tg?.BottomButton.toggle();
   };
 
   return {

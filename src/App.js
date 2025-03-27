@@ -1,4 +1,6 @@
 import './App.css';
+import { useEffect } from 'react';
+import Button from './components/Button/Button';
 import { useTelegram } from './hooks/useTelegram';
 
 function App() {
@@ -16,4 +18,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;

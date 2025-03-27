@@ -1,27 +1,29 @@
-const tg = window.Telegram.WebApp;
+const tg = window.Telegram?.WebApp;
 
+if (!tg) {
+  console.error('Telegram WebApp is not initialized');
+}
 
 export const useTelegram = () => {
   const onClose = () => {
-    tg.close();
+    tg?.close();
   };
 
   const onToggleButton = () => {
-    //tg.MainButton.toggle();
-    if (tg.MainButton.isVisible()) {
+    if (tg?.MainButton.isVisible()) {
       tg.MainButton.hide();
     } else {
-      tg.MainButton.show();
+      tg?.MainButton.show();
     }
   };
 
   const onToggleButtonText = (text) => {
-    tg.MainButton.setParams({ text });
+    tg?.MainButton.setParams({ text });
   };
 
   return {
     tg,
-    user: tg.initDataUnsafe?.user,
+    user: tg?.initDataUnsafe?.user,
     onClose,
     onToggleButton,
     onToggleButtonText,

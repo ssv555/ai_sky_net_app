@@ -17,15 +17,10 @@ export const useTelegram = () => {
     }
   };
 
-  const onToggleButtonText = (text) => {
-    tg?.MainButton?.setParams({ text });
-  };
-
   return {
     tg,
     user: tg?.initDataUnsafe?.user,
     onClose,
     onToggleButton,
-    onToggleButtonText,
   };
 }

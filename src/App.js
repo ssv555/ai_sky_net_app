@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useTelegram } from './hooks/useTelegram';
 import Button from './components/button/Button';
 import Header from './components/header/Header';
@@ -7,19 +7,14 @@ import Header from './components/header/Header';
 
 function App() {
   const { tg, user, onToggleButton } = useTelegram();
-  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
-    try {
-      if (tg) {
-        tg.ready();
-        setIsReady(true);
-        console.log('Telegram WebApp is ready');
-      } else {
-        console.error('Telegram WebApp is not available');
-      }
-    } catch (error) {
-      console.error('Error initializing Telegram WebApp:', error);
+    if (tg) {  
+      tg.ready();
+      tg.onEvent('online', () => {  
+        tg.MainButton.show(); // Отображаем кнопку после инициализации  
+      });  
+      tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана  
     }
   }, [tg]);
 
@@ -29,7 +24,6 @@ function App() {
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
       Body of the app of {user?.username}.
-      {!isReady && <div>Waiting for Telegram WebApp initialization...</div>}
     </div>
   );
 }

@@ -1,19 +1,17 @@
 import './App.css';
-const tg = window.Telegram.WebApp;
 
 
 function App() {
 
-  const onClose = () => {
-    tg.close();
-  }
+  useEffect(() => {
+    tg.ready();
+  }, []);
 
   return (
     <div className="App">
       work
-      <button onClick={onClose} className="app__close">Закрыть</button>
     </div>
   );
 }
 
-export default App;
+export default App; 

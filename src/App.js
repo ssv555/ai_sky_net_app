@@ -11,7 +11,6 @@ function App() {
   useEffect(() => {
     if (tg) {  
       tg.ready();
-      tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана
     }
   }, [tg]);
 

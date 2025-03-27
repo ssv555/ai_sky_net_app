@@ -20,7 +20,7 @@ function App() {
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
       <br/>Body of the app of {user?.username}.
-      <br/>tg.MainButton.isVisible: {tg?.MainButton?.isVisible === undefined ? 'undefined' : 'defined' }
+      <br/>tg.MainButton.isVisible: {tg?.MainButton?.isVisible === true ? 'true' : 'false' }
     </div>
   );
 }

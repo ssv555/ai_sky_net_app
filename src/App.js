@@ -1,10 +1,10 @@
 import './App.css';
 import { useEffect } from 'react';
 import { useTelegram } from './hooks/useTelegram';
-
+import Button from './components/button/Button';
 
 function App() {
-  const { tg, onToggleButton } = useTelegram();
+  const { tg, user, onToggleButton } = useTelegram();
 
   useEffect(() => {
     try {
@@ -16,9 +16,9 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={onToggleButton}>Toggle</button>
+      <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
-      Body of the app
+      Body of the app of {user?.username}.
     </div>
   );
 }

@@ -10,11 +10,7 @@ export const useTelegram = () => {
   };
 
   const onToggleButton = () => {
-    if (tg?.MainButton?.isVisible()) {
-      tg?.MainButton?.hide();
-    } else {
-      tg?.MainButton?.show();
-    }
+    tg?.MainButton?.toggle();
   };
 
   return {

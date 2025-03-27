@@ -10,10 +10,7 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <div>
-        <Button onClick={onToggleButton}>Toggle</Button>
-      </div>
+      <Button onClick={onToggleButton}>Toggle</Button>
       Body of the app
     </div>
   );

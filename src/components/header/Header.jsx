@@ -3,7 +3,7 @@ import Button from "../button/button";
 import { useTelegram } from "../../hooks/useTelegram";
 
 const Header = () => {
-    const { user, onClose, onToggleButton, onToggleButtonText } = useTelegram();
+    const { user, onClose } = useTelegram();
 
     return (
         <div className={'header'}>

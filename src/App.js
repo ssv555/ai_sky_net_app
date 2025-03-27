@@ -23,7 +23,8 @@ function App() {
       <Header />
       <Button onClick={onToggleButton}>Toggle</Button>
       <br/>
-      Body of the app of {user?.username}.
+      <br/>Body of the app of {user?.username}.
+      <br/>tg.MainButton: {tg?.MainButton}
     </div>
   );
 }

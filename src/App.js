@@ -1,5 +1,5 @@
 import './App.css';
-
+const tg = window.Telegram.WebApp;
 
 function App() {
 
@@ -9,7 +9,7 @@ function App() {
 
   return (
     <div className="App">
-      work
+      Body of the app
     </div>
   );
 }

@@ -10,15 +10,15 @@ export const useTelegram = () => {
   };
 
   const onToggleButton = () => {
-    if (tg?.MainButton.isVisible()) {
-      tg.MainButton.hide();
+    if (tg?.MainButton?.isVisible()) {
+      tg?.MainButton?.hide();
     } else {
-      tg?.MainButton.show();
+      tg?.MainButton?.show();
     }
   };
 
   const onToggleButtonText = (text) => {
-    tg?.MainButton.setParams({ text });
+    tg?.MainButton?.setParams({ text });
   };
 
   return {

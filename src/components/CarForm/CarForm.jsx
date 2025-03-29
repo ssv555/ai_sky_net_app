@@ -37,38 +37,25 @@ const CarForm = () => {
     try {
       // Проверяем, запущено ли приложение через inline keyboard
       const isInlineKeyboard = tg?.initDataUnsafe?.start_param;
+      tg.showAlert(`isInlineKeyboard: ${isInlineKeyboard}`);
 
       if (isInlineKeyboard) {
-        // Если запущено через inline keyboard, используем showPopup
-        tg.showPopup(
-          {
-            title: "Подтверждение",
-            message: "Сохранить данные?",
-            buttons: [
-              { id: "save", type: "ok" },
-              { id: "cancel", type: "cancel" },
-            ],
-          },
-          (buttonId) => {
-            if (buttonId === "save") {
-              // Отправляем данные через callback_data в inline кнопке
-              const params = new URLSearchParams(data);
-              const callbackData = `car_data:${params.toString()}`;
+        // Отправляем данные через callback_data в inline кнопке
+        const params = new URLSearchParams(data);
+        const callbackData = `car_data:${params.toString()}`;
 
-              // Получаем имя бота из initDataUnsafe
-              const botUsername = tg?.initDataUnsafe?.bot?.username;
-              if (!botUsername) {
-                tg.showAlert("Не удалось получить имя бота");
-                return;
-              }
+        // Получаем имя бота из initDataUnsafe
+        const botUsername = tg?.initDataUnsafe?.bot?.username;
+        if (!botUsername) {
+          tg.showAlert("Не удалось получить имя бота");
+          return;
+        }
 
-              // Отправляем сообщение с кнопкой через URL
-              window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
-                callbackData
-              )}`;
-            }
-          }
-        );
+        // Отправляем сообщение с кнопкой через URL
+        window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
+          callbackData
+        )}`;
+        tg.showAlert(`window.location.href: ${window.location.href}`);
       } else {
         tg.sendData(data);
       }

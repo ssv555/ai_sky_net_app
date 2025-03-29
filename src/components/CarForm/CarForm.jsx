@@ -42,23 +42,19 @@ const CarForm = () => {
         tg.MainButton.hide();
       }
     }
-  }, [carName, carPrice, carModel, tg]);
+  }, [tg, carName, carPrice, carModel]);
 
   useEffect(() => {
     if (tg?.MainButton) {
       tg.MainButton.onClick(() => {
+        tg.showAlert(
+          `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}`
+        );
         const data = {
           name: carName,
           price: carPrice,
           model: carModel,
         };
-
-        console.log("carName:", carName);
-        console.log("carPrice:", carPrice);
-        console.log("carModel:", carModel);
-        console.log("Объект data:", data);
-        console.log("JSON строка:", JSON.stringify(data));
-
         tg.showAlert(`data: ${JSON.stringify(data)}`);
 
         // Показываем диалог подтверждения

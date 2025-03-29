@@ -35,6 +35,9 @@ const CarForm = () => {
     if (tg?.MainButton) {
       if (carName && carPrice && carModel) {
         tg.MainButton.show();
+        tg.showAlert(
+          `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}`
+        );
       } else {
         tg.MainButton.hide();
       }
@@ -49,6 +52,13 @@ const CarForm = () => {
           price: carPrice,
           model: carModel,
         };
+
+        console.log("carName:", carName);
+        console.log("carPrice:", carPrice);
+        console.log("carModel:", carModel);
+        console.log("Объект data:", data);
+        console.log("JSON строка:", JSON.stringify(data));
+
         tg.showAlert(`data: ${JSON.stringify(data)}`);
 
         // Показываем диалог подтверждения

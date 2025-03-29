@@ -27,7 +27,7 @@ function App() {
   useEffect(() => {
     if (tg) {
       tg.ready();
-      setHeaderText;
+      //setHeaderText();
     }
   }, [tg, setHeaderText]);
 

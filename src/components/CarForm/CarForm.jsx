@@ -17,6 +17,11 @@ const CarForm = () => {
     tg.showAlert(`1. data: ${JSON.stringify(data)}`);
 
     try {
+      if (!tg?.sendData) {
+        tg.showAlert("sendData не существует!");
+        return;
+      }
+
       tg.sendData(data);
     } catch (error) {
       tg.showAlert(error);

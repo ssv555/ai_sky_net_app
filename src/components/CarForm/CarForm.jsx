@@ -21,7 +21,7 @@ const CarForm = () => {
       }
       tg.sendData(data);
     } catch (error) {
-      tg.showAlert(error);
+      tg.showAlert(error.message);
     }
 
     tg.showAlert(`2. data: ${JSON.stringify(data)}`);

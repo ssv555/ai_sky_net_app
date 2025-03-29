@@ -15,12 +15,12 @@ const CarForm = () => {
     sendData(data);
   }, [carName, carPrice, carModel]);
 
-  useEffect(() => {
-    tg.onEvent("mainButtonClicked", onSendData);
-    return () => {
-      tg.offEvent("mainButtonClicked", onSendData);
-    };
-  }, [tg, onSendData]);
+  // useEffect(() => {
+  //   tg.onEvent("mainButtonClicked", onSendData);
+  //   return () => {
+  //     tg.offEvent("mainButtonClicked", onSendData);
+  //   };
+  // }, [tg, onSendData]);
 
   useEffect(() => {
     if (tg?.MainButton) {
@@ -56,16 +56,15 @@ const CarForm = () => {
             `Вы уверены, что хотите сохранить автомобиль ${carName}?`,
             (confirmed) => {
               if (confirmed && tg.showAlert) {
-                // Если пользователь подтвердил, показываем уведомление об успехе
+                onSendData(); // TODO: Добавить отправку данных на сервер
                 tg.showAlert("Автомобиль успешно сохранен!");
-                // TODO: Добавить отправку данных на сервер
               }
             }
           );
         }
       });
     }
-  }, [carName, carPrice, carModel, tg]);
+  }, [carName, carPrice, carModel, tg, onSendData]);
 
   const changeCarName = (e) => {
     setCarName(e.target.value);

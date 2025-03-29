@@ -10,17 +10,17 @@ const CarForm = () => {
   const [carModel, setCarModel] = useState("0");
   const { tg } = useTelegram();
 
-  // const onSendData = useCallback(() => {
-  //   const data = { carName, carPrice, carModel };
-  //   // sendData(data);
-  // }, [carName, carPrice, carModel]); // , sendData
+  const onSendData = useCallback(() => {
+    const data = { carName, carPrice, carModel };
+    tg.endData(data);
+  }, [tg, carName, carPrice, carModel]); // , sendData
 
-  // useEffect(() => {
-  //   tg.onEvent("mainButtonClicked", onSendData);
-  //   return () => {
-  //     tg.offEvent("mainButtonClicked", onSendData);
-  //   };
-  // }, [tg, onSendData]);
+  useEffect(() => {
+    tg.onEvent("mainButtonClicked", onSendData);
+    return () => {
+      tg.offEvent("mainButtonClicked", onSendData);
+    };
+  }, [tg, onSendData]);
 
   useEffect(() => {
     if (tg?.MainButton) {
@@ -41,40 +41,6 @@ const CarForm = () => {
       } else {
         tg.MainButton.hide();
       }
-    }
-  }, [tg, carName, carPrice, carModel]);
-
-  useEffect(() => {
-    if (tg?.MainButton) {
-      tg.MainButton.onClick(() => {
-        tg.showAlert(
-          `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}`
-        );
-        const data = {
-          name: carName,
-          price: carPrice,
-          model: carModel,
-        };
-        tg.showAlert(`data: ${JSON.stringify(data)}`);
-
-        // Показываем диалог подтверждения
-        if (tg.showConfirm) {
-          tg.showConfirm(
-            `Вы хотите сохранить автомобиль "${JSON.stringify(data)}"?`,
-            (confirmed) => {
-              if (confirmed && tg.showAlert) {
-                try {
-                  tg.sendData(JSON.stringify(data));
-                  tg.showAlert("Автомобиль успешно сохранен!");
-                } catch (error) {
-                  console.log(error);
-                  tg.showAlert(error);
-                }
-              }
-            }
-          );
-        }
-      });
     }
   }, [tg, carName, carPrice, carModel]);
 

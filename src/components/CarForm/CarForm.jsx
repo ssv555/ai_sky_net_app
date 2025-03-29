@@ -35,30 +35,22 @@ const CarForm = () => {
     };
 
     try {
-      // Проверяем, запущено ли приложение через inline keyboard
-      const isInlineKeyboard = tg?.initDataUnsafe?.start_param;
-      tg.showAlert(`isInlineKeyboard: ${isInlineKeyboard}`);
+      // Отправляем данные через callback_data в inline кнопке
+      const params = new URLSearchParams(data);
+      const callbackData = `car_data:${params.toString()}`;
 
-      if (isInlineKeyboard) {
-        // Отправляем данные через callback_data в inline кнопке
-        const params = new URLSearchParams(data);
-        const callbackData = `car_data:${params.toString()}`;
-
-        // Получаем имя бота из initDataUnsafe
-        const botUsername = tg?.initDataUnsafe?.bot?.username;
-        if (!botUsername) {
-          tg.showAlert("Не удалось получить имя бота");
-          return;
-        }
-
-        // Отправляем сообщение с кнопкой через URL
-        window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
-          callbackData
-        )}`;
-        tg.showAlert(`window.location.href: ${window.location.href}`);
-      } else {
-        tg.sendData(data);
+      // Получаем имя бота из initDataUnsafe
+      const botUsername = tg?.initDataUnsafe?.bot?.username;
+      if (!botUsername) {
+        tg.showAlert("Не удалось получить имя бота");
+        return;
       }
+
+      // Отправляем сообщение с кнопкой через URL
+      window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
+        callbackData
+      )}`;
+      tg.showAlert(`window.location.href: ${window.location.href}`);
     } catch (error) {
       tg.showAlert(error);
     }

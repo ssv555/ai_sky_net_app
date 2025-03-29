@@ -46,6 +46,7 @@ const CarForm = () => {
         tg.showAlert("Не удалось получить имя бота");
         return;
       }
+      tg.showAlert(`botUsername: ${botUsername}`);
 
       // Отправляем сообщение с кнопкой через URL
       window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(

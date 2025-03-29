@@ -17,7 +17,6 @@ const CarForm = () => {
       return;
     }
 
-    // Валидация данных
     if (!carName.trim()) {
       tg.showAlert("Пожалуйста, введите название автомобиля");
       return;
@@ -35,15 +34,15 @@ const CarForm = () => {
     };
 
     try {
-      // Отправляем данные через callback_data в inline кнопке
+      const botUsername = "ssv_test_bot";
       const params = new URLSearchParams(data);
       const callbackData = `car_data:${params.toString()}`;
-      const botUsername = "ssv_test_bot";
+      const encodedCallbackData = encodeURIComponent(callbackData);
+      const url = `https://t.me/${botUsername}?data=${encodedCallbackData}`;
+      tg.showAlert(`url: ${url}`);
 
       // Отправляем сообщение с кнопкой через URL
-      window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
-        callbackData
-      )}`;
+      window.location.href = url;
       tg.showAlert(`window.location.href: ${window.location.href}`);
     } catch (error) {
       tg.showAlert(error);

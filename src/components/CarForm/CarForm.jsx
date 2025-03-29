@@ -53,7 +53,7 @@ const CarForm = () => {
         // Показываем диалог подтверждения
         if (tg.showConfirm) {
           tg.showConfirm(
-            `Вы уверены, что хотите сохранить автомобиль "${carName}"?`,
+            `Вы уверены, что хотите сохранить автомобиль "${data}"?`,
             (confirmed) => {
               if (confirmed && tg.showAlert) {
                 tg.sendData(JSON.stringify(data));

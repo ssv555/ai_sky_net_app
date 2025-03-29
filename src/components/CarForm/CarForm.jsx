@@ -20,7 +20,7 @@ const CarForm = () => {
     return () => {
       tg.offEvent("mainButtonClicked", onSendData);
     };
-  }, [tg]);
+  }, [tg, onSendData]);
 
   useEffect(() => {
     if (tg?.MainButton) {

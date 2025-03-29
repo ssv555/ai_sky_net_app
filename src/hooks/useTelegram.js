@@ -1,9 +1,7 @@
 const tg = window.Telegram?.WebApp;
 
-
-tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана
-tg.MainButton.show();
-
+// tg.MainButton.setText("Ваш текст"); // Не забудьте создать кнопку, если она еще не была создана
+// tg.MainButton.show();
 
 export const useTelegram = () => {
   const onClose = () => {
@@ -18,10 +16,26 @@ export const useTelegram = () => {
     }
   };
 
+  const setHeaderText = (text) => {
+    if (tg) {
+      tg.setHeaderText(text);
+    }
+  };
+
+  const setHeaderWithUserInfo = () => {
+    if (tg) {
+      const botName = tg?.initDataUnsafe?.bot?.username || "Test Bot";
+      const userName = tg?.initDataUnsafe?.user?.username || "Пользователь";
+      tg.setHeaderText(`${botName} | ${userName}`);
+    }
+  };
+
   return {
     tg,
     user: tg?.initDataUnsafe?.user,
     onClose,
     onToggleButton,
+    setHeaderText,
+    setHeaderWithUserInfo,
   };
-}
+};

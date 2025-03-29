@@ -8,7 +8,7 @@ import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
 
 function App() {
-  const { tg, setHeaderWithUserInfo } = useTelegram();
+  const { tg, setHeaderText } = useTelegram();
   const location = useLocation();
 
   const getPageTitle = () => {
@@ -27,9 +27,9 @@ function App() {
   useEffect(() => {
     if (tg) {
       tg.ready();
-      setHeaderWithUserInfo;
+      setHeaderText;
     }
-  }, [tg, setHeaderWithUserInfo]);
+  }, [tg, setHeaderText]);
 
   return (
     <div className="App">

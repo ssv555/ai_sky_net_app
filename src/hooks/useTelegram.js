@@ -18,15 +18,13 @@ export const useTelegram = () => {
 
   const setHeaderText = (text) => {
     if (tg) {
-      tg.setHeaderText(text);
-    }
-  };
-
-  const setHeaderWithUserInfo = () => {
-    if (tg) {
-      const botName = tg?.initDataUnsafe?.bot?.username || "Test Bot";
-      const userName = tg?.initDataUnsafe?.user?.username || "Пользователь";
-      tg.setHeaderText(`${botName} | ${userName}`);
+      if (text) {
+        tg.setHeaderText(text);
+      } else {
+        const botName = tg.initDataUnsafe?.bot?.username || "Test Bot...";
+        const userName = tg.initDataUnsafe?.user?.username || "Пользователь";
+        tg.setHeaderText(`${botName} | ${userName}`);
+      }
     }
   };
 
@@ -36,6 +34,5 @@ export const useTelegram = () => {
     onClose,
     onToggleButton,
     setHeaderText,
-    setHeaderWithUserInfo,
   };
 };

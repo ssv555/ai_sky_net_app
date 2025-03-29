@@ -1,15 +1,17 @@
-import './App.css';
-import { useEffect } from 'react';
-import { useTelegram } from './hooks/useTelegram';
-import Button from './components/button/Button';
-import Header from './components/header/Header';
+import "./App.css";
+import { useEffect } from "react";
+import { useTelegram } from "./hooks/useTelegram";
+import { Route, Routes } from "react-router-dom";
+import Header from "./components/header/Header";
 
+import CarList from "./components/CarList/CarList";
+import CarForm from "./components/CarForm/CarForm";
 
 function App() {
-  const { tg, user, onToggleButton } = useTelegram();
+  const { tg } = useTelegram();
 
   useEffect(() => {
-    if (tg) {  
+    if (tg) {
       tg.ready();
     }
   }, [tg]);
@@ -17,12 +19,14 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <Button onClick={onToggleButton}>Toggle</Button>
-      <br/>
-      <br/>Body of the app of {user?.username}.
-      <br/>tg.MainButton.isVisible: {tg?.MainButton?.isVisible === true ? 'true' : 'false' }
+      <Routes>
+        <Route path="/CarList" element={<CarList />} />
+        <Route path="/CarForm" element={<CarForm />} />
+      </Routes>
     </div>
   );
 }
 
 export default App;
+
+// <Button onClick={onToggleButton}>Toggle</Button>

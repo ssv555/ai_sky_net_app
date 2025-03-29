@@ -8,13 +8,12 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { tg, sendData } = useTelegram();
+  const { tg } = useTelegram();
 
-  const onSendData = useCallback(() => {
-    const data = { carName, carPrice, carModel };
-    // sendData(data);
-    tg.sendData(JSON.stringify(data));
-  }, [carName, carPrice, carModel]); // , sendData
+  // const onSendData = useCallback(() => {
+  //   const data = { carName, carPrice, carModel };
+  //   // sendData(data);
+  // }, [carName, carPrice, carModel]); // , sendData
 
   // useEffect(() => {
   //   tg.onEvent("mainButtonClicked", onSendData);
@@ -45,7 +44,7 @@ const CarForm = () => {
   useEffect(() => {
     if (tg?.MainButton) {
       tg.MainButton.onClick(() => {
-        const carData = {
+        const data = {
           name: carName,
           price: carPrice,
           model: carModel,
@@ -54,10 +53,10 @@ const CarForm = () => {
         // Показываем диалог подтверждения
         if (tg.showConfirm) {
           tg.showConfirm(
-            `Вы уверены, что хотите сохранить автомобиль ${carName}?`,
+            `Вы уверены, что хотите сохранить автомобиль "${carName}"?`,
             (confirmed) => {
               if (confirmed && tg.showAlert) {
-                onSendData(); // TODO: Добавить отправку данных на сервер
+                tg.sendData(JSON.stringify(data));
                 tg.showAlert("Автомобиль успешно сохранен!");
               }
             }
@@ -65,7 +64,7 @@ const CarForm = () => {
         }
       });
     }
-  }, [tg, carName, carPrice, carModel, onSendData]);
+  }, [tg, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
     setCarName(e.target.value);

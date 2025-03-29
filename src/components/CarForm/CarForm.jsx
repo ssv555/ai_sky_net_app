@@ -12,6 +12,9 @@ const CarForm = () => {
 
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
+    tg.showAlert(
+      `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\ndata: ${data}`
+    );
     tg.endData(data);
   }, [tg, carName, carPrice, carModel]); // , sendData
 
@@ -35,9 +38,6 @@ const CarForm = () => {
     if (tg?.MainButton) {
       if (carName && carPrice && carModel) {
         tg.MainButton.show();
-        tg.showAlert(
-          `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}`
-        );
       } else {
         tg.MainButton.hide();
       }

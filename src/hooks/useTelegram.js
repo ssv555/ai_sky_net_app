@@ -16,23 +16,10 @@ export const useTelegram = () => {
     }
   };
 
-  const setHeaderText = (text) => {
-    if (tg) {
-      if (text) {
-        tg.setHeaderText(text);
-      } else {
-        const botName = tg.initDataUnsafe?.bot?.username || "Hi man...";
-        const userName = tg.initDataUnsafe?.user?.username || "Пользователь...";
-        tg.setHeaderText(`${botName} | ${userName}`);
-      }
-    }
-  };
-
   return {
     tg,
     user: tg?.initDataUnsafe?.user,
     onClose,
     onToggleButton,
-    setHeaderText,
   };
 };

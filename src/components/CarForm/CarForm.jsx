@@ -8,7 +8,7 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { tg } = useTelegram();
+  const { tg, sendData } = useTelegram();
 
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };

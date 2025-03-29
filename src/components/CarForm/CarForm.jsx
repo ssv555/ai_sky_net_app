@@ -13,9 +13,16 @@ const CarForm = () => {
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
     tg.showAlert(
-      `carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\ndata: ${data}`
+      `1. carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\n
+      data: ${JSON.stringify(data)}`
     );
-    tg.endData(data);
+
+    tg.sendData(data);
+
+    tg.showAlert(
+      `2. carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\n
+      data: ${JSON.stringify(data)}`
+    );
   }, [tg, carName, carPrice, carModel]); // , sendData
 
   useEffect(() => {

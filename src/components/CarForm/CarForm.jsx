@@ -11,7 +11,29 @@ const CarForm = () => {
   const { tg } = useTelegram();
 
   const onSendData = useCallback(() => {
-    const data = { carName, carPrice, carModel };
+    // Проверяем наличие tg
+    if (!tg) {
+      console.error("Telegram WebApp не инициализирован");
+      return;
+    }
+
+    // Валидация данных
+    if (!carName.trim()) {
+      tg.showAlert("Пожалуйста, введите название автомобиля");
+      return;
+    }
+
+    if (!carPrice.trim() || isNaN(Number(carPrice))) {
+      tg.showAlert("Пожалуйста, введите корректную цену");
+      return;
+    }
+
+    const data = {
+      carName: carName.trim(),
+      carPrice: Number(carPrice),
+      carModel: Number(carModel),
+    };
+
     try {
       // Проверяем, запущено ли приложение через inline keyboard
       const isInlineKeyboard = tg?.initDataUnsafe?.start_param;
@@ -51,7 +73,7 @@ const CarForm = () => {
         tg.sendData(data);
       }
     } catch (error) {
-      tg.showAlert(error.message);
+      tg.showAlert(error);
     }
 
     tg.showAlert(`2. data: ${JSON.stringify(data)}`);

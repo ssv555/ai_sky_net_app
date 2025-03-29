@@ -10,32 +10,49 @@ const CarForm = () => {
   const { tg } = useTelegram();
 
   useEffect(() => {
-    tg.MainButton.setParams({
-      color: "#2481cc",
-      text: "Сохранить",
-    });
-  }, []);
-
-  useEffect(() => {
-    if (carName && carPrice && carModel) {
-      tg.MainButton.show();
-    } else {
-      tg.MainButton.hide();
+    if (tg?.MainButton) {
+      tg.MainButton.setParams({
+        color: "#2481cc",
+        text: "Сохранить",
+      });
     }
-  }, [carName, carPrice, carModel]);
+  }, [tg]);
 
   useEffect(() => {
-    tg.MainButton.onClick(() => {
-      // Здесь будет логика сохранения
-      const carData = {
-        name: carName,
-        price: carPrice,
-        model: carModel,
-      };
-      console.log("Saving car data:", carData);
-      // TODO: Добавить отправку данных на сервер
-    });
-  }, [carName, carPrice, carModel]);
+    if (tg?.MainButton) {
+      if (carName && carPrice && carModel) {
+        tg.MainButton.show();
+      } else {
+        tg.MainButton.hide();
+      }
+    }
+  }, [carName, carPrice, carModel, tg]);
+
+  useEffect(() => {
+    if (tg?.MainButton) {
+      tg.MainButton.onClick(() => {
+        const carData = {
+          name: carName,
+          price: carPrice,
+          model: carModel,
+        };
+
+        // Показываем диалог подтверждения
+        if (tg.showConfirm) {
+          tg.showConfirm(
+            `Вы уверены, что хотите сохранить автомобиль ${carName}?`,
+            (confirmed) => {
+              if (confirmed && tg.showAlert) {
+                // Если пользователь подтвердил, показываем уведомление об успехе
+                tg.showAlert("Автомобиль успешно сохранен!");
+                // TODO: Добавить отправку данных на сервер
+              }
+            }
+          );
+        }
+      });
+    }
+  }, [carName, carPrice, carModel, tg]);
 
   const changeCarName = (e) => {
     setCarName(e.target.value);

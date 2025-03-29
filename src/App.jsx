@@ -26,10 +26,14 @@ function App() {
 
   useEffect(() => {
     if (tg) {
-      console.log("tg", tg);
+      //console.log("tg", tg);
       tg.ready();
-      tg.setHeaderText("Hello world.");
-      //setHeaderText();
+      try {
+        setHeaderText("Hello world.");
+      } catch (error) {
+        console.log("error", error);
+        tg.showPopup("error", error, "OK");
+      }
     }
   }, [tg, setHeaderText]);
 

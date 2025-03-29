@@ -49,6 +49,7 @@ const CarForm = () => {
           price: carPrice,
           model: carModel,
         };
+        tg.showAlert(`data: ${JSON.stringify(data)}`);
 
         // Показываем диалог подтверждения
         if (tg.showConfirm) {

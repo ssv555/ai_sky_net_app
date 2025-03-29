@@ -40,7 +40,8 @@ const CarForm = () => {
       const callbackData = `car_data:${params.toString()}`;
 
       // Получаем имя бота из initDataUnsafe
-      const botUsername = tg?.initDataUnsafe?.bot?.username;
+      const botUsername =
+        tg.initDataUnsafe?.bot?.username || tg.initDataUnsafe.user.username;
       if (!botUsername) {
         tg.showAlert("Не удалось получить имя бота");
         return;

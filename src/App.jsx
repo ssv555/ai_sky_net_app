@@ -26,7 +26,9 @@ function App() {
 
   useEffect(() => {
     if (tg) {
+      console.log("tg", tg);
       tg.ready();
+      tg.setHeaderText("Hello world.");
       //setHeaderText();
     }
   }, [tg, setHeaderText]);

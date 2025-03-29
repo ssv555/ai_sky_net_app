@@ -38,15 +38,7 @@ const CarForm = () => {
       // Отправляем данные через callback_data в inline кнопке
       const params = new URLSearchParams(data);
       const callbackData = `car_data:${params.toString()}`;
-
-      // Получаем имя бота из initDataUnsafe
-      const botUsername =
-        tg.initDataUnsafe?.bot?.username || tg.initDataUnsafe.user.username;
-      if (!botUsername) {
-        tg.showAlert("Не удалось получить имя бота");
-        return;
-      }
-      tg.showAlert(`botUsername: ${botUsername}`);
+      const botUsername = "ssv_test_bot";
 
       // Отправляем сообщение с кнопкой через URL
       window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(

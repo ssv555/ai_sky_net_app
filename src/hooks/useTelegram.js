@@ -16,10 +16,17 @@ export const useTelegram = () => {
     }
   };
 
+  const sendData = (data) => {
+    if (tg) {
+      tg.sendData(JSON.stringify(data));
+    }
+  };
+
   return {
     tg,
     user: tg?.initDataUnsafe?.user,
     onClose,
     onToggleButton,
+    sendData,
   };
 };

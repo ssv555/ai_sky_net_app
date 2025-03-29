@@ -1,0 +1,73 @@
+.twa-container {
+  min-height: 100vh;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+}
+
+.twa-page {
+  padding: 16px;
+}
+
+.twa-header {
+  margin-bottom: 24px;
+}
+
+.twa-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+  margin: 0;
+}
+
+.twa-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.twa-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.twa-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.twa-list-item:hover {
+  opacity: 0.9;
+}
+
+.twa-list-item:active {
+  opacity: 0.8;
+}
+
+.twa-list-item-content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.twa-list-item-title {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+}
+
+.twa-list-item-subtitle {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #999999);
+}
+
+.twa-list-item-price {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--tg-theme-button-color, #2481cc);
+}

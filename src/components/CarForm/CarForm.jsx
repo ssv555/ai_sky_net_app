@@ -1,18 +1,17 @@
 import React from "react";
 import "./CarForm.css";
-import Button from "../button/Button";
 import { useState, useEffect } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 
 const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
-  const [carModel, setCarModel] = useState("physical");
+  const [carModel, setCarModel] = useState("0");
   const { tg } = useTelegram();
 
   useEffect(() => {
     tg.MainButton.setParams({
-      color: "#000000",
+      color: "#2481cc",
       text: "Сохранить",
     });
   }, []);
@@ -23,6 +22,19 @@ const CarForm = () => {
     } else {
       tg.MainButton.hide();
     }
+  }, [carName, carPrice, carModel]);
+
+  useEffect(() => {
+    tg.MainButton.onClick(() => {
+      // Здесь будет логика сохранения
+      const carData = {
+        name: carName,
+        price: carPrice,
+        model: carModel,
+      };
+      console.log("Saving car data:", carData);
+      // TODO: Добавить отправку данных на сервер
+    });
   }, [carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
@@ -36,28 +48,49 @@ const CarForm = () => {
   };
 
   return (
-    <div className="form">
-      <h3>Форма автомобиля</h3>
-      <input
-        className="input"
-        type="text"
-        placeholder="Название автомобиля"
-        value={carName}
-        onChange={changeCarName}
-      />
-      <input
-        className="input"
-        type="text"
-        placeholder="Цена автомобиля"
-        value={carPrice}
-        onChange={changeCarPrice}
-      />
-      <select className="select" value={carModel} onChange={changeCarModel}>
-        <option value="0">Не указано - Модель</option>
-        <option value="1">A45</option>
-        <option value="2">CLA45</option>
-        <option value="3">GLA45</option>
-      </select>
+    <div className="twa-container">
+      <div className="twa-page">
+        <div className="twa-header">
+          <h1 className="twa-title">Форма автомобиля</h1>
+        </div>
+        <div className="twa-content">
+          <div className="twa-form">
+            <div className="twa-form-group">
+              <label className="twa-form-label">Название автомобиля</label>
+              <input
+                className="twa-input"
+                type="text"
+                placeholder="Введите название"
+                value={carName}
+                onChange={changeCarName}
+              />
+            </div>
+            <div className="twa-form-group">
+              <label className="twa-form-label">Цена автомобиля</label>
+              <input
+                className="twa-input"
+                type="text"
+                placeholder="Введите цену"
+                value={carPrice}
+                onChange={changeCarPrice}
+              />
+            </div>
+            <div className="twa-form-group">
+              <label className="twa-form-label">Модель</label>
+              <select
+                className="twa-select"
+                value={carModel}
+                onChange={changeCarModel}
+              >
+                <option value="0">Не указано</option>
+                <option value="1">A45</option>
+                <option value="2">CLA45</option>
+                <option value="3">GLA45</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

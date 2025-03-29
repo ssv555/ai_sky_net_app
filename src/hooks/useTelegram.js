@@ -21,7 +21,7 @@ export const useTelegram = () => {
       if (text) {
         tg.setHeaderText(text);
       } else {
-        const botName = tg.initDataUnsafe?.bot?.username || "Test Bot...";
+        const botName = tg.initDataUnsafe?.bot?.username || "Hi man...";
         const userName = tg.initDataUnsafe?.user?.username || "Пользователь...";
         tg.setHeaderText(`${botName} | ${userName}`);
       }

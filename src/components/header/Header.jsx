@@ -1,5 +1,6 @@
 import React from "react";
 import { useTelegram } from "../../hooks/useTelegram";
+import "../../styles/common.css";
 import "./Header.css";
 
 const Header = ({ title = "Main Page" }) => {

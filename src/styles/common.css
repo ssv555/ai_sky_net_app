@@ -1,0 +1,63 @@
+/* Общие стили контейнера и страницы */
+.twa-container {
+  min-height: 100vh;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+}
+
+.twa-page {
+  padding: 16px;
+}
+
+.twa-header {
+  margin-bottom: 24px;
+}
+
+.twa-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--tg-theme-text-color, #000000);
+  margin: 0;
+}
+
+.twa-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Общие стили кнопок */
+.twa-button {
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.twa-button-primary {
+  background-color: var(--tg-theme-button-color, #2481cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 16px;
+}
+
+.twa-button-secondary {
+  background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
+  color: var(--tg-theme-text-color, #000000);
+  width: 36px;
+  height: 36px;
+}
+
+.twa-button:hover {
+  opacity: 0.9;
+}
+
+.twa-button:active {
+  opacity: 0.8;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import "./CarForm.css";
 import { useState, useEffect } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
+import "../../styles/common.css";
 
 const CarForm = () => {
   const [carName, setCarName] = useState("");

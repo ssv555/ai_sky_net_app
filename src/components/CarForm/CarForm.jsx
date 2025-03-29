@@ -3,23 +3,53 @@ import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import "./CarForm.css";
 import "../../styles/common.css";
-import { useNavigate } from "react-router-dom";
 
 const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
   const { tg } = useTelegram();
-  const navigate = useNavigate();
 
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
     try {
-      if (!tg.sendData) {
-        tg.showAlert("sendData не существует!");
-        return;
+      // Проверяем, запущено ли приложение через inline keyboard
+      const isInlineKeyboard = tg?.initDataUnsafe?.start_param;
+
+      if (isInlineKeyboard) {
+        // Если запущено через inline keyboard, используем showPopup
+        tg.showPopup(
+          {
+            title: "Подтверждение",
+            message: "Сохранить данные?",
+            buttons: [
+              { id: "save", type: "ok" },
+              { id: "cancel", type: "cancel" },
+            ],
+          },
+          (buttonId) => {
+            if (buttonId === "save") {
+              // Отправляем данные через callback_data в inline кнопке
+              const params = new URLSearchParams(data);
+              const callbackData = `car_data:${params.toString()}`;
+
+              // Получаем имя бота из initDataUnsafe
+              const botUsername = tg?.initDataUnsafe?.bot?.username;
+              if (!botUsername) {
+                tg.showAlert("Не удалось получить имя бота");
+                return;
+              }
+
+              // Отправляем сообщение с кнопкой через URL
+              window.location.href = `https://t.me/${botUsername}?data=${encodeURIComponent(
+                callbackData
+              )}`;
+            }
+          }
+        );
+      } else {
+        tg.sendData(data);
       }
-      tg.sendData(data);
     } catch (error) {
       tg.showAlert(error.message);
     }

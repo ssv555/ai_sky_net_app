@@ -13,7 +13,7 @@ const CarForm = () => {
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
     sendData(data);
-  }, [carName, carPrice, carModel]);
+  }, [carName, carPrice, carModel, sendData]);
 
   // useEffect(() => {
   //   tg.onEvent("mainButtonClicked", onSendData);
@@ -64,7 +64,7 @@ const CarForm = () => {
         }
       });
     }
-  }, [carName, carPrice, carModel, tg, onSendData]);
+  }, [tg, carName, carPrice, carModel, onSendData]);
 
   const changeCarName = (e) => {
     setCarName(e.target.value);

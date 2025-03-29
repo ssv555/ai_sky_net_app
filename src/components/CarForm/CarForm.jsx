@@ -12,8 +12,9 @@ const CarForm = () => {
 
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
-    sendData(data);
-  }, [carName, carPrice, carModel, sendData]);
+    // sendData(data);
+    tg.sendData(JSON.stringify(data));
+  }, [carName, carPrice, carModel]); // , sendData
 
   // useEffect(() => {
   //   tg.onEvent("mainButtonClicked", onSendData);

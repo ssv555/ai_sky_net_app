@@ -38,10 +38,10 @@ const CarForm = () => {
       const params = new URLSearchParams(data);
       const callbackData = `car_data:${params.toString()}`;
       const encodedCallbackData = encodeURIComponent(callbackData);
-      const url = `https://t.me/${botUsername}?data=${encodedCallbackData}`;
+      const url = `https://t.me/${botUsername}?start=${encodedCallbackData}`;
       tg.showAlert(`url: ${url}`);
 
-      // Отправляем сообщение с кнопкой через URL
+      // Отправляем сообщение через URL
       window.location.href = url;
       tg.showAlert(`window.location.href: ${window.location.href}`);
     } catch (error) {

@@ -17,6 +17,7 @@ export const useTelegram = () => {
   };
 
   const sendData = (data) => {
+    // TODO: Размер данных ограничен 4096 символов, добавить проверку и отправку частями?.
     if (tg) {
       tg.sendData(JSON.stringify(data));
     }

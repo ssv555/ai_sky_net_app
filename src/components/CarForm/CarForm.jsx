@@ -10,6 +10,18 @@ const CarForm = () => {
   const [carModel, setCarModel] = useState("0");
   const { tg } = useTelegram();
 
+  const onSendData = useCallback(() => {
+    const data = { carName, carPrice, carModel };
+    sendData(data);
+  }, [carName, carPrice, carModel]);
+
+  useEffect(() => {
+    tg.onEvent("mainButtonClicked", onSendData);
+    return () => {
+      tg.offEvent("mainButtonClicked", onSendData);
+    };
+  }, [tg]);
+
   useEffect(() => {
     if (tg?.MainButton) {
       tg.MainButton.setParams({

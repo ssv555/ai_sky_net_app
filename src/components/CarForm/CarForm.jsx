@@ -3,26 +3,26 @@ import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import "./CarForm.css";
 import "../../styles/common.css";
+import { useNavigate } from "react-router-dom";
 
 const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
   const { tg } = useTelegram();
+  const navigate = useNavigate();
 
   const onSendData = useCallback(() => {
     const data = { carName, carPrice, carModel };
-    tg.showAlert(
-      `1. carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\n
-      data: ${JSON.stringify(data)}`
-    );
+    tg.showAlert(`1. data: ${JSON.stringify(data)}`);
 
-    tg.sendData(data);
+    try {
+      tg.sendData(data);
+    } catch (error) {
+      tg.showAlert(error);
+    }
 
-    tg.showAlert(
-      `2. carName: ${carName}, carPrice: ${carPrice}, carModel: ${carModel}\n
-      data: ${JSON.stringify(data)}`
-    );
+    tg.showAlert(`2. data: ${JSON.stringify(data)}`);
   }, [tg, carName, carPrice, carModel]); // , sendData
 
   useEffect(() => {

@@ -175,9 +175,9 @@ export const useTelegram = () => {
               headers: {
                 "Content-Type": "application/json",
                 // "X-CSRF-Token": csrfToken || "",
-                "X-Requested-With": "XMLHttpRequest",
+                // "X-Requested-With": "XMLHttpRequest",
               },
-              credentials: "include", // Включаем передачу куки
+              // credentials: "include",
               body: JSON.stringify(send_data),
               signal: controller.signal,
             });

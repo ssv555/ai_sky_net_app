@@ -1,17 +1,36 @@
 {
-  "name": "telegram-webapp-server",
-  "version": "1.0.0",
-  "description": "Сервер для обработки данных от Telegram WebApp",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
+  "name": "ai_sky_net_app",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
-    "express": "^4.18.2",
-    "cors": "^2.8.5"
+    "@telegram-apps/sdk": "^3.5.4",
+    "@telegram-mini-apps/ui": "^0.0.10",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.5.2",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.4.1",
+    "react-scripts": "5.0.1",
+    "web-vitals": "^4.2.4"
   },
-  "devDependencies": {
-    "nodemon": "^3.0.2"
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

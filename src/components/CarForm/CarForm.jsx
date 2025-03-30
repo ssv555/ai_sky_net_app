@@ -78,7 +78,10 @@ const CarForm = () => {
   // }, [carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    WebApp.showAlert(
+    // WebApp.showAlert(
+    //   `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
+    // );
+    window.Telegram.WebApp.showAlert(
       `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
     );
 

@@ -1,23 +1,23 @@
-const tg = window.Telegram?.WebApp;
+import { WebApp } from "@twa-dev/sdk";
 
 export const useTelegram = () => {
   const onClose = () => {
-    if (!tg) {
+    if (!WebApp) {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
-    tg.close();
+    WebApp.close();
   };
 
   const onToggleButton = () => {
-    if (!tg?.MainButton) {
+    if (!WebApp?.MainButton) {
       console.error("MainButton не доступен");
       return;
     }
-    if (tg.MainButton.isVisible) {
-      tg.MainButton.hide();
+    if (WebApp.MainButton.isVisible) {
+      WebApp.MainButton.hide();
     } else {
-      tg.MainButton.show();
+      WebApp.MainButton.show();
     }
   };
 
@@ -26,12 +26,12 @@ export const useTelegram = () => {
     "unknown_bot_username"; // ssv_test_bot
 
   const sendDataToServer = (data) => {
-    if (!tg) {
+    if (!WebApp) {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
     if (!data) {
-      tg.showAlert("Данные для отправки отсутствуют");
+      WebApp.showAlert("Данные для отправки отсутствуют");
       return;
     }
 
@@ -44,7 +44,7 @@ export const useTelegram = () => {
 
       const send_data = {
         ...data,
-        user_id: tg.initDataUnsafe?.user?.id,
+        user_id: WebApp.initDataUnsafe?.user?.id,
       };
 
       fetch(url, {
@@ -62,19 +62,19 @@ export const useTelegram = () => {
           return response.json();
         })
         .then((result) => {
-          tg.showAlert("Данные успешно отправлены");
+          WebApp.showAlert("Данные успешно отправлены");
         })
         .catch((error) => {
-          tg.showAlert(`Ошибка: ${error.message}`);
+          WebApp.showAlert(`Ошибка: ${error.message}`);
         });
     } catch (error) {
-      tg.showAlert(`Ошибка: ${error.message}`);
+      WebApp.showAlert(`Ошибка: ${error.message}`);
     }
   };
 
   return {
-    tg,
-    user: tg?.initDataUnsafe?.user,
+    tg: WebApp,
+    user: WebApp?.initDataUnsafe?.user,
     BOT_USERNAME,
     onClose,
     onToggleButton,

@@ -23,13 +23,13 @@ const MainPage = () => {
         <div className="twa-content">
           <button
             className="twa-button twa-button-primary"
-            onClick={() => handleNavigation("/CarList")}
+            onClick={() => handleNavigation("CarList")}
           >
             Car list
           </button>
           <button
             className="twa-button twa-button-primary"
-            onClick={() => handleNavigation("/CarForm")}
+            onClick={() => handleNavigation("CarForm")}
           >
             Car
           </button>

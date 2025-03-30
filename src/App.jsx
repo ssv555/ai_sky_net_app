@@ -12,12 +12,12 @@ function App() {
   const location = useLocation();
 
   const getPageTitle = () => {
-    switch (location.pathname) {
-      case "/":
+    switch (location.pathname.replace(/^\//, "")) {
+      case "":
         return "Главная страница";
-      case "/CarList":
+      case "CarList":
         return "Список автомобилей";
-      case "/CarForm":
+      case "CarForm":
         return "Форма автомобиля";
       default:
         return "Main Page";
@@ -34,9 +34,9 @@ function App() {
     <div className="App">
       <Header title={getPageTitle()} />
       <Routes>
-        <Route path="/" element={<MainPage />} />
-        <Route path="/CarList" element={<CarList />} />
-        <Route path="/CarForm" element={<CarForm />} />
+        <Route index element={<MainPage />} />
+        <Route path="CarList" element={<CarList />} />
+        <Route path="CarForm" element={<CarForm />} />
       </Routes>
     </div>
   );

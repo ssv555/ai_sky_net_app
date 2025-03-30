@@ -86,12 +86,12 @@ const CarForm = () => {
 
     MainButton.setText("Сохранить");
     MainButton.setBackgroundColor("#2481cc");
-    MainButton.onClick(onSendData);
+    //MainButton.onClick(onSendData);
     MainButton.show();
     return () => {
       MainButton.offClick(onSendData);
     };
-  }, [onSendData, carName, carPrice, carModel]);
+  }, [carName, carPrice, carModel]); // TODO: добавить onSendData
 
   // useEffect(() => {
   //   /*

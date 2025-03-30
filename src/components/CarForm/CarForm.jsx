@@ -11,7 +11,7 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { WebApp, MainButton, sendDataToServer } = useTelegram();
+  const { WebApp, MainButton, sendDataToServer, isDevMode } = useTelegram();
 
   const validateForm = useCallback(() => {
     let message;
@@ -68,17 +68,19 @@ const CarForm = () => {
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price > 0;
 
-      document.querySelector(".twa-footer-debug").innerHTML = `
-        Название: ${carName || "не задано"}<br/>
-        Цена: ${carPrice || "0"}<br/> 
-        Модель: ${carModel || "не выбрана"}<br/>
-        Валидная цена: ${isValidPrice ? "да" : "нет"}
-      `;
+      if (isDevMode()) {
+        document.querySelector(".twa-footer-debug").innerHTML = `
+          carName: ${carName || "не задано"}<br/>
+          carPrice: ${carPrice || "0"}<br/> 
+          carModel: ${carModel || "не выбрана"}<br/>
+          isValidPrice: ${isValidPrice ? "true" : "false"}
+        `;
+      }
 
       if (carName && isValidPrice && carModel) {
         MainButton.setText("Сохранить");
-        MainButton.show();
         MainButton.oтClick(onSendData);
+        MainButton.show();
         return () => {
           MainButton.offClick(onSendData);
         };

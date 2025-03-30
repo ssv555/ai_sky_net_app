@@ -43,6 +43,13 @@ export const useTelegram = () => {
   /**
    * Закрывает Telegram WebApp
    */
+  const isDevMode = useCallback(() => {
+    return BOT_USERNAME !== "ai_sky_net_bot";
+  }, [BOT_USERNAME]);
+
+  /**
+   * Закрывает Telegram WebApp
+   */
   const onClose = useCallback(() => {
     if (!WebApp) return;
     WebApp.close();
@@ -78,10 +85,9 @@ export const useTelegram = () => {
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
       try {
-        const baseUrl =
-          BOT_USERNAME === "ai_sky_net_bot"
-            ? "http://195.2.75.212:5000"
-            : "http://localhost:5000";
+        const baseUrl = isDevMode()
+          ? "http://localhost:5000"
+          : "http://195.2.75.212:5000";
         const url = `${baseUrl}/data/`;
 
         // Получаем CSRF токен из мета-тега
@@ -140,14 +146,14 @@ export const useTelegram = () => {
         clearTimeout(timeoutId);
       }
     },
-    [WebApp, BOT_USERNAME]
+    [WebApp, isDevMode]
   );
 
   return {
-    BOT_USERNAME,
     user: WebApp?.initDataUnsafe?.user,
     WebApp,
     MainButton,
+    isDevMode,
     onClose,
     onToggleButton: toggleMainButton,
     sendDataToServer,

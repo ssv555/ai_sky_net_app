@@ -1,79 +1,147 @@
-import { WebApp } from "@twa-dev/sdk";
+import { useCallback } from "react";
 
+const BOT_USERNAME =
+  new URLSearchParams(window.location.search).get("bot_username") ||
+  "unknown_bot_username"; // ssv_test_bot
+
+const MAX_RETRIES = 3;
+const TIMEOUT = 10000; // 10 секунд
+
+/**
+ * Обработчик ошибок для HTTP запросов
+ * @param {Error} error - Объект ошибки
+ * @param {Object} WebApp - Объект Telegram WebApp
+ * @returns {void}
+ */
+const handleError = (error, WebApp) => {
+  if (error.name === "AbortError") {
+    WebApp.showAlert("Запрос превысил время ожидания");
+    return;
+  }
+  WebApp.showAlert(`Ошибка: ${error.message}`);
+};
+
+/**
+ * Хук для работы с Telegram WebApp
+ * @returns {Object} Объект с методами и данными Telegram WebApp
+ * @property {string} BOT_USERNAME - Имя бота
+ * @property {Object} user - Данные пользователя
+ * @property {Object} WebApp - Объект Telegram WebApp
+ * @property {Object} MainButton - Объект главной кнопки
+ * @property {Function} onClose - Функция закрытия приложения
+ * @property {Function} onToggleButton - Функция переключения видимости главной кнопки
+ * @property {Function} sendDataToServer - Функция отправки данных на сервер
+ */
 export const useTelegram = () => {
-  const WebApp = window.Telegram.WebApp;
-  const MainButton = window.Telegram.WebApp.MainButton;
+  const WebApp = window?.Telegram?.WebApp;
+  const MainButton = window?.Telegram?.WebApp?.MainButton;
 
-  const onClose = () => {
-    if (!WebApp) {
-      console.error("Telegram WebApp не инициализирован");
-      return;
-    }
+  if (!WebApp) {
+    console.warn("Telegram WebApp не инициализирован");
+  }
+
+  /**
+   * Закрывает Telegram WebApp
+   */
+  const onClose = useCallback(() => {
+    if (!WebApp) return;
     WebApp.close();
-  };
+  }, [WebApp]);
 
-  const onToggleButton = () => {
-    if (!MainButton) {
-      console.error("MainButton не доступен");
-      return;
-    }
+  /**
+   * Переключает видимость главной кнопки
+   */
+  const toggleMainButton = useCallback(() => {
+    if (!MainButton) return;
     if (MainButton.isVisible) {
       MainButton.hide();
     } else {
       MainButton.show();
     }
-  };
+  }, [MainButton]);
 
-  const BOT_USERNAME =
-    new URLSearchParams(window.location.search).get("bot_username") ||
-    "unknown_bot_username"; // ssv_test_bot
+  /**
+   * Отправляет данные на сервер с поддержкой повторных попыток и CSRF защиты
+   * @param {Object} data - Данные для отправки
+   * @returns {Promise<Object>} Результат запроса
+   * @throws {Error} Ошибка при отправке данных
+   */
+  const sendDataToServer = useCallback(
+    async (data) => {
+      if (!WebApp) return;
+      if (!data) {
+        WebApp.showAlert("Данные для отправки отсутствуют");
+        return;
+      }
 
-  const sendDataToServer = (data) => {
-    if (!WebApp) {
-      console.error("Telegram WebApp не инициализирован");
-      return;
-    }
-    if (!data) {
-      WebApp.showAlert("Данные для отправки отсутствуют");
-      return;
-    }
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
-    try {
-      const baseUrl =
-        BOT_USERNAME === "ai_sky_net_bot"
-          ? "http://195.2.75.212:5000"
-          : "http://localhost:5000";
-      const url = `${baseUrl}/data/`;
+      try {
+        const baseUrl =
+          BOT_USERNAME === "ai_sky_net_bot"
+            ? "http://195.2.75.212:5000"
+            : "http://localhost:5000";
+        const url = `${baseUrl}/data/`;
 
-      const send_data = {
-        ...data,
-        user_id: WebApp.initDataUnsafe?.user?.id,
-      };
+        // Получаем CSRF токен из мета-тега
+        const csrfToken = document.querySelector(
+          'meta[name="csrf-token"]'
+        )?.content;
 
-      fetch(url, {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(send_data),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Ошибка сети");
+        const send_data = {
+          ...data,
+          user_id: WebApp.initDataUnsafe?.user?.id,
+        };
+
+        let retries = 0;
+        let lastError = null;
+
+        while (retries < MAX_RETRIES) {
+          try {
+            const response = await fetch(url, {
+              method: "POST",
+              mode: "cors",
+              headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-Token": csrfToken || "",
+                "X-Requested-With": "XMLHttpRequest",
+              },
+              credentials: "include", // Включаем передачу куки
+              body: JSON.stringify(send_data),
+              signal: controller.signal,
+            });
+
+            if (!response.ok) {
+              throw new Error(`HTTP ошибка! статус: ${response.status}`);
+            }
+
+            const result = await response.json();
+            WebApp.showAlert("Данные успешно отправлены");
+            return result;
+          } catch (error) {
+            lastError = error;
+            handleError(error, WebApp);
+
+            retries++;
+            if (retries < MAX_RETRIES) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, Math.pow(2, retries) * 1000)
+              );
+            }
           }
-          return response.json();
-        })
-        .then((result) => {
-          WebApp.showAlert("Данные успешно отправлены");
-        })
-        .catch((error) => {
-          WebApp.showAlert(`Ошибка: ${error.message}`);
-        });
-    } catch (error) {
-      WebApp.showAlert(`Ошибка: ${error.message}`);
-    }
-  };
+        }
+
+        throw lastError;
+      } catch (error) {
+        handleError(error, WebApp);
+        throw error;
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    },
+    [WebApp, BOT_USERNAME]
+  );
 
   return {
     BOT_USERNAME,
@@ -81,7 +149,7 @@ export const useTelegram = () => {
     WebApp,
     MainButton,
     onClose,
-    onToggleButton,
+    onToggleButton: toggleMainButton,
     sendDataToServer,
   };
 };

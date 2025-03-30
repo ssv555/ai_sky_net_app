@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
+import { WebApp } from "@twa-dev/sdk";
 import "./CarForm.css";
 import "../../styles/common.css";
 
@@ -87,9 +88,15 @@ const CarForm = () => {
   }, [twa, onSendData]);
 
   useEffect(() => {
-    twa.MainButton.show();
-    /*
+    if (!WebApp?.MainButton) {
+      console.error("MainButton не доступен");
+      return;
+    }
+    WebApp.MainButton.setText("Сохранить");
+    WebApp.MainButton.setBackgroundColor("#2481cc");
+    WebApp.MainButton.show();
 
+    /*
     if (!twa) return;
 
     try {

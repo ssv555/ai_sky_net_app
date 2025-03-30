@@ -24,7 +24,7 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="error-boundary">
           <h2>Что-то пошло не так 😕</h2>
-          <p>Произошла ошибка'</p>
+          <p>Произошла ошибка</p>
 
           {this.state.error && (
             <div className="error-details">

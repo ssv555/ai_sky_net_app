@@ -4,53 +4,55 @@ import { useTelegram } from "../../hooks/useTelegram";
 import "./CarForm.css";
 import "../../styles/common.css";
 
+const MAX_NAME_LENGTH = 255;
+const MAX_PRICE = 1000000000;
+
 const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { tg, BOT_USERNAME } = useTelegram();
+  const { tg, sendDataToServer } = useTelegram();
 
   const onSendData = useCallback(() => {
-    // Проверяем наличие tg
     if (!tg) {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
 
-    if (!carName.trim()) {
+    const trimmedName = carName.trim();
+    if (!trimmedName) {
       tg.showAlert("Пожалуйста, введите название автомобиля");
       return;
     }
-
-    if (!carPrice.trim() || isNaN(Number(carPrice))) {
+    if (trimmedName.length > MAX_NAME_LENGTH) {
+      tg.showAlert(`Название не должно превышать ${MAX_NAME_LENGTH} символов`);
+      return;
+    }
+    const price = Number(carPrice);
+    if (!carPrice.trim() || isNaN(price)) {
       tg.showAlert("Пожалуйста, введите корректную цену");
+      return;
+    }
+    if (price < 0) {
+      tg.showAlert("Цена не может быть отрицательной");
+      return;
+    }
+    if (price > MAX_PRICE) {
+      tg.showAlert(`Цена не может превышать ${MAX_PRICE}`);
       return;
     }
 
     const data = {
-      carName: carName.trim(),
-      carPrice: Number(carPrice),
+      carName: trimmedName,
+      carPrice: price,
       carModel: Number(carModel),
     };
-    // ПЕРЕДЕЛАТЬ НА fetch
-    try {
-      const params = new URLSearchParams(data);
-      const callbackData = `car_data:${params.toString()}`;
-      const encodedCallbackData = encodeURIComponent(callbackData);
-      const url = `https://t.me/${BOT_USERNAME}?start=${encodedCallbackData}`;
-      tg.showAlert(`url: ${url}`);
 
-      // Отправляем сообщение через URL
-      window.location.href = url;
-      tg.showAlert(`window.location.href: ${window.location.href}`);
-    } catch (error) {
-      tg.showAlert(error);
-    }
-
-    tg.showAlert(`2. data: ${JSON.stringify(data)}`);
-  }, [tg, carName, carPrice, carModel]); // , sendData
+    sendDataToServer(data);
+  }, [tg, carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
+    if (!tg) return;
     tg.onEvent("mainButtonClicked", onSendData);
     return () => {
       tg.offEvent("mainButtonClicked", onSendData);
@@ -58,30 +60,48 @@ const CarForm = () => {
   }, [tg, onSendData]);
 
   useEffect(() => {
-    if (tg?.MainButton) {
+    if (!tg?.MainButton) return;
+    try {
       tg.MainButton.setParams({
         color: "#2481cc",
         text: "Сохранить",
       });
+    } catch (error) {
+      console.error("Ошибка при настройке MainButton:", error);
     }
   }, [tg]);
 
   useEffect(() => {
-    if (tg?.MainButton) {
-      if (carName && carPrice && carModel) {
+    if (!tg?.MainButton) return;
+    try {
+      const trimmedName = carName.trim();
+      const price = Number(carPrice);
+      const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
+
+      if (trimmedName && isValidPrice && carModel !== "0") {
         tg.MainButton.show();
       } else {
         tg.MainButton.hide();
       }
+    } catch (error) {
+      console.error("Ошибка при управлении MainButton:", error);
     }
   }, [tg, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
-    setCarName(e.target.value);
+    const value = e.target.value;
+    if (value.length <= MAX_NAME_LENGTH) {
+      setCarName(value);
+    }
   };
+
   const changeCarPrice = (e) => {
-    setCarPrice(e.target.value);
+    const value = e.target.value;
+    if (value === "" || /^\d+$/.test(value)) {
+      setCarPrice(value);
+    }
   };
+
   const changeCarModel = (e) => {
     setCarModel(e.target.value);
   };
@@ -102,6 +122,7 @@ const CarForm = () => {
                 placeholder="Введите название"
                 value={carName}
                 onChange={changeCarName}
+                maxLength={MAX_NAME_LENGTH}
               />
             </div>
             <div className="twa-form-group">
@@ -112,6 +133,8 @@ const CarForm = () => {
                 placeholder="Введите цену"
                 value={carPrice}
                 onChange={changeCarPrice}
+                pattern="[0-9]*"
+                inputMode="numeric"
               />
             </div>
             <div className="twa-form-group">

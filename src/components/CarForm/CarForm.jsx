@@ -100,14 +100,14 @@ const CarForm = () => {
       return;
     }
     /*
-    if (!twa) return;
+    if (!WebApp) return;
 
     try {
       const trimmedName = carName.trim();
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
 
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Отладочная информация",
         message: `trimmedName: ${trimmedName}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
         buttons: [{ type: "ok" }],
@@ -115,18 +115,18 @@ const CarForm = () => {
 
       if (trimmedName && isValidPrice && carModel !== "0") {
         console.log("Показ кнопки");
-        twa.MainButton.setText("Сохранить");
-        twa.MainButton.setBackgroundColor("#2481cc");
-        twa.MainButton.show();
+        WebApp.MainButton.setText("Сохранить");
+        WebApp.MainButton.setBackgroundColor("#2481cc");
+        WebApp.MainButton.show();
       } else {
         console.log("Скрытие кнопки");
-        twa.MainButton.hide();
+        WebApp.MainButton.hide();
       }
     } catch (error) {
       console.error("Ошибка при управлении MainButton:", error);
     }
       */
-  }, [twa, carName, carPrice, carModel]);
+  }, [WebApp, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
     const value = e.target.value;

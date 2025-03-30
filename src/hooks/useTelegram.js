@@ -1,6 +1,8 @@
 import { WebApp } from "@twa-dev/sdk";
 
 export const useTelegram = () => {
+  const MainButton = window.Telegram.WebApp.MainButton;
+
   const onClose = () => {
     if (!WebApp) {
       console.error("Telegram WebApp не инициализирован");
@@ -10,14 +12,14 @@ export const useTelegram = () => {
   };
 
   const onToggleButton = () => {
-    if (!WebApp?.MainButton) {
+    if (!MainButton) {
       console.error("MainButton не доступен");
       return;
     }
-    if (WebApp.MainButton.isVisible) {
-      WebApp.MainButton.hide();
+    if (MainButton.isVisible) {
+      MainButton.hide();
     } else {
-      WebApp.MainButton.show();
+      MainButton.show();
     }
   };
 
@@ -73,8 +75,9 @@ export const useTelegram = () => {
   };
 
   return {
-    twa: WebApp,
     user: WebApp?.initDataUnsafe?.user,
+    twa: WebApp,
+    MainButton,
     BOT_USERNAME,
     onClose,
     onToggleButton,

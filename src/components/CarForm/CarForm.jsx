@@ -85,20 +85,17 @@ const CarForm = () => {
       buttons: [{ type: "ok" }],
     });
 
-    WebApp.MainButton.setText("Сохранить");
-    WebApp.MainButton.setBackgroundColor("#2481cc");
-    WebApp.MainButton.onClick(onSendData);
-    WebApp.MainButton.show();
+    const MainButton = useTelegram().MainButton;
+    MainButton.setText("Сохранить");
+    MainButton.setBackgroundColor("#2481cc");
+    MainButton.onClick(onSendData);
+    MainButton.show();
     return () => {
-      WebApp.MainButton.offClick(onSendData);
+      MainButton.offClick(onSendData);
     };
   }, [onSendData, carName, carPrice, carModel]);
 
   useEffect(() => {
-    if (!WebApp?.MainButton) {
-      console.error("MainButton не доступен");
-      return;
-    }
     /*
     if (!WebApp) return;
 

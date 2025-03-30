@@ -5,9 +5,6 @@ import "./CarForm.css";
 import "../../styles/common.css";
 
 const CarForm = () => {
-  const MAX_NAME_LENGTH = 255;
-  const MAX_PRICE = 1000000000;
-
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
@@ -90,7 +87,13 @@ const CarForm = () => {
     if (!WebApp) return;
     try {
       const price = Number(carPrice);
-      const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
+      const isValidPrice = !isNaN(price) && price >= 0;
+
+      WebApp.showPopup({
+        title: "Отладочная информация",
+        message: `carName: ${carName}\nprice: ${price}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
+        buttons: [{ type: "ok" }],
+      });
 
       if (carName && isValidPrice && carModel) {
         MainButton.setText("Сохранить");

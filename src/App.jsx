@@ -2,7 +2,6 @@ import "./App.css";
 import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
-import Header from "./components/header/Header";
 import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
@@ -34,7 +33,6 @@ function App() {
   return (
     <ErrorBoundary>
       <div className="App">
-        <Header title={getPageTitle()} />
         <Routes>
           <Route
             index

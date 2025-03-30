@@ -17,9 +17,7 @@ const MainPage = () => {
   return (
     <div className="twa-container">
       <div className="twa-page">
-        <div className="twa-header">
-          <h1 className="twa-title">Some text of main page</h1>
-        </div>
+        <h1 className="twa-title">Some text of main page</h1>
         <div className="twa-content">
           <button
             className="twa-button twa-button-primary"

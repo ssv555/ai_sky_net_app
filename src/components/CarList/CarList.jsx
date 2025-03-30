@@ -5,9 +5,7 @@ const CarList = () => {
   return (
     <div className="twa-container">
       <div className="twa-page">
-        <div className="twa-header">
-          <h1 className="twa-title">Список автомобилей</h1>
-        </div>
+        <h1 className="twa-title">Список автомобилей</h1>
         <div className="twa-content">
           <div className="twa-list">
             {/* Здесь будет список автомобилей */}

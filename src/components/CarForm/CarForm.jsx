@@ -68,6 +68,13 @@ const CarForm = () => {
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price > 0;
 
+      document.querySelector(".twa-footer-debug").innerHTML = `
+        Название: ${carName || "не задано"}<br/>
+        Цена: ${carPrice || "0"}<br/> 
+        Модель: ${carModel || "не выбрана"}<br/>
+        Валидная цена: ${isValidPrice ? "да" : "нет"}
+      `;
+
       if (carName && isValidPrice && carModel) {
         MainButton.setText("Сохранить");
         MainButton.show();
@@ -104,9 +111,7 @@ const CarForm = () => {
   return (
     <div className="twa-container">
       <div className="twa-page">
-        <div className="twa-header">
-          <h1 className="twa-title">Форма автомобиля</h1>
-        </div>
+        <h1 className="twa-title">Форма автомобиля</h1>
         <div className="twa-content">
           <div className="twa-form">
             <div className="twa-form-group">

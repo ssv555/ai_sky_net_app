@@ -14,6 +14,7 @@ const CarForm = () => {
   const { twa, sendDataToServer } = useTelegram();
 
   const onSendData = useCallback(() => {
+    /*
     if (!twa) {
       console.error("Telegram WebApp не инициализирован");
       return;
@@ -60,12 +61,18 @@ const CarForm = () => {
       });
       return;
     }
-
+    */
     const data = {
       carName: trimmedName,
       carPrice: price,
       carModel: Number(carModel),
     };
+
+    twa.showPopup({
+      title: "data",
+      message: JSON.stringify(data),
+      buttons: [{ type: "ok" }],
+    });
 
     sendDataToServer(data);
   }, [twa, carName, carPrice, carModel, sendDataToServer]);
@@ -87,10 +94,10 @@ const CarForm = () => {
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
 
-      console.log("Проверка условий для кнопки:", {
-        hasName: !!trimmedName,
-        isValidPrice,
-        carModel,
+      twa.showPopup({
+        title: "Отладочная информация",
+        message: `trimmedName: ${trimmedName}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
+        buttons: [{ type: "ok" }],
       });
 
       if (trimmedName && isValidPrice && carModel !== "0") {

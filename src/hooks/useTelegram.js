@@ -42,13 +42,18 @@ export const useTelegram = () => {
           : "http://localhost:5000";
       const url = `${baseUrl}/data/`;
 
+      const send_data = {
+        ...data,
+        user_id: tg.initDataUnsafe?.user?.id,
+      };
+
       fetch(url, {
         method: "POST",
         mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(send_data),
       })
         .then((response) => {
           if (!response.ok) {

@@ -152,6 +152,7 @@ const CarForm = () => {
             </div>
           </div>
         </div>
+        <div className="twa-footer-debug"></div>
       </div>
     </div>
   );

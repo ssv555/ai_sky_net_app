@@ -87,6 +87,9 @@ const CarForm = () => {
   }, [twa, onSendData]);
 
   useEffect(() => {
+    twa.MainButton.show();
+    /*
+
     if (!twa) return;
 
     try {
@@ -112,6 +115,7 @@ const CarForm = () => {
     } catch (error) {
       console.error("Ошибка при управлении MainButton:", error);
     }
+      */
   }, [twa, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {

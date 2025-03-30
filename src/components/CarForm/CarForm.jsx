@@ -94,7 +94,7 @@ const CarForm = () => {
       );
 
       if (carName && isValidPrice && carModel) {
-        addFooterDebugInfo("\nМы внутри.", true);
+        addFooterDebugInfo("<br>Мы внутри.", true);
         MainButton.setText("Сохранить");
         MainButton.onClick(onSendData);
         MainButton.show();

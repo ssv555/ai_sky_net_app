@@ -13,6 +13,23 @@ const CarForm = () => {
   const [carModel, setCarModel] = useState("0");
   const { WebApp, MainButton, sendDataToServer, isDevMode } = useTelegram();
 
+  const addFooterDebugInfo = useCallback(
+    (text, append = false) => {
+      if (!isDevMode()) return;
+
+      const debugElement = document.querySelector(".twa-footer-debug");
+      if (!debugElement) return;
+
+      if (append) {
+        const currentContent = debugElement.innerHTML;
+        debugElement.innerHTML = currentContent + text;
+      } else {
+        debugElement.innerHTML = text;
+      }
+    },
+    [isDevMode]
+  );
+
   const validateForm = useCallback(() => {
     let message;
 
@@ -68,16 +85,16 @@ const CarForm = () => {
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price > 0;
 
-      if (isDevMode()) {
-        document.querySelector(".twa-footer-debug").innerHTML = `
-          carName: ${carName || "не задано"}<br/>
-          carPrice: ${carPrice || "0"}<br/> 
-          carModel: ${carModel || "не выбрана"}<br/>
-          isValidPrice: ${isValidPrice ? "true" : "false"}
-        `;
-      }
+      addFooterDebugInfo(
+        `
+        carName: ${carName || "не задано"}<br/>
+        carPrice: ${carPrice || "0"}<br/> 
+        carModel: ${carModel || "не выбрана"}<br/>
+        isValidPrice: ${isValidPrice ? "true" : "false"}`
+      );
 
       if (carName && isValidPrice && carModel) {
+        addFooterDebugInfo("\nМы внутри.", true);
         MainButton.setText("Сохранить");
         MainButton.oтClick(onSendData);
         MainButton.show();

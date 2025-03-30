@@ -112,7 +112,7 @@ const CarForm = () => {
 
   const changeCarName = (e) => {
     const value = e.target.value.trim();
-    if (value.length <= MAX_NAME_LENGTH) {
+    if (value.length > 0) {
       setCarName(value);
     }
   };
@@ -144,7 +144,7 @@ const CarForm = () => {
                 placeholder="Введите название"
                 value={carName}
                 onChange={changeCarName}
-                maxLength={MAX_NAME_LENGTH}
+                maxLength={256}
               />
             </div>
             <div className="twa-form-group">

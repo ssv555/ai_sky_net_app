@@ -85,20 +85,14 @@ const CarForm = () => {
   //   };
   // }, [carName, carPrice, carModel]); // TODO: добавить onSendData
 
+  // Отображение кнопки Сохранить.
   useEffect(() => {
     if (!WebApp) return;
     try {
-      const trimmedName = carName.trim();
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
 
-      WebApp.showPopup({
-        title: "Отладочная информация",
-        message: `trimmedName: ${trimmedName}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
-        buttons: [{ type: "ok" }],
-      });
-
-      if (trimmedName && isValidPrice && carModel !== "0") {
+      if (carName && isValidPrice && carModel) {
         MainButton.setText("Сохранить");
         // MainButton.oтClick(onSendData);
         // return () => {
@@ -110,16 +104,11 @@ const CarForm = () => {
       }
     } catch (error) {
       MainButton.hide();
-      WebApp.showPopup({
-        title: "Ошибка",
-        message: `Ошибка: ${error.message}`,
-        buttons: [{ type: "ok" }],
-      });
     }
   }, [WebApp, MainButton, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
-    const value = e.target.value;
+    const value = e.target.value.trim();
     if (value.length <= MAX_NAME_LENGTH) {
       setCarName(value);
     }
@@ -188,3 +177,11 @@ const CarForm = () => {
 };
 
 export default CarForm;
+
+/*
+      WebApp.showPopup({
+        title: "Ошибка",
+        message: `Ошибка: ${error.message}`,
+        buttons: [{ type: "ok" }],
+      });
+*/

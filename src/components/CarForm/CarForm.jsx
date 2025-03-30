@@ -78,19 +78,8 @@ const CarForm = () => {
   // }, [carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    // WebApp.showAlert(
-    //   `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
-    // );
-    window.Telegram.WebApp.showAlert(
-      `1. carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
-    );
-    WebApp.showAlert(
-      `2. carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
-    );
-
     MainButton.setText("Сохранить");
     MainButton.color = "#2481cc";
-    //MainButton.onClick(onSendData);
     MainButton.show();
     return () => {
       MainButton.offClick(onSendData);
@@ -132,7 +121,6 @@ const CarForm = () => {
     if (value.length <= MAX_NAME_LENGTH) {
       setCarName(value);
     }
-    WebApp.showAlert(`carName: ${carName}`);
   };
 
   const changeCarPrice = (e) => {
@@ -140,12 +128,10 @@ const CarForm = () => {
     if (value === "" || /^\d+$/.test(value)) {
       setCarPrice(value);
     }
-    WebApp.showAlert(`carPrice: ${carPrice}`);
   };
 
   const changeCarModel = (e) => {
     setCarModel(e.target.value);
-    WebApp.showAlert(`carModel: ${carModel}`);
   };
 
   return (

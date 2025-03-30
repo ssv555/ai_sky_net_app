@@ -6,6 +6,7 @@ import Header from "./components/header/Header";
 import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 function App() {
   const { twa } = useTelegram();
@@ -31,14 +32,28 @@ function App() {
   }, [twa]);
 
   return (
-    <div className="App">
-      <Header title={getPageTitle()} />
-      <Routes>
-        <Route index element={<MainPage />} />
-        <Route path="CarList" element={<CarList />} />
-        <Route path="CarForm" element={<CarForm />} />
-      </Routes>
-    </div>
+    <ErrorBoundary>
+      <div className="App">
+        <Header title={getPageTitle()} />
+        <Routes>
+          <Route
+            index
+            element={<MainPage />}
+            errorElement={<ErrorBoundary />}
+          />
+          <Route
+            path="CarList"
+            element={<CarList />}
+            errorElement={<ErrorBoundary />}
+          />
+          <Route
+            path="CarForm"
+            element={<CarForm />}
+            errorElement={<ErrorBoundary />}
+          />
+        </Routes>
+      </div>
+    </ErrorBoundary>
   );
 }
 

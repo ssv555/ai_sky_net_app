@@ -79,11 +79,9 @@ const CarForm = () => {
   }, [carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    WebApp.showPopup({
-      title: "Отладочная информация",
-      message: `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`,
-      buttons: [{ type: "ok" }],
-    });
+    WebApp.showAlert(
+      `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
+    );
 
     const MainButton = useTelegram().MainButton;
     MainButton.setText("Сохранить");

@@ -18,27 +18,46 @@ const CarForm = () => {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
-
     const trimmedName = carName.trim();
     if (!trimmedName) {
-      tg.showAlert("Пожалуйста, введите название автомобиля");
+      tg.showPopup({
+        title: "Ошибка",
+        message: "Пожалуйста, введите название автомобиля",
+        buttons: [{ type: "ok" }],
+      });
       return;
     }
     if (trimmedName.length > MAX_NAME_LENGTH) {
-      tg.showAlert(`Название не должно превышать ${MAX_NAME_LENGTH} символов`);
+      tg.showPopup({
+        title: "Ошибка",
+        message: `Название не должно превышать ${MAX_NAME_LENGTH} символов`,
+        buttons: [{ type: "ok" }],
+      });
       return;
     }
     const price = Number(carPrice);
     if (!carPrice.trim() || isNaN(price)) {
-      tg.showAlert("Пожалуйста, введите корректную цену");
+      tg.showPopup({
+        title: "Ошибка",
+        message: "Пожалуйста, введите корректную цену",
+        buttons: [{ type: "ok" }],
+      });
       return;
     }
     if (price < 0) {
-      tg.showAlert("Цена не может быть отрицательной");
+      tg.showPopup({
+        title: "Ошибка",
+        message: "Цена не может быть отрицательной",
+        buttons: [{ type: "ok" }],
+      });
       return;
     }
     if (price > MAX_PRICE) {
-      tg.showAlert(`Цена не может превышать ${MAX_PRICE}`);
+      tg.showPopup({
+        title: "Ошибка",
+        message: `Цена не может превышать ${MAX_PRICE}`,
+        buttons: [{ type: "ok" }],
+      });
       return;
     }
 
@@ -53,15 +72,18 @@ const CarForm = () => {
 
   useEffect(() => {
     if (!tg) return;
-    tg.onEvent("mainButtonClicked", onSendData);
+
+    tg.MainButton.onClick(onSendData);
     return () => {
-      tg.offEvent("mainButtonClicked", onSendData);
+      tg.MainButton.offClick(onSendData);
     };
   }, [tg, onSendData]);
 
   useEffect(() => {
-    if (!tg?.MainButton) return;
+    if (!tg) return;
+
     try {
+      console.log("Установка параметров MainButton");
       tg.MainButton.setParams({
         color: "#2481cc",
         text: "Сохранить",
@@ -72,15 +94,24 @@ const CarForm = () => {
   }, [tg]);
 
   useEffect(() => {
-    if (!tg?.MainButton) return;
+    if (!tg) return;
+
     try {
       const trimmedName = carName.trim();
       const price = Number(carPrice);
       const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
 
+      console.log("Проверка условий для кнопки:", {
+        hasName: !!trimmedName,
+        isValidPrice,
+        carModel,
+      });
+
       if (trimmedName && isValidPrice && carModel !== "0") {
+        console.log("Показ кнопки");
         tg.MainButton.show();
       } else {
+        console.log("Скрытие кнопки");
         tg.MainButton.hide();
       }
     } catch (error) {

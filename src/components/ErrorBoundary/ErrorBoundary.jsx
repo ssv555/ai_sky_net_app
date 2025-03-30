@@ -24,7 +24,11 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="error-boundary">
           <h2>Что-то пошло не так 😕</h2>
-          <p>Произошла ошибка при загрузке страницы.</p>
+          <p>
+            Произошла ошибка при загрузке страницы '
+            {this.props.pageTitle || "неизвестной"}' (компонент:{" "}
+            {this.props.componentName || "неизвестный"})
+          </p>
 
           {this.state.error && (
             <div className="error-details">

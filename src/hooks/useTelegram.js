@@ -1,7 +1,8 @@
 import { WebApp } from "@twa-dev/sdk";
 
 export const useTelegram = () => {
-  const MainButton = WebApp.MainButton;
+  const WebApp = window.Telegram.WebApp;
+  const MainButton = window.Telegram.WebApp.MainButton;
 
   const onClose = () => {
     if (!WebApp) {
@@ -75,10 +76,10 @@ export const useTelegram = () => {
   };
 
   return {
+    BOT_USERNAME,
     user: WebApp?.initDataUnsafe?.user,
     WebApp,
     MainButton,
-    BOT_USERNAME,
     onClose,
     onToggleButton,
     sendDataToServer,

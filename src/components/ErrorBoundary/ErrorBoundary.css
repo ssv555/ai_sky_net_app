@@ -6,38 +6,39 @@
   min-height: 100vh;
   padding: 20px;
   text-align: center;
-  background-color: #f8f9fa;
+  background-color: var(--tg-theme-bg-color, #ffffff);
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .error-boundary h2 {
-  color: #dc3545;
+  color: var(--tg-theme-button-color, #2481cc);
   margin-bottom: 16px;
 }
 
 .error-boundary p {
-  color: #6c757d;
+  color: var(--tg-theme-text-color, #000000);
   margin-bottom: 24px;
 }
 
 .error-button {
   padding: 12px 24px;
-  background-color: #007bff;
-  color: white;
+  background-color: var(--tg-theme-button-color, #2481cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  transition: background-color 0.2s;
+  transition: opacity 0.2s;
 }
 
 .error-button:hover {
-  background-color: #0056b3;
+  opacity: 0.8;
 }
 
 .error-details {
   margin: 20px 0;
   padding: 20px;
-  background-color: #fff;
+  background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   text-align: left;
@@ -46,28 +47,28 @@
 }
 
 .error-details h3 {
-  color: #dc3545;
+  color: var(--tg-theme-button-color, #2481cc);
   margin-bottom: 16px;
 }
 
 .error-message {
-  background-color: #f8f9fa;
+  background-color: var(--tg-theme-bg-color, #ffffff);
   padding: 12px;
   border-radius: 4px;
   margin-bottom: 16px;
   white-space: pre-wrap;
   word-break: break-word;
   font-family: monospace;
-  color: #dc3545;
+  color: var(--tg-theme-text-color, #000000);
 }
 
 .error-stack {
-  background-color: #f8f9fa;
+  background-color: var(--tg-theme-bg-color, #ffffff);
   padding: 12px;
   border-radius: 4px;
   white-space: pre-wrap;
   word-break: break-word;
   font-family: monospace;
-  color: #6c757d;
+  color: var(--tg-theme-text-color, #000000);
   font-size: 14px;
 }

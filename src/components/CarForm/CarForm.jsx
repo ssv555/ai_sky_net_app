@@ -87,7 +87,7 @@ const CarForm = () => {
     if (!WebApp) return;
     try {
       const price = Number(carPrice);
-      const isValidPrice = !isNaN(price) && price >= 0;
+      const isValidPrice = !isNaN(price) && price > 0;
 
       WebApp.showPopup({
         title: "Отладочная информация",

@@ -7,6 +7,7 @@ export default defineConfig({
   server: {
     port: 3000,
     open: true,
+    allowedHosts: ["silly-comics-wave.loca.lt", "tall-islands-change.loca.lt"],
   },
   build: {
     outDir: "dist",

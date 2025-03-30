@@ -76,7 +76,7 @@ export const useTelegram = () => {
 
   return {
     user: WebApp?.initDataUnsafe?.user,
-    twa: WebApp,
+    WebApp,
     MainButton,
     BOT_USERNAME,
     onClose,

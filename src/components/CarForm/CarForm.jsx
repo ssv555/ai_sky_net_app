@@ -1,19 +1,17 @@
 import React from "react";
-import { WebApp } from "@twa-dev/sdk";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import "./CarForm.css";
 import "../../styles/common.css";
 
-const MAX_NAME_LENGTH = 255;
-const MAX_PRICE = 1000000000;
-const MainButton = useTelegram().MainButton;
-
 const CarForm = () => {
+  const MAX_NAME_LENGTH = 255;
+  const MAX_PRICE = 1000000000;
+
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { sendDataToServer } = useTelegram();
+  const { WebApp, MainButton } = useTelegram();
 
   // const onSendData = useCallback(() => {
   //   if (!WebApp) {

@@ -79,9 +79,15 @@ const CarForm = () => {
   }, [twa, carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    if (!twa) return;
-
-    twa.MainButton.onClick(onSendData);
+    twa.showPopup({
+      title: "Отладочная информация",
+      message: `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`,
+      buttons: [{ type: "ok" }],
+    });
+    WebApp.MainButton.setText("Сохранить");
+    WebApp.MainButton.setBackgroundColor("#2481cc");
+    WebApp.MainButton.onClick(onSendData);
+    WebApp.MainButton.show();
     return () => {
       twa.MainButton.offClick(onSendData);
     };
@@ -92,10 +98,6 @@ const CarForm = () => {
       console.error("MainButton не доступен");
       return;
     }
-    WebApp.MainButton.setText("Сохранить");
-    WebApp.MainButton.setBackgroundColor("#2481cc");
-    WebApp.MainButton.show();
-
     /*
     if (!twa) return;
 

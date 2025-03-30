@@ -11,16 +11,16 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { tg, sendDataToServer } = useTelegram();
+  const { twa, sendDataToServer } = useTelegram();
 
   const onSendData = useCallback(() => {
-    if (!tg) {
+    if (!twa) {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
     const trimmedName = carName.trim();
     if (!trimmedName) {
-      tg.showPopup({
+      twa.showPopup({
         title: "Ошибка",
         message: "Пожалуйста, введите название автомобиля",
         buttons: [{ type: "ok" }],
@@ -28,7 +28,7 @@ const CarForm = () => {
       return;
     }
     if (trimmedName.length > MAX_NAME_LENGTH) {
-      tg.showPopup({
+      twa.showPopup({
         title: "Ошибка",
         message: `Название не должно превышать ${MAX_NAME_LENGTH} символов`,
         buttons: [{ type: "ok" }],
@@ -37,7 +37,7 @@ const CarForm = () => {
     }
     const price = Number(carPrice);
     if (!carPrice.trim() || isNaN(price)) {
-      tg.showPopup({
+      twa.showPopup({
         title: "Ошибка",
         message: "Пожалуйста, введите корректную цену",
         buttons: [{ type: "ok" }],
@@ -45,7 +45,7 @@ const CarForm = () => {
       return;
     }
     if (price < 0) {
-      tg.showPopup({
+      twa.showPopup({
         title: "Ошибка",
         message: "Цена не может быть отрицательной",
         buttons: [{ type: "ok" }],
@@ -53,7 +53,7 @@ const CarForm = () => {
       return;
     }
     if (price > MAX_PRICE) {
-      tg.showPopup({
+      twa.showPopup({
         title: "Ошибка",
         message: `Цена не может превышать ${MAX_PRICE}`,
         buttons: [{ type: "ok" }],
@@ -68,33 +68,19 @@ const CarForm = () => {
     };
 
     sendDataToServer(data);
-  }, [tg, carName, carPrice, carModel, sendDataToServer]);
+  }, [twa, carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    if (!tg) return;
+    if (!twa) return;
 
-    tg.MainButton.onClick(onSendData);
+    twa.MainButton.onClick(onSendData);
     return () => {
-      tg.MainButton.offClick(onSendData);
+      twa.MainButton.offClick(onSendData);
     };
-  }, [tg, onSendData]);
+  }, [twa, onSendData]);
 
   useEffect(() => {
-    if (!tg) return;
-
-    try {
-      console.log("Установка параметров MainButton");
-      tg.MainButton.setParams({
-        color: "#2481cc",
-        text: "Сохранить",
-      });
-    } catch (error) {
-      console.error("Ошибка при настройке MainButton:", error);
-    }
-  }, [tg]);
-
-  useEffect(() => {
-    if (!tg) return;
+    if (!twa) return;
 
     try {
       const trimmedName = carName.trim();
@@ -109,15 +95,17 @@ const CarForm = () => {
 
       if (trimmedName && isValidPrice && carModel !== "0") {
         console.log("Показ кнопки");
-        tg.MainButton.show();
+        twa.MainButton.setText("Сохранить");
+        twa.MainButton.setBackgroundColor("#2481cc");
+        twa.MainButton.show();
       } else {
         console.log("Скрытие кнопки");
-        tg.MainButton.hide();
+        twa.MainButton.hide();
       }
     } catch (error) {
       console.error("Ошибка при управлении MainButton:", error);
     }
-  }, [tg, carName, carPrice, carModel]);
+  }, [twa, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
     const value = e.target.value;

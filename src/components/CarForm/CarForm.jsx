@@ -98,9 +98,9 @@ const CarForm = () => {
         MainButton.setText("Сохранить");
         MainButton.oтClick(onSendData);
         MainButton.show();
-        return () => {
-          MainButton.offClick(onSendData);
-        };
+        // return () => {
+        //   MainButton.offClick(onSendData);
+        // };
       } else {
         MainButton.hide();
       }

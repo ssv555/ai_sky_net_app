@@ -82,11 +82,14 @@ const CarForm = () => {
     //   `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
     // );
     window.Telegram.WebApp.showAlert(
-      `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
+      `1. carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
+    );
+    WebApp.showAlert(
+      `2. carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`
     );
 
     MainButton.setText("Сохранить");
-    MainButton.setBackgroundColor("#2481cc");
+    MainButton.color = "#2481cc";
     //MainButton.onClick(onSendData);
     MainButton.show();
     return () => {

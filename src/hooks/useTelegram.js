@@ -1,7 +1,7 @@
 import { WebApp } from "@twa-dev/sdk";
 
 export const useTelegram = () => {
-  const MainButton = window.Telegram.WebApp.MainButton;
+  const MainButton = WebApp.MainButton;
 
   const onClose = () => {
     if (!WebApp) {

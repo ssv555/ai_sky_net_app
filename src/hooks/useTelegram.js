@@ -2,7 +2,10 @@ import { useCallback } from "react";
 
 const BOT_USERNAME =
   new URLSearchParams(window.location.search).get("bot_username") ||
-  "unknown_bot_username"; // ssv_test_bot
+  "unknown_bot_username";
+
+const SERVER_PORT =
+  new URLSearchParams(window.location.search).get("port") || 5000;
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
@@ -123,9 +126,19 @@ export const useTelegram = () => {
 
       try {
         const baseUrl = isDevMode()
-          ? "http://localhost:5000"
-          : "http://195.2.75.212:5000";
+          ? `http://localhost:${SERVER_PORT}`
+          : `http://195.2.75.212:${SERVER_PORT}`;
         const url = `${baseUrl}/data/`;
+
+        // Показываем отладочную информацию
+        WebApp.showAlert(
+          `Debug Info:\n` +
+            `Dev Mode: ${isDevMode()}\n` +
+            `Base URL: ${baseUrl}\n` +
+            `Full URL: ${url}\n` +
+            `Bot Username: ${BOT_USERNAME}\n` +
+            `Server Port: ${SERVER_PORT}`
+        );
 
         // Получаем CSRF токен из мета-тега
         const csrfToken = document.querySelector(

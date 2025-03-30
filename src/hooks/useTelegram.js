@@ -24,23 +24,19 @@ const copyToClipboard = async (text) => {
 };
 
 /**
- * Обработчик ошибок для HTTP запросов
- * @param {Error} error - Объект ошибки
+ * Сообщение c кнопками - OK, COPY
+ * @param {Message} message - Сообщение
+ * @param {Title} title - Заголовок
  * @param {Object} WebApp - Объект Telegram WebApp
  * @returns {void}
  */
-const handleError = (error, WebApp) => {
+const showMessage = (WebApp, message, title = "Сообщение") => {
   if (!WebApp) return;
-
-  const errorMessage =
-    error.name === "AbortError"
-      ? "Запрос превысил время ожидания"
-      : `Ошибка: ${error.message}`;
 
   WebApp.showPopup(
     {
-      title: "Ошибка",
-      message: errorMessage,
+      title: title,
+      message: message,
       buttons: [
         {
           id: "copy",
@@ -59,6 +55,23 @@ const handleError = (error, WebApp) => {
       }
     }
   );
+};
+
+/**
+ * Обработчик ошибок для HTTP запросов
+ * @param {Error} error - Объект ошибки
+ * @param {Object} WebApp - Объект Telegram WebApp
+ * @returns {void}
+ */
+const handleError = (error, WebApp) => {
+  if (!WebApp) return;
+
+  const errorMessage =
+    error.name === "AbortError"
+      ? "Запрос превысил время ожидания"
+      : `Ошибка: ${error.message}`;
+
+  showMessage(WebApp, errorMessage, "Ошибка");
 };
 
 /**
@@ -131,13 +144,14 @@ export const useTelegram = () => {
         const url = `${baseUrl}/data/`;
 
         // Показываем отладочную информацию
-        WebApp.showAlert(
+        showMessage(
+          WebApp,
           `Debug Info:\n` +
-            `Dev Mode: ${isDevMode()}\n` +
-            `Base URL: ${baseUrl}\n` +
-            `Full URL: ${url}\n` +
-            `Bot Username: ${BOT_USERNAME}\n` +
-            `Server Port: ${SERVER_PORT}`
+            `isDevMode: ${isDevMode()}\n` +
+            `baseUrl: ${baseUrl}\n` +
+            `url: ${url}\n` +
+            `BOT_USERNAME: ${BOT_USERNAME}\n` +
+            `SERVER_PORTt: ${SERVER_PORT}`
         );
 
         // Получаем CSRF токен из мета-тега

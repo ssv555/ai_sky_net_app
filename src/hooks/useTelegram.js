@@ -194,6 +194,5 @@ export const useTelegram = () => {
     onClose,
     onToggleButton: toggleMainButton,
     sendDataToServer,
-    testErrorHandling,
   };
 };

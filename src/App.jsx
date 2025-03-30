@@ -32,43 +32,41 @@ function App() {
   }, [twa]);
 
   return (
-    <ErrorBoundary>
-      <div className="App">
-        <Header title={getPageTitle()} />
-        <Routes>
-          <Route
-            index
-            element={<MainPage />}
-            errorElement={
-              <ErrorBoundary
-                pageTitle="Главная страница"
-                componentName="MainPage"
-              />
-            }
-          />
-          <Route
-            path="CarList"
-            element={<CarList />}
-            errorElement={
-              <ErrorBoundary
-                pageTitle="Список автомобилей"
-                componentName="CarList"
-              />
-            }
-          />
-          <Route
-            path="CarForm"
-            element={<CarForm />}
-            errorElement={
-              <ErrorBoundary
-                pageTitle="Форма автомобиля"
-                componentName="CarForm"
-              />
-            }
-          />
-        </Routes>
-      </div>
-    </ErrorBoundary>
+    <div className="App">
+      <Header title={getPageTitle()} />
+      <Routes>
+        <Route
+          index
+          element={<MainPage />}
+          errorElement={
+            <ErrorBoundary
+              pageTitle="Главная страница"
+              componentName="MainPage"
+            />
+          }
+        />
+        <Route
+          path="CarList"
+          element={<CarList />}
+          errorElement={
+            <ErrorBoundary
+              pageTitle="Список автомобилей"
+              componentName="CarList"
+            />
+          }
+        />
+        <Route
+          path="CarForm"
+          element={<CarForm />}
+          errorElement={
+            <ErrorBoundary
+              pageTitle="Форма автомобиля"
+              componentName="CarForm"
+            />
+          }
+        />
+      </Routes>
+    </div>
   );
 }
 

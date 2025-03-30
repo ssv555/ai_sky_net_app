@@ -143,21 +143,21 @@ export const useTelegram = () => {
           : `http://195.2.75.212:${SERVER_PORT}`;
         const url = `${baseUrl}/data/`;
 
-        // Показываем отладочную информацию
-        showMessage(
-          WebApp,
-          `Debug Info:\n` +
-            `isDevMode: ${isDevMode()}\n` +
-            `baseUrl: ${baseUrl}\n` +
-            `url: ${url}\n` +
-            `BOT_USERNAME: ${BOT_USERNAME}\n` +
-            `SERVER_PORTt: ${SERVER_PORT}`
-        );
+        // // Показываем отладочную информацию
+        // showMessage(
+        //   WebApp,
+        //   `Debug Info:\n` +
+        //     `isDevMode: ${isDevMode()}\n` +
+        //     `baseUrl: ${baseUrl}\n` +
+        //     `url: ${url}\n` +
+        //     `BOT_USERNAME: ${BOT_USERNAME}\n` +
+        //     `SERVER_PORTt: ${SERVER_PORT}`
+        // );
 
-        // Получаем CSRF токен из мета-тега
-        const csrfToken = document.querySelector(
-          'meta[name="csrf-token"]'
-        )?.content;
+        // // Получаем CSRF токен из мета-тега
+        // const csrfToken = document.querySelector(
+        //   'meta[name="csrf-token"]'
+        // )?.content;
 
         const send_data = {
           ...data,
@@ -174,7 +174,7 @@ export const useTelegram = () => {
               mode: "cors",
               headers: {
                 "Content-Type": "application/json",
-                "X-CSRF-Token": csrfToken || "",
+                // "X-CSRF-Token": csrfToken || "",
                 "X-Requested-With": "XMLHttpRequest",
               },
               credentials: "include", // Включаем передачу куки

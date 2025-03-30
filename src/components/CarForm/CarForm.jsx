@@ -73,48 +73,50 @@ const CarForm = () => {
   //   //   message: JSON.stringify(data),
   //   //   buttons: [{ type: "ok" }],
   //   // });
-
   //   sendDataToServer(data);
   // }, [carName, carPrice, carModel, sendDataToServer]);
 
-  useEffect(() => {
-    MainButton.setText("Сохранить");
-    MainButton.color = "#2481cc";
-    MainButton.show();
-    return () => {
-      MainButton.offClick(onSendData);
-    };
-  }, [carName, carPrice, carModel]); // TODO: добавить onSendData
-
   // useEffect(() => {
-  //   /*
-  //   if (!WebApp) return;
+  //   MainButton.setText("Сохранить");
+  //   MainButton.color = "#2481cc";
+  //   MainButton.show();
+  //   return () => {
+  //     MainButton.offClick(onSendData);
+  //   };
+  // }, [carName, carPrice, carModel]); // TODO: добавить onSendData
 
-  //   try {
-  //     const trimmedName = carName.trim();
-  //     const price = Number(carPrice);
-  //     const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
+  useEffect(() => {
+    if (!WebApp) return;
+    try {
+      const trimmedName = carName.trim();
+      const price = Number(carPrice);
+      const isValidPrice = !isNaN(price) && price >= 0 && price <= MAX_PRICE;
 
-  //     WebApp.showPopup({
-  //       title: "Отладочная информация",
-  //       message: `trimmedName: ${trimmedName}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
-  //       buttons: [{ type: "ok" }],
-  //     });
+      WebApp.showPopup({
+        title: "Отладочная информация",
+        message: `trimmedName: ${trimmedName}\nisValidPrice: ${isValidPrice}\ncarModel: ${carModel}`,
+        buttons: [{ type: "ok" }],
+      });
 
-  //     if (trimmedName && isValidPrice && carModel !== "0") {
-  //       console.log("Показ кнопки");
-  //       WebApp.MainButton.setText("Сохранить");
-  //       WebApp.MainButton.setBackgroundColor("#2481cc");
-  //       WebApp.MainButton.show();
-  //     } else {
-  //       console.log("Скрытие кнопки");
-  //       WebApp.MainButton.hide();
-  //     }
-  //   } catch (error) {
-  //     console.error("Ошибка при управлении MainButton:", error);
-  //   }
-  //     */
-  // }, [WebApp, carName, carPrice, carModel]);
+      if (trimmedName && isValidPrice && carModel !== "0") {
+        MainButton.setText("Сохранить");
+        // MainButton.oтClick(onSendData);
+        // return () => {
+        //   MainButton.offClick(onSendData);
+        // };
+        MainButton.show();
+      } else {
+        MainButton.hide();
+      }
+    } catch (error) {
+      MainButton.hide();
+      WebApp.showPopup({
+        title: "Ошибка",
+        message: `Ошибка: ${error.message}`,
+        buttons: [{ type: "ok" }],
+      });
+    }
+  }, [WebApp, MainButton, carName, carPrice, carModel]);
 
   const changeCarName = (e) => {
     const value = e.target.value;

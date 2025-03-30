@@ -4,7 +4,7 @@ import "./ErrorBoundary.css";
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -13,6 +13,10 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     console.error("Ошибка в компоненте:", error, errorInfo);
+    this.setState({
+      error: error,
+      errorInfo: errorInfo,
+    });
   }
 
   render() {
@@ -21,6 +25,19 @@ class ErrorBoundary extends React.Component {
         <div className="error-boundary">
           <h2>Что-то пошло не так 😕</h2>
           <p>Произошла ошибка при загрузке страницы.</p>
+
+          {this.state.error && (
+            <div className="error-details">
+              <h3>Детали ошибки:</h3>
+              <pre className="error-message">
+                {this.state.error?.toString()}
+              </pre>
+              <pre className="error-stack">
+                {this.state.errorInfo?.componentStack}
+              </pre>
+            </div>
+          )}
+
           <button
             onClick={() => window.location.reload()}
             className="error-button"

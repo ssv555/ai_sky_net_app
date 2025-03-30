@@ -51,7 +51,7 @@ const showMessage = (WebApp, message, title = "Сообщение") => {
     },
     (buttonId) => {
       if (buttonId === "copy") {
-        copyToClipboard(errorMessage);
+        copyToClipboard(message);
       }
     }
   );

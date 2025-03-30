@@ -12,17 +12,17 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { twa, sendDataToServer } = useTelegram();
+  const { sendDataToServer } = useTelegram();
 
   const onSendData = useCallback(() => {
-    /*
-    if (!twa) {
+    if (!WebApp) {
       console.error("Telegram WebApp не инициализирован");
       return;
     }
+    /*
     const trimmedName = carName.trim();
     if (!trimmedName) {
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Ошибка",
         message: "Пожалуйста, введите название автомобиля",
         buttons: [{ type: "ok" }],
@@ -30,7 +30,7 @@ const CarForm = () => {
       return;
     }
     if (trimmedName.length > MAX_NAME_LENGTH) {
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Ошибка",
         message: `Название не должно превышать ${MAX_NAME_LENGTH} символов`,
         buttons: [{ type: "ok" }],
@@ -39,7 +39,7 @@ const CarForm = () => {
     }
     const price = Number(carPrice);
     if (!carPrice.trim() || isNaN(price)) {
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Ошибка",
         message: "Пожалуйста, введите корректную цену",
         buttons: [{ type: "ok" }],
@@ -47,7 +47,7 @@ const CarForm = () => {
       return;
     }
     if (price < 0) {
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Ошибка",
         message: "Цена не может быть отрицательной",
         buttons: [{ type: "ok" }],
@@ -55,7 +55,7 @@ const CarForm = () => {
       return;
     }
     if (price > MAX_PRICE) {
-      twa.showPopup({
+      WebApp.showPopup({
         title: "Ошибка",
         message: `Цена не может превышать ${MAX_PRICE}`,
         buttons: [{ type: "ok" }],
@@ -69,29 +69,30 @@ const CarForm = () => {
       carModel: Number(carModel),
     };
 
-    twa.showPopup({
+    WebApp.showPopup({
       title: "data",
       message: JSON.stringify(data),
       buttons: [{ type: "ok" }],
     });
 
     sendDataToServer(data);
-  }, [twa, carName, carPrice, carModel, sendDataToServer]);
+  }, [carName, carPrice, carModel, sendDataToServer]);
 
   useEffect(() => {
-    twa.showPopup({
+    WebApp.showPopup({
       title: "Отладочная информация",
       message: `carName: ${carName}\ncarPrice: ${carPrice}\ncarModel: ${carModel}`,
       buttons: [{ type: "ok" }],
     });
+
     WebApp.MainButton.setText("Сохранить");
     WebApp.MainButton.setBackgroundColor("#2481cc");
     WebApp.MainButton.onClick(onSendData);
     WebApp.MainButton.show();
     return () => {
-      twa.MainButton.offClick(onSendData);
+      WebApp.MainButton.offClick(onSendData);
     };
-  }, [twa, onSendData]);
+  }, [onSendData, carName, carPrice, carModel]);
 
   useEffect(() => {
     if (!WebApp?.MainButton) {

@@ -8,7 +8,7 @@ const CarForm = () => {
   const [carName, setCarName] = useState("");
   const [carPrice, setCarPrice] = useState("");
   const [carModel, setCarModel] = useState("0");
-  const { tg } = useTelegram();
+  const { tg, BOT_USERNAME } = useTelegram();
 
   const onSendData = useCallback(() => {
     // Проверяем наличие tg
@@ -32,13 +32,12 @@ const CarForm = () => {
       carPrice: Number(carPrice),
       carModel: Number(carModel),
     };
-
+    // ПЕРЕДЕЛАТЬ НА fetch
     try {
-      const botUsername = "ssv_test_bot";
       const params = new URLSearchParams(data);
       const callbackData = `car_data:${params.toString()}`;
       const encodedCallbackData = encodeURIComponent(callbackData);
-      const url = `https://t.me/${botUsername}?start=${encodedCallbackData}`;
+      const url = `https://t.me/${BOT_USERNAME}?start=${encodedCallbackData}`;
       tg.showAlert(`url: ${url}`);
 
       // Отправляем сообщение через URL

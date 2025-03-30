@@ -23,9 +23,14 @@ export const useTelegram = () => {
   //   }
   // };
 
+  const BOT_USERNAME =
+    new URLSearchParams(window.location.search).get("bot_username") ||
+    "unknown_bot_username"; // ssv_test_bot
+
   return {
     tg,
     user: tg?.initDataUnsafe?.user,
+    BOT_USERNAME,
     onClose,
     onToggleButton,
   };

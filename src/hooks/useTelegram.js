@@ -8,17 +8,54 @@ const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
 
 /**
+ * Копирует текст в буфер обмена
+ * @param {string} text - Текст для копирования
+ * @returns {Promise<void>}
+ */
+const copyToClipboard = async (text) => {
+  try {
+    await navigator.clipboard.writeText(text);
+  } catch (err) {
+    console.error("Ошибка при копировании в буфер обмена:", err);
+  }
+};
+
+/**
  * Обработчик ошибок для HTTP запросов
  * @param {Error} error - Объект ошибки
  * @param {Object} WebApp - Объект Telegram WebApp
  * @returns {void}
  */
 const handleError = (error, WebApp) => {
-  if (error.name === "AbortError") {
-    WebApp.showAlert("Запрос превысил время ожидания");
-    return;
-  }
-  WebApp.showAlert(`Ошибка: ${error.message}`);
+  if (!WebApp) return;
+
+  const errorMessage =
+    error.name === "AbortError"
+      ? "Запрос превысил время ожидания"
+      : `Ошибка: ${error.message}`;
+
+  WebApp.showPopup(
+    {
+      title: "Ошибка",
+      message: errorMessage,
+      buttons: [
+        {
+          id: "copy",
+          type: "default",
+          text: "Копировать",
+        },
+        {
+          id: "ok",
+          type: "ok",
+        },
+      ],
+    },
+    (buttonId) => {
+      if (buttonId === "copy") {
+        copyToClipboard(errorMessage);
+      }
+    }
+  );
 };
 
 /**
@@ -157,5 +194,6 @@ export const useTelegram = () => {
     onClose,
     onToggleButton: toggleMainButton,
     sendDataToServer,
+    testErrorHandling,
   };
 };

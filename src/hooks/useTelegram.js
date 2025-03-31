@@ -1,11 +1,5 @@
-import { useCallback } from "react";
-
-const BOT_USERNAME =
-  new URLSearchParams(window.location.search).get("bot_username") ||
-  "unknown_bot_username";
-
-const SERVER_PORT =
-  new URLSearchParams(window.location.search).get("port") || 5000;
+import { useCallback, useState, useEffect } from "react";
+import { isDevMode, getServerUrl } from "../constants/serverConfig";
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
@@ -88,17 +82,7 @@ const handleError = (error, WebApp) => {
 export const useTelegram = () => {
   const WebApp = window?.Telegram?.WebApp;
   const MainButton = window?.Telegram?.WebApp?.MainButton;
-
-  if (!WebApp) {
-    console.warn("Telegram WebApp не инициализирован");
-  }
-
-  /**
-   * Закрывает Telegram WebApp
-   */
-  const isDevMode = useCallback(() => {
-    return BOT_USERNAME !== "ai_sky_net_bot";
-  }, [BOT_USERNAME]);
+  const user = WebApp.initDataUnsafe?.user;
 
   /**
    * Закрывает Telegram WebApp
@@ -138,10 +122,7 @@ export const useTelegram = () => {
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
       try {
-        const baseUrl = isDevMode()
-          ? `http://localhost:${SERVER_PORT}`
-          : `http://195.2.75.212:${SERVER_PORT}`;
-        const url = `${baseUrl}/data/`;
+        const url = `${getServerUrl()}/car/`;
 
         // // Показываем отладочную информацию
         // showMessage(
@@ -161,7 +142,7 @@ export const useTelegram = () => {
 
         const send_data = {
           ...data,
-          user_id: WebApp.initDataUnsafe?.user?.id,
+          user_id: user.id,
         };
 
         let retries = 0;
@@ -214,7 +195,7 @@ export const useTelegram = () => {
   );
 
   return {
-    user: WebApp?.initDataUnsafe?.user,
+    user,
     WebApp,
     MainButton,
     isDevMode,

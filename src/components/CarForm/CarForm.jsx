@@ -1,8 +1,8 @@
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
-import "./CarForm.css";
 import "../../styles/common.css";
+import "./CarForm.css";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
@@ -130,7 +130,7 @@ const CarForm = () => {
   return (
     <div className="twa-container">
       <div className="twa-page">
-        <h1 className="twa-title">Форма автомобиля</h1>
+        <h1 className="twa-title">Автомобиль</h1>
         <div className="twa-content">
           <div className="twa-form">
             <div className="twa-form-group">

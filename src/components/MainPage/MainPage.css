@@ -1,9 +1,3 @@
-/* Стили для MainPage теперь импортируются из common.css */
-
-.twa-content {
-  width: 100%;
-}
-
 .twa-content button {
   width: 100%;
 }

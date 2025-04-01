@@ -1,5 +1,6 @@
 import React from "react";
 import "./CarList.css";
+import "../../styles/common.css";
 
 const CarList = () => {
   return (

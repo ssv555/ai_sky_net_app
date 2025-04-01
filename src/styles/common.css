@@ -1,24 +1,52 @@
-/* Общие стили контейнера и страницы */
 .twa-container {
   min-height: 100vh;
-  background-color: var(--tg-theme-bg-color, #ffffff);
+  background-color: var(--tg-theme-bg-color, #313030);
+}
+
+.twa-header {
+  margin-bottom: 24px;
 }
 
 .twa-page {
   padding: 16px;
+  background-color: var(--tg-theme-bg-color, #313030);
+}
+
+.twa-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: var(--tg-theme-bg-color, #313030);
 }
 
 .twa-title {
   font-size: 20px;
   font-weight: 500;
-  color: var(--tg-theme-text-color, #000000);
+  color: var(--tg-theme-text-color, #9e9d9d);
   margin: 0;
+  text-align: center;
+}
+
+.twa-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background-color: var(--tg-theme-bg-color, #cad3dc);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .twa-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.twa-form-label {
+  font-size: 14px;
+  color: var(--tg-theme-hint-color, #999999);
 }
 
 /* Общие стили кнопок */
@@ -56,4 +84,8 @@
 
 .twa-button:active {
   opacity: 0.8;
+}
+
+.twa-form-group {
+  margin-bottom: 16px;
 }

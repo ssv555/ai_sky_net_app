@@ -50,3 +50,11 @@
   background-color: var(--tg-theme-bg-color, #ffffff);
   color: var(--tg-theme-text-color, #000000);
 }
+
+.twa-title {
+  margin: 0 0 16px 0;
+  padding: 0;
+  line-height: 1;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

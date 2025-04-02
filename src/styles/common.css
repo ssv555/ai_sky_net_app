@@ -21,11 +21,19 @@
 }
 
 .twa-title {
-  font-size: 20px;
+  margin: 0 0 5px 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
+  font-size: 1.2rem !important;
   font-weight: 500;
-  color: var(--tg-theme-text-color, #9e9d9d);
-  margin: 0;
+  height: fit-content !important;
+  color: var(--tg-theme-text-color, #939292);
   text-align: center;
+  display: block;
+  min-height: 0;
+  max-height: fit-content;
+  transform: scale(0.95, 0.95);
+  transform-origin: center;
 }
 
 .twa-form {
@@ -38,15 +46,9 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-.twa-content {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
 .twa-form-label {
   font-size: 14px;
-  color: var(--tg-theme-hint-color, #999999);
+  color: var(--tg-theme-hint-color, #3d3d3d);
 }
 
 /* Общие стили кнопок */

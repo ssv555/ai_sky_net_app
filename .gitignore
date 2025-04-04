@@ -2,6 +2,7 @@
 .vscode
 .idea
 .doc
+.env
 
 # dependencies
 /node_modules

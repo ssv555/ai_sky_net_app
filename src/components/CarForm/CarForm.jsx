@@ -142,6 +142,21 @@ const CarForm = () => {
         <h1 className="twa-title">Автомобиль</h1>
         <div className="twa-content">
           <div className="twa-form">
+            <div className="twa-form-group highlight-field">
+              <label className="twa-form-label">Год выпуска</label>
+              <select
+                className="twa-select"
+                name="year"
+                value={carData.year}
+                onChange={handleInputChange}
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="twa-form-group">
               <label className="twa-form-label">Регистрационный номер</label>
               <input
@@ -165,21 +180,6 @@ const CarForm = () => {
                 onChange={handleInputChange}
                 maxLength={255}
               />
-            </div>
-            <div className="twa-form-group">
-              <label className="twa-form-label">Год выпуска</label>
-              <select
-                className="twa-select"
-                name="year"
-                value={carData.year}
-                onChange={handleInputChange}
-              >
-                {years.map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
             </div>
             <div className="twa-form-group">
               <label className="twa-form-label">Объем двигателя (л)</label>

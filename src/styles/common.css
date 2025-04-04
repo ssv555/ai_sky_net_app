@@ -91,3 +91,22 @@
 .twa-form-group {
   margin-bottom: 16px;
 }
+
+.highlight-field {
+  background-color: #b5bec5;
+  border: 2px solid #765cd7;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.highlight-field .twa-form-label {
+  color: #765cd7;
+  font-weight: bold;
+}
+
+.highlight-field .twa-select {
+  border-color: #765cd7;
+  background-color: white;
+}

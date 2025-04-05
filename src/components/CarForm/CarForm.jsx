@@ -112,7 +112,7 @@ const CarForm = () => {
   useEffect(() => {
     if (carData.car_model_id && models.length > 0) {
       const model = models.find((m) => m.car_model_id === carData.car_model_id);
-      if (model && model.model_code.includes("117.352")) {
+      if (model && model.model_code.includes("117")) {
         let set_horsepower = carData.horsepower;
         if (carData.year >= 2013 && carData.year < 2016) {
           set_horsepower = 360;
@@ -191,33 +191,16 @@ const CarForm = () => {
 
   const validateForm = useCallback(() => {
     let message;
-
-    if (!carData.reg_number) {
-      message = "Пожалуйста, введите регистрационный номер";
-    }
-    if (!carData.vin) {
-      message = "Пожалуйста, введите VIN код";
-    }
-    if (!carData.year) {
+    if (!carData.car_brand_id) {
+      message = "Пожалуйста, выберите бренд";
+    } else if (!carData.car_model_id) {
+      message = "Пожалуйста, выберите модель";
+    } else if (!carData.year) {
       message = "Пожалуйста, выберите год выпуска";
-    }
-    if (!carData.engine_size) {
-      message = "Пожалуйста, введите объем двигателя";
-    }
-    if (!carData.horsepower) {
-      message = "Пожалуйста, введите мощность двигателя";
-    }
-    if (!carData.buy_price) {
-      message = "Пожалуйста, введите цену";
-    }
-    if (!carData.buy_mileage) {
-      message = "Пожалуйста, введите пробег";
-    }
-    if (!carData.transmission) {
-      message = "Пожалуйста, введите тип трансмиссии";
-    }
-    if (!carData.fuel_type) {
-      message = "Пожалуйста, выберите тип топлива";
+    } else if (!carData.vin) {
+      message = "Пожалуйста, введите VIN код";
+    } else if (!carData.reg_number) {
+      message = "Пожалуйста, введите регистрационный номер";
     }
 
     if (message) {
@@ -244,15 +227,18 @@ const CarForm = () => {
   useEffect(() => {
     if (!WebApp) return;
     try {
-      const isValid = Object.values(carData).some(
-        (value) => value !== null && value !== ""
-      );
+      const areRequiredFieldsFilled =
+        carData.car_brand_id &&
+        carData.car_model_id &&
+        carData.year &&
+        carData.vin &&
+        carData.reg_number;
 
       addFooterDebugInfo(`
         carData: ${JSON.stringify(carData, null, 2)}
       `);
 
-      if (isValid) {
+      if (areRequiredFieldsFilled) {
         MainButton.setText("Сохранить");
         MainButton.onClick(onSendData);
         MainButton.show();

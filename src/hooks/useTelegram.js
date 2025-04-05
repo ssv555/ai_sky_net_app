@@ -143,19 +143,7 @@ export const useTelegram = () => {
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
       try {
-        const url = `${getServerUrl()}/car/`;
-
-        // // Показываем отладочную информацию
-        // showMessage(
-        //   WebApp,
-        //   `Debug Info:\n` +
-        //     `isDevMode: ${isDevMode()}\n` +
-        //     `baseUrl: ${baseUrl}\n` +
-        //     `url: ${url}\n` +
-        //     `BOT_USERNAME: ${BOT_USERNAME}\n` +
-        //     `SERVER_PORTt: ${SERVER_PORT}`
-        // );
-
+        const url = `${API_BASE_URL}/car/garage/add/`;
         // // Получаем CSRF токен из мета-тега
         // const csrfToken = document.querySelector(
         //   'meta[name="csrf-token"]'
@@ -185,7 +173,9 @@ export const useTelegram = () => {
             });
 
             if (!response.ok) {
-              throw new Error(`HTTP ошибка! статус: ${response.status}`);
+              throw new Error(
+                `HTTP ошибка! статус: ${response.status}\nURL:${url}`
+              );
             }
 
             const result = await response.json();

@@ -30,9 +30,108 @@ const CarForm = () => {
     settings: "",
     datetime_ins: "",
   });
-
   const [brands, setBrands] = useState([{ car_brand_id: "", name: "" }]);
+  const [models, setModels] = useState([
+    { car_model_id: "", model_code: "", model_name: "", tuning: "" },
+  ]);
 
+  // Загрузка моделей при изменении бренда
+  useEffect(() => {
+    const fetchModels = async () => {
+      if (!carData.car_brand_id) {
+        setModels([
+          { car_model_id: "", model_code: "", model_name: "", tuning: "" },
+        ]);
+        return;
+      }
+      try {
+        setModels([]);
+        const response = await apiCar.getModels(carData.car_brand_id);
+        const filteredModels = response.data.filter(
+          (model) => model.model_name && model.model_name.trim() !== ""
+        );
+        setModels(filteredModels);
+
+        // Находим модель 117.352 CLA 45 AMGG и устанавливаем его как выбранный
+        const model_117 = filteredModels.find(
+          (model) => model.model_code === "117.352"
+        );
+        if (model_117) {
+          setCarData((prev) => ({
+            ...prev,
+            car_model_id: model_117.car_model_id,
+          }));
+        }
+      } catch (error) {
+        console.error("Ошибка при загрузке моделей:", error);
+        setModels([]);
+      }
+    };
+
+    fetchModels();
+  }, [carData.car_brand_id]);
+
+  // Установка частичного VIN при выборе модели
+  useEffect(() => {
+    if (carData.car_model_id && models.length > 0) {
+      const model = models.find((m) => m.car_model_id === carData.car_model_id);
+      if (model) {
+        const partialVin = `WDD${model.model_code.replace(".", "")}`;
+        setCarData((prev) => ({
+          ...prev,
+          vin: partialVin,
+        }));
+
+        if (model.model_name.includes("AMG")) {
+          // Проверяем наличие AMG в названии модели и устанавливаем тип топлива
+          setCarData((prev) => ({
+            ...prev,
+            fuel_type: "Бензин",
+          }));
+
+          // Проверяем наличие AMG в названии модели и устанавливаем Трансмиссия = "Робот", КПП, АКПП, Робот, Вариатор
+          setCarData((prev) => ({
+            ...prev,
+            transmission: "Робот",
+          }));
+        }
+
+        // Устанавливаем фокус на поле VIN
+        setTimeout(() => {
+          const vinInput = document.querySelector('input[name="vin"]');
+          if (vinInput) {
+            vinInput.focus();
+            vinInput.setSelectionRange(partialVin.length, partialVin.length);
+          }
+        }, 0);
+      }
+    }
+  }, [carData.car_model_id, models]);
+
+  // Установка мощности двигателя в зависимости от модели и года выпуска
+  useEffect(() => {
+    if (carData.car_model_id && models.length > 0) {
+      const model = models.find((m) => m.car_model_id === carData.car_model_id);
+      if (model && model.model_code.includes("117.352")) {
+        let set_horsepower = carData.horsepower;
+        if (carData.year >= 2013 && carData.year < 2016) {
+          set_horsepower = 360;
+        } else if (carData.year >= 2016 && carData.year < 2020) {
+          set_horsepower = 381;
+        } else {
+          set_horsepower = 421;
+        }
+
+        setCarData((prev) => ({
+          ...prev,
+          horsepower: set_horsepower || 360,
+          engine_size: 2,
+        }));
+      }
+    }
+  }, [carData.car_model_id, carData.year, models]);
+
+  // Загрузка брендов
   useEffect(() => {
     const fetchBrands = async () => {
       if (brands.length > 1) return;
@@ -65,6 +164,13 @@ const CarForm = () => {
 
   const years = Array.from({ length: 2025 - 1950 + 1 }, (_, i) => 2025 - i);
   const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];
+  const transmissionTypes = [
+    "Не установлено",
+    "КПП",
+    "АКПП",
+    "Робот",
+    "Вариатор",
+  ];
 
   const addFooterDebugInfo = useCallback(
     (text, append = false) => {
@@ -201,6 +307,29 @@ const CarForm = () => {
                 className="twa-form-label-required"
                 title="обязательно для заполнения"
               >
+                Модель
+              </label>
+              <select
+                className="twa-select"
+                name="car_model_id"
+                value={carData.car_model_id}
+                onChange={handleInputChange}
+              >
+                <option value="">Выберите модель</option>
+                {models.map((model) => (
+                  <option key={model.car_model_id} value={model.car_model_id}>
+                    {`${model.model_code}. ${model.model_name} ${
+                      model.tuning ? ", " + model.tuning : ""
+                    }`}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="twa-form-group">
+              <label
+                className="twa-form-label-required"
+                title="обязательно для заполнения"
+              >
                 Год выпуска
               </label>
               <select
@@ -234,7 +363,12 @@ const CarForm = () => {
               />
             </div>
             <div className="twa-form-group">
-              <label className="twa-form-label">Регистрационный номер</label>
+              <label
+                className="twa-form-label-required"
+                title="обязательно для заполнения"
+              >
+                Регистрационный номер
+              </label>
               <input
                 className="twa-input"
                 type="text"
@@ -243,6 +377,7 @@ const CarForm = () => {
                 value={carData.reg_number}
                 onChange={handleInputChange}
                 maxLength={30}
+                required
               />
             </div>
             <div className="twa-form-group">
@@ -299,15 +434,18 @@ const CarForm = () => {
             </div>
             <div className="twa-form-group">
               <label className="twa-form-label">Трансмиссия</label>
-              <input
-                className="twa-input"
-                type="text"
+              <select
+                className="twa-select"
                 name="transmission"
-                placeholder="Введите тип трансмиссии"
                 value={carData.transmission}
                 onChange={handleInputChange}
-                maxLength={30}
-              />
+              >
+                {transmissionTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="twa-form-group">
               <label className="twa-form-label">Тип топлива</label>

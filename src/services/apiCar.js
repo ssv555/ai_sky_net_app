@@ -10,6 +10,15 @@ const apiCar = {
       throw error;
     }
   },
+  async getModels(car_brand_id) {
+    try {
+      const endpoint = `/car/models/?car_brand_id=${car_brand_id}`;
+      return await apiService().get(endpoint);
+    } catch (error) {
+      console.error("getModels. Ошибка при получении данных:", error);
+      throw error;
+    }
+  },
 };
 
 export default apiCar;

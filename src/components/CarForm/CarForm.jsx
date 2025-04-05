@@ -30,11 +30,41 @@ const CarForm = () => {
     settings: "",
     datetime_ins: "",
   });
-  // const brands = apiCar.getBrands() = [];
+
+  const [brands, setBrands] = useState([{ car_brand_id: "", name: "" }]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      if (brands.length > 1) return;
+      try {
+        setBrands([]);
+        const response = await apiCar.getBrands();
+        const filteredBrands = response.data.filter(
+          (brand) => brand.name && brand.name.trim() !== ""
+        );
+        setBrands(filteredBrands);
+
+        // Находим Mercedes-Benz и устанавливаем его как выбранный
+        const mercedes = filteredBrands.find(
+          (brand) => brand.name === "Mercedes-Benz"
+        );
+        if (mercedes) {
+          setCarData((prev) => ({
+            ...prev,
+            car_brand_id: mercedes.car_brand_id,
+          }));
+        }
+      } catch (error) {
+        console.error("Ошибка при загрузке брендов:", error);
+        setBrands([]);
+      }
+    };
+
+    fetchBrands();
+  }, [brands]);
 
   const years = Array.from({ length: 2025 - 1950 + 1 }, (_, i) => 2025 - i);
   const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];
-  const brands = [{ key: "", value: "" }];
 
   const addFooterDebugInfo = useCallback(
     (text, append = false) => {
@@ -160,8 +190,8 @@ const CarForm = () => {
               >
                 <option value="">Выберите бренд</option>
                 {brands.map((brand) => (
-                  <option key={brand.key} value={brand.key}>
-                    {brand.value}
+                  <option key={brand.car_brand_id} value={brand.car_brand_id}>
+                    {brand.name}
                   </option>
                 ))}
               </select>

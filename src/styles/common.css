@@ -110,3 +110,13 @@
   border-color: #765cd7;
   background-color: white;
 }
+
+.twa-form-label-required {
+  font-weight: bold;
+  color: var(--tg-theme-button-text-color, #dc8144);
+}
+
+.twa-form-label-required::after {
+  content: "*";
+  color: var(--tg-theme-button-text-color, #dc8144);
+}

@@ -51,6 +51,19 @@
   color: var(--tg-theme-text-color, #000000);
 }
 
+.required-field {
+  color: #ff4444;
+  margin-left: 4px;
+}
+
+.required-select {
+  background-color: #fff5f5;
+}
+
+.required-select:focus {
+  background-color: #fff5f5;
+}
+
 .twa-title {
   margin: 0 0 16px 0;
   padding: 0;

@@ -15,7 +15,7 @@ const isDevMode = () => {
   return BOT_USERNAME.toLowerCase().trim() !== "ai_sky_net_bot";
 };
 
-const getApiUrl = () => {
+export const getApiUrl = () => {
   return isDevMode()
     ? `http://localhost:${SERVER_PORT}/api/dev/srv`
     : `http://195.2.75.212:${SERVER_PORT}/api/prod/srv`;

@@ -1,16 +1,16 @@
-import { apiService } from "./apiService.js";
+import apiService from "./apiService.js";
 
 const apiCar = {
   async getBrands(params = {}) {
     try {
       const endpoint = "/api/car/brands";
-      const response = await apiService.get(endpoint);
+      const response = await apiService.get(endpoint, params);
 
       if (!response.ok) {
         throw new Error(`getBrands. HTTP error! status: ${response.status}`);
       }
 
-      return await response.data.json();
+      return await response.json();
     } catch (error) {
       console.error("getBrands. Ошибка при получении данных:", error);
       throw error;

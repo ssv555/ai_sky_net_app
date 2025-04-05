@@ -1,8 +1,9 @@
+import "../../styles/common.css";
+import "./CarForm.css";
 import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
-import "../../styles/common.css";
-import "./CarForm.css";
+//import { apiCar } from "../../services/apiCar";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
@@ -29,6 +30,7 @@ const CarForm = () => {
     settings: null,
     datetime_ins: null,
   });
+  // const brands = apiCar.getBrands() = [];
 
   const years = Array.from({ length: 2025 - 1950 + 1 }, (_, i) => 2025 - i);
   const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];

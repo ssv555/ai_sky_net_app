@@ -1,5 +1,25 @@
 import { useCallback, useState, useEffect } from "react";
-import { isDevMode, getServerUrl } from "../constants/serverConfig";
+
+const SERVER_PORT =
+  new URLSearchParams(window.location.search).get("port") || 5000;
+
+const BOT_USERNAME =
+  new URLSearchParams(window.location.search).get("bot_username") ||
+  "ssv_test_bot";
+
+const USER_ID = new URLSearchParams(window.location.search).get("user_id") || 0;
+
+const CHAT_ID = new URLSearchParams(window.location.search).get("chat_id") || 0;
+
+const isDevMode = () => {
+  return BOT_USERNAME.toLowerCase().trim() !== "ai_sky_net_bot";
+};
+
+const getApiUrl = () => {
+  return isDevMode()
+    ? `http://localhost:${SERVER_PORT}/api/dev/srv`
+    : `http://195.2.75.212:${SERVER_PORT}/api/prod/srv`;
+};
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
@@ -83,6 +103,7 @@ export const useTelegram = () => {
   const WebApp = window?.Telegram?.WebApp;
   const MainButton = window?.Telegram?.WebApp?.MainButton;
   const user = WebApp.initDataUnsafe?.user;
+  const API_BASE_URL = getApiUrl();
 
   /**
    * Закрывает Telegram WebApp
@@ -198,6 +219,13 @@ export const useTelegram = () => {
     user,
     WebApp,
     MainButton,
+
+    USER_ID,
+    CHAT_ID,
+    BOT_USERNAME,
+    SERVER_PORT,
+    API_BASE_URL,
+
     isDevMode,
     onClose,
     onToggleButton: toggleMainButton,

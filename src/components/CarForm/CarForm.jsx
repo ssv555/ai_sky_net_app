@@ -4,12 +4,40 @@ import React from "react";
 import { useState, useEffect, useCallback } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import apiCar from "../../services/apiCar";
+import {
+  setAmg45Model,
+  isAmg45Group,
+  handleModelSelection,
+  handleEnginePower,
+  setMercedesBrand,
+} from "../../groups/amg45";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
 
 const CarForm = () => {
-  const { WebApp, MainButton, sendDataToServer, isDevMode } = useTelegram();
+  const currentYear = new Date().getFullYear();
+  const years = Array.from(
+    { length: currentYear - 1950 + 1 },
+    (_, i) => currentYear - i
+  );
+  const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];
+  const transmissionTypes = [
+    "Не установлено",
+    "КПП",
+    "АКПП",
+    "Робот",
+    "Вариатор",
+  ];
+
+  const {
+    WebApp,
+    MainButton,
+    sendDataToServer,
+    isDevMode,
+    CHAT_ID,
+    BOT_USERNAME,
+  } = useTelegram();
   const { user } = useTelegram();
   const [carData, setCarData] = useState({
     car_garage_id: "",
@@ -35,7 +63,7 @@ const CarForm = () => {
     { car_model_id: "", model_code: "", model_name: "", tuning: "" },
   ]);
 
-  // Загрузка моделей при изменении бренда
+  // ЗАГРУЗКА МОДЕЛЕЙ ПРИ ИЗМЕНЕНИИ БРЕНДА
   useEffect(() => {
     const fetchModels = async () => {
       if (!carData.car_brand_id) {
@@ -51,17 +79,6 @@ const CarForm = () => {
           (model) => model.model_name && model.model_name.trim() !== ""
         );
         setModels(filteredModels);
-
-        // Находим модель 117.352 CLA 45 AMGG и устанавливаем его как выбранный
-        const model_117 = filteredModels.find(
-          (model) => model.model_code === "117.352"
-        );
-        if (model_117) {
-          setCarData((prev) => ({
-            ...prev,
-            car_model_id: model_117.car_model_id,
-          }));
-        }
       } catch (error) {
         console.error("Ошибка при загрузке моделей:", error);
         setModels([]);
@@ -71,67 +88,7 @@ const CarForm = () => {
     fetchModels();
   }, [carData.car_brand_id]);
 
-  // Установка частичного VIN при выборе модели
-  useEffect(() => {
-    if (carData.car_model_id && models.length > 0) {
-      const model = models.find((m) => m.car_model_id === carData.car_model_id);
-      if (model) {
-        const partialVin = `WDD${model.model_code.replace(".", "")}`;
-        setCarData((prev) => ({
-          ...prev,
-          vin: partialVin,
-        }));
-
-        if (model.model_name.includes("AMG")) {
-          // Проверяем наличие AMG в названии модели и устанавливаем тип топлива
-          setCarData((prev) => ({
-            ...prev,
-            fuel_type: "Бензин",
-          }));
-
-          // Проверяем наличие AMG в названии модели и устанавливаем Трансмиссия = "Робот", КПП, АКПП, Робот, Вариатор
-          setCarData((prev) => ({
-            ...prev,
-            transmission: "Робот",
-          }));
-        }
-
-        // Устанавливаем фокус на поле VIN
-        setTimeout(() => {
-          const vinInput = document.querySelector('input[name="vin"]');
-          if (vinInput) {
-            vinInput.focus();
-            vinInput.setSelectionRange(partialVin.length, partialVin.length);
-          }
-        }, 0);
-      }
-    }
-  }, [carData.car_model_id, models]);
-
-  // Установка мощности двигателя в зависимости от модели и года выпуска
-  useEffect(() => {
-    if (carData.car_model_id && models.length > 0) {
-      const model = models.find((m) => m.car_model_id === carData.car_model_id);
-      if (model && model.model_code.includes("117")) {
-        let set_horsepower = carData.horsepower;
-        if (carData.year >= 2013 && carData.year < 2016) {
-          set_horsepower = 360;
-        } else if (carData.year >= 2016 && carData.year < 2020) {
-          set_horsepower = 381;
-        } else {
-          set_horsepower = 421;
-        }
-
-        setCarData((prev) => ({
-          ...prev,
-          horsepower: set_horsepower || 360,
-          engine_size: 2,
-        }));
-      }
-    }
-  }, [carData.car_model_id, carData.year, models]);
-
-  // Загрузка брендов
+  // ЗАГРУЗКА БРЕНДОВ
   useEffect(() => {
     const fetchBrands = async () => {
       if (brands.length > 1) return;
@@ -142,17 +99,8 @@ const CarForm = () => {
           (brand) => brand.name && brand.name.trim() !== ""
         );
         setBrands(filteredBrands);
-
-        // Находим Mercedes-Benz и устанавливаем его как выбранный
-        const mercedes = filteredBrands.find(
-          (brand) => brand.name === "Mercedes-Benz"
-        );
-        if (mercedes) {
-          setCarData((prev) => ({
-            ...prev,
-            car_brand_id: mercedes.car_brand_id,
-          }));
-        }
+        console.log("filteredBrands", filteredBrands);
+        console.log("brands", brands);
       } catch (error) {
         console.error("Ошибка при загрузке брендов:", error);
         setBrands([]);
@@ -162,15 +110,43 @@ const CarForm = () => {
     fetchBrands();
   }, [brands]);
 
-  const years = Array.from({ length: 2025 - 1950 + 1 }, (_, i) => 2025 - i);
-  const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];
-  const transmissionTypes = [
-    "Не установлено",
-    "КПП",
-    "АКПП",
-    "Робот",
-    "Вариатор",
-  ];
+  // region Работа с клубом AMG 45 RUS
+
+  // Установка бренда
+  useEffect(() => {
+    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
+      if (brands.length > 1) {
+        setMercedesBrand(brands, setCarData);
+      }
+    }
+  }, [CHAT_ID, BOT_USERNAME, brands]);
+
+  // Установка модели
+  useEffect(() => {
+    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
+      if (models.length > 1) {
+        setAmg45Model(models, setCarData);
+        setCarData((prev) => ({ ...prev, year: 2013 }));
+      }
+    }
+  }, [CHAT_ID, BOT_USERNAME, models]);
+
+  // Установка лс
+  useEffect(() => {
+    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
+      if (models.length > 1) {
+        const model = models.find(
+          (m) => m.car_model_id === carData.car_model_id
+        );
+        if (model) {
+          handleModelSelection(model, setCarData);
+          handleEnginePower(model, carData.year, setCarData);
+        }
+      }
+    }
+  }, [CHAT_ID, BOT_USERNAME, carData.year]);
+
+  // endregion
 
   const addFooterDebugInfo = useCallback(
     (text, append = false) => {
@@ -345,7 +321,7 @@ const CarForm = () => {
                 placeholder="Введите VIN код"
                 value={carData.vin}
                 onChange={handleInputChange}
-                maxLength={255}
+                maxLength={MAX_NAME_LENGTH}
               />
             </div>
             <div className="twa-form-group">
@@ -362,7 +338,7 @@ const CarForm = () => {
                 placeholder="Введите регистрационный номер"
                 value={carData.reg_number}
                 onChange={handleInputChange}
-                maxLength={30}
+                maxLength={MAX_NAME_LENGTH}
                 required
               />
             </div>

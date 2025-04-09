@@ -1,4 +1,5 @@
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { copyToClipboard, showMessage, handleError } from "../utils/utils";
 
 const SERVER_PORT =
   new URLSearchParams(window.location.search).get("port") || 5000;
@@ -23,70 +24,6 @@ export const getApiUrl = () => {
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
-
-/**
- * Копирует текст в буфер обмена
- * @param {string} text - Текст для копирования
- * @returns {Promise<void>}
- */
-const copyToClipboard = async (text) => {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (err) {
-    console.error("Ошибка при копировании в буфер обмена:", err);
-  }
-};
-
-/**
- * Сообщение c кнопками - OK, COPY
- * @param {Message} message - Сообщение
- * @param {Title} title - Заголовок
- * @param {Object} WebApp - Объект Telegram WebApp
- * @returns {void}
- */
-const showMessage = (WebApp, message, title = "Сообщение") => {
-  if (!WebApp) return;
-
-  WebApp.showPopup(
-    {
-      title: title,
-      message: message,
-      buttons: [
-        {
-          id: "copy",
-          type: "default",
-          text: "Копировать",
-        },
-        {
-          id: "ok",
-          type: "ok",
-        },
-      ],
-    },
-    (buttonId) => {
-      if (buttonId === "copy") {
-        copyToClipboard(message);
-      }
-    }
-  );
-};
-
-/**
- * Обработчик ошибок для HTTP запросов
- * @param {Error} error - Объект ошибки
- * @param {Object} WebApp - Объект Telegram WebApp
- * @returns {void}
- */
-const handleError = (error, WebApp) => {
-  if (!WebApp) return;
-
-  const errorMessage =
-    error.name === "AbortError"
-      ? "Запрос превысил время ожидания"
-      : `Ошибка: ${error.message}`;
-
-  showMessage(WebApp, errorMessage, "Ошибка");
-};
 
 /**
  * Хук для работы с Telegram WebApp

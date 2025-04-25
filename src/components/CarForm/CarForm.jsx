@@ -11,6 +11,7 @@ import {
   handleEnginePower,
   setMercedesBrand,
 } from "../../groups/amg45";
+import { useAmg45Logic } from "./CarForm.amg45";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
@@ -111,41 +112,14 @@ const CarForm = () => {
   }, [brands]);
 
   // region Работа с клубом AMG 45 RUS
-
-  // Установка бренда
-  useEffect(() => {
-    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
-      if (brands.length > 1) {
-        setMercedesBrand(brands, setCarData);
-      }
-    }
-  }, [CHAT_ID, BOT_USERNAME, brands]);
-
-  // Установка модели
-  useEffect(() => {
-    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
-      if (models.length > 1) {
-        setAmg45Model(models, setCarData);
-        setCarData((prev) => ({ ...prev, year: 2013 }));
-      }
-    }
-  }, [CHAT_ID, BOT_USERNAME, models]);
-
-  // Установка лс
-  useEffect(() => {
-    if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
-      if (models.length > 1) {
-        const model = models.find(
-          (m) => m.car_model_id === carData.car_model_id
-        );
-        if (model) {
-          handleModelSelection(model, setCarData);
-          handleEnginePower(model, carData.year, setCarData);
-        }
-      }
-    }
-  }, [CHAT_ID, BOT_USERNAME, carData.year]);
-
+  useAmg45Logic({
+    brands,
+    models,
+    carData,
+    setCarData,
+    CHAT_ID,
+    BOT_USERNAME,
+  });
   // endregion
 
   const addFooterDebugInfo = useCallback(

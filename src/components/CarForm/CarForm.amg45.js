@@ -17,6 +17,38 @@ export function useAmg45Logic({
 }) {
   // Установка бренда
   useEffect(() => {
+    if (isAmg45Group(CHAT_ID, BOT_USERNAME) && brands.length > 1) {
+      setMercedesBrand(brands, setCarData);
+    }
+  }, [CHAT_ID, BOT_USERNAME, brands]);
+
+  // Установка модели и мощности двигателя
+  useEffect(() => {
+    if (isAmg45Group(CHAT_ID, BOT_USERNAME) && models.length > 1) {
+      const model = models.find((m) => m.car_model_id === carData.car_model_id);
+      if (model) {
+        setCarData((prev) => ({
+          ...prev,
+          model: model.name,
+          year: 2013,
+          enginePower: handleEnginePower(model, 2013),
+        }));
+      }
+    }
+  }, [CHAT_ID, BOT_USERNAME, carData.car_model_id, models, setCarData]);
+}
+
+/*
+export function useAmg45Logic({
+  brands,
+  models,
+  carData,
+  setCarData,
+  CHAT_ID,
+  BOT_USERNAME,
+}) {
+  // Установка бренда
+  useEffect(() => {
     if (isAmg45Group(CHAT_ID, BOT_USERNAME)) {
       if (brands.length > 1) {
         setMercedesBrand(brands, setCarData);
@@ -56,3 +88,4 @@ export function useAmg45Logic({
     setCarData,
   ]);
 }
+*/

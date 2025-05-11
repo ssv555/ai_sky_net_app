@@ -80,7 +80,7 @@ export const useTelegram = () => {
       const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
 
       try {
-        const url = `${API_BASE_URL}/car/garage/add/`;
+        const url = `${API_BASE_URL}/car/carlist/add/`;
         // // Получаем CSRF токен из мета-тега
         // const csrfToken = document.querySelector(
         //   'meta[name="csrf-token"]'

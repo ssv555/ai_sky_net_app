@@ -12,8 +12,8 @@ const CarList = () => {
             {/* Здесь будет список автомобилей */}
             <div className="twa-list-item">
               <div className="twa-list-item-content">
-                <div className="twa-list-item-title">A45 AMG</div>
                 <div className="twa-list-item-subtitle">Mercedes-Benz</div>
+                <div className="twa-list-item-title">A45 AMG</div>
               </div>
               <div className="twa-list-item-price">$50,000</div>
             </div>

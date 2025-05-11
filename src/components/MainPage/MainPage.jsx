@@ -17,8 +17,23 @@ const MainPage = () => {
   return (
     <div className="twa-container">
       <div className="twa-page">
-        <h1 className="twa-title">Some text of main page</h1>
+        <h1 className="twa-title">Главная страница</h1>
         <div className="twa-content">
+          <button
+            className="twa-button twa-button-primary"
+            onClick={() => handleNavigation("CarList")}
+          >
+            Гараж
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MainPage;
+
+/*
           <button
             className="twa-button twa-button-primary"
             onClick={() => handleNavigation("CarList")}
@@ -31,10 +46,4 @@ const MainPage = () => {
           >
             Car
           </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-export default MainPage;
+*/

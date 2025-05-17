@@ -40,6 +40,11 @@
   color: var(--tg-theme-hint-color, #999999);
 }
 
+.twa-list-item-description {
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #000000);
+}
+
 .twa-list-item-price {
   font-size: 16px;
   font-weight: 500;

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { copyToClipboard, showMessage, handleError } from "../utils/utils";
 
 const SERVER_PORT =
@@ -24,6 +24,29 @@ export const getApiUrl = () => {
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
+const CACHE_DURATION = 5 * 60 * 1000; // 5 минут
+
+const requestCache = new Map();
+
+const getCacheKey = (url, data) => {
+  return `${url}-${JSON.stringify(data)}`;
+};
+
+const getCachedResponse = (cacheKey) => {
+  const cached = requestCache.get(cacheKey);
+  if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
+    return cached.data;
+  }
+  requestCache.delete(cacheKey);
+  return null;
+};
+
+const setCachedResponse = (cacheKey, data) => {
+  requestCache.set(cacheKey, {
+    data,
+    timestamp: Date.now(),
+  });
+};
 
 /**
  * Хук для работы с Telegram WebApp
@@ -41,6 +64,7 @@ export const useTelegram = () => {
   const MainButton = window?.Telegram?.WebApp?.MainButton;
   const user = WebApp.initDataUnsafe?.user;
   const API_BASE_URL = getApiUrl();
+  const abortControllerRef = useRef(null);
 
   /**
    * Закрывает Telegram WebApp
@@ -76,16 +100,26 @@ export const useTelegram = () => {
         return;
       }
 
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), TIMEOUT);
+      const url = `${API_BASE_URL}/car/carlist/add/`;
+      const cacheKey = getCacheKey(url, data);
+      const cachedResponse = getCachedResponse(cacheKey);
+
+      if (cachedResponse) {
+        WebApp.showAlert("Данные успешно отправлены (из кэша)");
+        return cachedResponse;
+      }
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      abortControllerRef.current = new AbortController();
+      const timeoutId = setTimeout(
+        () => abortControllerRef.current.abort(),
+        TIMEOUT
+      );
 
       try {
-        const url = `${API_BASE_URL}/car/carlist/add/`;
-        // // Получаем CSRF токен из мета-тега
-        // const csrfToken = document.querySelector(
-        //   'meta[name="csrf-token"]'
-        // )?.content;
-
         const send_data = {
           ...data,
           user_id: user.id,
@@ -101,12 +135,9 @@ export const useTelegram = () => {
               mode: "cors",
               headers: {
                 "Content-Type": "application/json",
-                // "X-CSRF-Token": csrfToken || "",
-                // "X-Requested-With": "XMLHttpRequest",
               },
-              // credentials: "include",
               body: JSON.stringify(send_data),
-              signal: controller.signal,
+              signal: abortControllerRef.current.signal,
             });
 
             if (!response.ok) {
@@ -116,11 +147,16 @@ export const useTelegram = () => {
             }
 
             const result = await response.json();
+            setCachedResponse(cacheKey, result);
             WebApp.showAlert("Данные успешно отправлены");
             return result;
           } catch (error) {
             lastError = error;
             handleError(error, WebApp);
+
+            if (error.name === "AbortError") {
+              throw error;
+            }
 
             retries++;
             if (retries < MAX_RETRIES) {
@@ -139,8 +175,16 @@ export const useTelegram = () => {
         clearTimeout(timeoutId);
       }
     },
-    [WebApp, isDevMode]
+    [WebApp, user, API_BASE_URL]
   );
+
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   return {
     user,

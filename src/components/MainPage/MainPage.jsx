@@ -2,6 +2,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import "../../styles/common.css";
 import "./MainPage.css";
+import Button from "../ui/Button";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -19,12 +20,18 @@ const MainPage = () => {
       <div className="twa-page">
         <h1 className="twa-title">Главная страница</h1>
         <div className="twa-content">
-          <button
-            className="twa-button twa-button-primary"
+          <Button
+            title="Гараж"
+            variant="primary"
+            fullWidth
             onClick={() => handleNavigation("CarList")}
-          >
-            Гараж
-          </button>
+          />
+          <Button>
+            <span>
+              <h3>Строка 1</h3>
+              <h4>Строка 2</h4>
+            </span>
+          </Button>
         </div>
       </div>
     </div>
@@ -34,16 +41,16 @@ const MainPage = () => {
 export default MainPage;
 
 /*
-          <button
-            className="twa-button twa-button-primary"
+          <Button
+            title="Car list"
+            variant="primary"
+            fullWidth
             onClick={() => handleNavigation("CarList")}
-          >
-            Car list
-          </button>
-          <button
-            className="twa-button twa-button-primary"
+          />
+          <Button
+            title="Car"
+            variant="primary"
+            fullWidth
             onClick={() => handleNavigation("CarForm")}
-          >
-            Car
-          </button>
+          />
 */

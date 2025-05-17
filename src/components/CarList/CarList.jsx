@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./CarList.css";
 import "../../styles/common.css";
 import apiCar from "../../services/apiCar";
@@ -6,24 +6,64 @@ import { useTelegram } from "../../hooks/useTelegram";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const { USER_ID } = useTelegram();
 
   useEffect(() => {
-    if (USER_ID && USER_ID !== 0) {
-      apiCar.getCarList(USER_ID).then((data) => {
-        // setCars(data);
-        // console.log("setCars:", data);
-        try {
-          setCars([]);
-          const carlist = data.data;
-          setCars(carlist);
-        } catch (error) {
-          console.error("Ошибка при загрузке списка автомобилей:", error);
-          setCars([]);
-        }
-      });
-    }
+    const fetchCars = async () => {
+      if (!USER_ID || USER_ID === 0) return;
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const { data } = await apiCar.getCarList(USER_ID);
+        setCars(data || []);
+      } catch (error) {
+        console.error("Ошибка при загрузке списка автомобилей:", error);
+        setError("Не удалось загрузить список автомобилей");
+        setCars([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCars();
   }, [USER_ID]);
+
+  const memoizedCars = useMemo(() => {
+    return cars.map((car) => ({
+      ...car,
+      displayName: `${car.brand_name} ${car.model_name} (${car.model_code}, ${car.year})`,
+    }));
+  }, [cars]);
+
+  if (isLoading) {
+    return (
+      <div className="twa-container">
+        <div className="twa-page">
+          <h1 className="twa-title">Список автомобилей</h1>
+          <div className="twa-content">
+            <div className="twa-loading">Загрузка...</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="twa-container">
+        <div className="twa-page">
+          <h1 className="twa-title">Список автомобилей</h1>
+          <div className="twa-content">
+            <div className="twa-error">{error}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="twa-container">
@@ -31,15 +71,19 @@ const CarList = () => {
         <h1 className="twa-title">Список автомобилей</h1>
         <div className="twa-content">
           <div className="twa-list">
-            {cars.map((car, index) => (
+            {memoizedCars.map((car, index) => (
               <div
                 key={car.id}
                 className={`twa-list-item ${index % 2 === 0 ? "even" : "odd"}`}
               >
                 <div className="twa-list-item-content">
-                  <div className="twa-list-item-subtitle">{car.garage_id}</div>
+                  <div className="twa-list-item-subtitle">
+                    ID: {car.car_garage_id}
+                  </div>
                   <div className="twa-list-item-title">{car.reg_number}</div>
-                  <div className="twa-list-item-description">{`${car.brand_name} ${car.model_name} (${car.model_code}, ${car.year})`}</div>
+                  <div className="twa-list-item-description">
+                    {car.displayName}
+                  </div>
                 </div>
               </div>
             ))}

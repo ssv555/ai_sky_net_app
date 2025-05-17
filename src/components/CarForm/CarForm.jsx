@@ -1,7 +1,6 @@
 import "../../styles/common.css";
 import "./CarForm.css";
-import React from "react";
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import apiCar from "../../services/apiCar";
 import {
@@ -18,18 +17,21 @@ const MAX_PRICE = 1000000000;
 
 const CarForm = () => {
   const currentYear = new Date().getFullYear();
-  const years = Array.from(
-    { length: currentYear - 1950 + 1 },
-    (_, i) => currentYear - i
+  const years = useMemo(
+    () =>
+      Array.from({ length: currentYear - 1950 + 1 }, (_, i) => currentYear - i),
+    [currentYear]
   );
-  const fuelTypes = ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"];
-  const transmissionTypes = [
-    "Не установлено",
-    "КПП",
-    "АКПП",
-    "Робот",
-    "Вариатор",
-  ];
+
+  const fuelTypes = useMemo(
+    () => ["Бензин", "Дизель", "Гибрид", "Электрический", "Газ"],
+    []
+  );
+
+  const transmissionTypes = useMemo(
+    () => ["Не установлено", "КПП", "АКПП", "Робот", "Вариатор"],
+    []
+  );
 
   const {
     WebApp,
@@ -40,6 +42,7 @@ const CarForm = () => {
     BOT_USERNAME,
   } = useTelegram();
   const { user } = useTelegram();
+
   const [carData, setCarData] = useState({
     car_garage_id: "",
     tg_user_id: user?.id,
@@ -59,10 +62,18 @@ const CarForm = () => {
     settings: "",
     datetime_ins: "",
   });
+
   const [brands, setBrands] = useState([{ car_brand_id: "", name: "" }]);
   const [models, setModels] = useState([
     { car_model_id: "", model_code: "", model_name: "", tuning: "" },
   ]);
+
+  const updateCarData = useCallback((updates) => {
+    setCarData((prev) => ({
+      ...prev,
+      ...updates,
+    }));
+  }, []);
 
   // ЗАГРУЗКА МОДЕЛЕЙ ПРИ ИЗМЕНЕНИИ БРЕНДА
   useEffect(() => {
@@ -97,11 +108,9 @@ const CarForm = () => {
         setBrands([]);
         const response = await apiCar.getBrands();
         const filteredBrands = response.data.filter(
-          (brand) => brand.name && brand.name.trim() !== ""
+          (brand) => brand.brand_name && brand.brand_name.trim() !== ""
         );
         setBrands(filteredBrands);
-        console.log("filteredBrands", filteredBrands);
-        console.log("brands", brands);
       } catch (error) {
         console.error("Ошибка при загрузке брендов:", error);
         setBrands([]);
@@ -116,7 +125,7 @@ const CarForm = () => {
     brands,
     models,
     carData,
-    setCarData,
+    setCarData: updateCarData,
     CHAT_ID,
     BOT_USERNAME,
   });
@@ -201,15 +210,15 @@ const CarForm = () => {
     } catch (error) {
       MainButton.hide();
     }
-  }, [WebApp, MainButton, carData]);
+  }, [WebApp, MainButton, carData, onSendData, addFooterDebugInfo]);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setCarData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value } = e.target;
+      updateCarData({ [name]: value });
+    },
+    [updateCarData]
+  );
 
   return (
     <div className="twa-container">
@@ -233,7 +242,7 @@ const CarForm = () => {
                 <option value="">Выберите бренд</option>
                 {brands.map((brand) => (
                   <option key={brand.car_brand_id} value={brand.car_brand_id}>
-                    {brand.name}
+                    {brand.brand_name}
                   </option>
                 ))}
               </select>

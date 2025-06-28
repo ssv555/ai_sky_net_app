@@ -154,48 +154,57 @@ const ProductsForm = () => {
     }
   }, [selectedDate, selectedReportType, tg_user_id, isDevMode]);
 
-  const handleCopy = useCallback(async () => {
+  // Функция для генерации CSV контента
+  const generateCSVContent = useCallback(() => {
     if (
       !productsData ||
       !Array.isArray(productsData) ||
       productsData.length === 0
     ) {
+      return null;
+    }
+
+    // Создаем заголовки CSV
+    const csvSeparator = ";";
+    const headers = tableColumns.map((col) => col.title).join(csvSeparator);
+
+    // Создаем строки данных
+    const rows = productsData.map((item) => {
+      return tableColumns
+        .map((col) => {
+          let value = item[col.key];
+
+          // Применяем рендер функцию если есть
+          if (col.render) {
+            value = col.render(value);
+          }
+
+          // Экранируем запятые и кавычки в значениях
+          if (
+            typeof value === "string" &&
+            (value.includes(csvSeparator) || value.includes('"'))
+          ) {
+            value = `"${value.replace(/"/g, '""')}"`;
+          }
+
+          return value || "";
+        })
+        .join(csvSeparator);
+    });
+
+    // Объединяем заголовки и данные
+    return [headers, ...rows].join("\n");
+  }, [productsData, tableColumns]);
+
+  const handleCopy = useCallback(async () => {
+    const csvContent = generateCSVContent();
+    if (!csvContent) {
       console.log("Нет данных для копирования");
+      showNotification("Нет данных для копирования", "info");
       return;
     }
 
     try {
-      // Создаем заголовки CSV
-      const csvSeparator = ";";
-      const headers = tableColumns.map((col) => col.title).join(csvSeparator);
-
-      // Создаем строки данных
-      const rows = productsData.map((item) => {
-        return tableColumns
-          .map((col) => {
-            let value = item[col.key];
-
-            // Применяем рендер функцию если есть
-            if (col.render) {
-              value = col.render(value);
-            }
-
-            // Экранируем запятые и кавычки в значениях
-            if (
-              typeof value === "string" &&
-              (value.includes(csvSeparator) || value.includes('"'))
-            ) {
-              value = `"${value.replace(/"/g, '""')}"`;
-            }
-
-            return value || "";
-          })
-          .join(csvSeparator);
-      });
-
-      // Объединяем заголовки и данные
-      const csvContent = [headers, ...rows].join("\n");
-
       // Копируем в буфер обмена
       await navigator.clipboard.writeText(csvContent);
       console.log("Данные скопированы в буфер обмена");
@@ -206,50 +215,17 @@ const ProductsForm = () => {
       console.error("Ошибка при копировании:", error);
       showNotification("Ошибка при копировании данных", "error");
     }
-  }, [productsData, tableColumns]);
+  }, [generateCSVContent, showNotification]);
 
   const handleCopyWin1251 = useCallback(async () => {
-    if (
-      !productsData ||
-      !Array.isArray(productsData) ||
-      productsData.length === 0
-    ) {
+    const csvContent = generateCSVContent();
+    if (!csvContent) {
       console.log("Нет данных для копирования");
+      showNotification("Нет данных для копирования", "info");
       return;
     }
 
     try {
-      // Создаем заголовки CSV
-      const csvSeparator = ";";
-      const headers = tableColumns.map((col) => col.title).join(csvSeparator);
-
-      // Создаем строки данных
-      const rows = productsData.map((item) => {
-        return tableColumns
-          .map((col) => {
-            let value = item[col.key];
-
-            // Применяем рендер функцию если есть
-            if (col.render) {
-              value = col.render(value);
-            }
-
-            // Экранируем запятые и кавычки в значениях
-            if (
-              typeof value === "string" &&
-              (value.includes(csvSeparator) || value.includes('"'))
-            ) {
-              value = `"${value.replace(/"/g, '""')}"`;
-            }
-
-            return value || "";
-          })
-          .join(csvSeparator);
-      });
-
-      // Объединяем заголовки и данные
-      const csvContent = [headers, ...rows].join("\n");
-
       // Конвертируем в Win-1251
       const encoder = new TextEncoder();
       const decoder = new TextDecoder("windows-1251");
@@ -271,7 +247,7 @@ const ProductsForm = () => {
       console.error("Ошибка при копировании:", error);
       showNotification("Ошибка при копировании данных", "error");
     }
-  }, [productsData, tableColumns]);
+  }, [generateCSVContent, showNotification]);
 
   const handleDropdownItemClick = useCallback(
     (item) => {

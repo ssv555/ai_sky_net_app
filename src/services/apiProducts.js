@@ -5,56 +5,57 @@ const apiProducts = {
     const endpoint = `/products/${short_endpoint}/?tg_user_id=${tg_user_id}&date=${date}`;
     return await apiService().get(endpoint);
   },
-  async getProducts(tg_user_id, date) {
+
+  async getDay(tg_user_id, date) {
     try {
-      return await this.getCommon(tg_user_id, date, "get");
+      return await this.getCommon(tg_user_id, date, "get_day");
     } catch (error) {
-      console.error("apiProducts.getProducts. Ошибка:", error);
+      console.error("apiProducts.getDay. Ошибка:", error);
       throw error;
     }
   },
-  async getSum(tg_user_id, date) {
+  async getDaySum(tg_user_id, date) {
     try {
-      return await this.getCommon(tg_user_id, date, "get_sum");
+      return await this.getCommon(tg_user_id, date, "get_day_sum");
     } catch (error) {
-      console.error("apiProducts.getSum. Ошибка:", error);
+      console.error("apiProducts.getDaySum. Ошибка:", error);
       throw error;
     }
   },
-  async getSumMonByDays(tg_user_id, date) {
+
+  async getMonth(tg_user_id, date) {
     try {
-      return await this.getCommon(tg_user_id, date, "get_sum_mon_by_days");
+      return await this.getCommon(tg_user_id, date, "get_month");
     } catch (error) {
-      console.error("apiProducts.getSumMonByDays. Ошибка:", error);
+      console.error("apiProducts.getMonth. Ошибка:", error);
       throw error;
     }
   },
-  async getSumMon(tg_user_id, date) {
+  async getMonthSum(tg_user_id, date) {
     try {
-      return await this.getCommon(tg_user_id, date, "get_sum_mon");
+      return await this.getCommon(tg_user_id, date, "get_month_sum");
     } catch (error) {
-      console.error("apiProducts.getSumMon. Ошибка:", error);
+      console.error("apiProducts.getMonthSum. Ошибка:", error);
+      throw error;
+    }
+  },
+
+  async getYear(tg_user_id, date) {
+    try {
+      return await this.getCommon(tg_user_id, date, "get_year");
+    } catch (error) {
+      console.error("apiProducts.getYear. Ошибка:", error);
+      throw error;
+    }
+  },
+  async getYearSum(tg_user_id, date) {
+    try {
+      return await this.getCommon(tg_user_id, date, "get_year_sum");
+    } catch (error) {
+      console.error("apiProducts.getYearSum. Ошибка:", error);
       throw error;
     }
   },
 };
 
 export default apiProducts;
-
-/*
-// использовать этот сервис следующим образом:
-
-import apiService from './services/apiService';
-
-// GET запрос
-const data = await apiService.get('/users', { page: 1, limit: 10 });
-
-// POST запрос
-const newUser = await apiService.post('/users', { name: 'John', age: 30 });
-
-// PUT запрос
-const updatedUser = await apiService.put('/users/1', { name: 'John Updated' });
-
-// DELETE запрос
-await apiService.delete('/users/1');
-*/

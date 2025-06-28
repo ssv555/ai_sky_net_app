@@ -5,6 +5,7 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Button from "../ui/Button";
 import Table from "../ui/Table";
+import "./ProductsForm.css";
 
 const ProductsForm = () => {
   const {
@@ -22,15 +23,18 @@ const ProductsForm = () => {
   const [selectedReportType, setSelectedReportType] = useState(0);
   const [lastRefreshTime, setLastRefreshTime] = useState(0);
   const [isRefreshDisabled, setIsRefreshDisabled] = useState(false);
+  const [isControlsDisabled, setIsControlsDisabled] = useState(false);
   const [productsData, setProductsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(0);
+  const [totalSum, setTotalSum] = useState(0);
 
   const REFRESH_COOLDOWN = 3000; // 5 секунд в миллисекундах
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
-    { value: 1, label: "Сумма за месяц по дням" },
-    { value: 2, label: "Сумма за год по месяцам" },
+    { value: 1, label: "Сумма за месяц" },
+    { value: 2, label: "Сумма за год" },
   ];
 
   // Конфигурация колонок для таблицы
@@ -45,7 +49,8 @@ const ProductsForm = () => {
             title: "Цена",
             width: "15%",
             align: "right",
-            render: (value) => `${value?.toLocaleString() || 0} ₽`,
+            render: (value) =>
+              `${value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽`,
           },
           {
             key: "type_sell_name",
@@ -63,8 +68,8 @@ const ProductsForm = () => {
             width: "20%",
           },
         ];
-      case 1: // Сумма за месяц по дням
-      case 2: // Сумма за год по месяцам
+      case 1: // Сумма за месяц
+      case 2: // Сумма за год
         return [
           { key: "date", title: "Дата", width: "10%", align: "center" },
           { key: "total_items", title: "Кол-во", width: "10%", align: "right" },
@@ -73,7 +78,8 @@ const ProductsForm = () => {
             title: "Сумма",
             width: "40%",
             align: "right",
-            render: (value) => `${value?.toLocaleString() || 0} ₽`,
+            render: (value) =>
+              `${value?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽`,
           },
         ];
       default:
@@ -89,37 +95,50 @@ const ProductsForm = () => {
     }
     setLastRefreshTime(now);
     setIsRefreshDisabled(true);
+    setIsControlsDisabled(true);
     setIsLoading(true);
     console.log("Обновление данных...");
 
     try {
-      let response;
+      let resData; // Данные
+      let resTotal; // Итоги
       const dateStr = selectedDate.toISOString().split("T")[0];
-      // Debug
-      const user_id = tg_user_id || 1264828537;
+
+      const user_id = tg_user_id || (isDevMode() === true ? 1264828537 : null);
       console.log(
         `user_id: ${user_id}, dateStr: ${dateStr}, selectedReportType: ${selectedReportType}`
       );
 
       switch (selectedReportType) {
         case 0:
-          response = await apiProducts.getProducts(user_id, dateStr);
+          resData = await apiProducts.getDay(user_id, dateStr);
+          resTotal = await apiProducts.getDaySum(user_id, dateStr);
           break;
         case 1:
-          response = await apiProducts.getSumMonByDays(user_id, dateStr);
+          resData = await apiProducts.getMonth(user_id, dateStr);
+          resTotal = await apiProducts.getMonthSum(user_id, dateStr);
           break;
         case 2:
-          response = await apiProducts.getSumMon(user_id, dateStr);
+          resData = await apiProducts.getYear(user_id, dateStr);
+          resTotal = await apiProducts.getYearSum(user_id, dateStr);
           break;
         default:
-          response = { data: [] };
+          resData = { data: [] };
       }
 
-      setProductsData(response.data || []);
-      console.log("Данные получены:", response.data);
+      setProductsData(resData.data || []);
+
+      // Обновляем тестовые данные для количества и суммы
+      // console.log(`resTotal:`, resTotal);
+      setTotalCount(resTotal.data[0]?.total_items || 0);
+      setTotalSum(resTotal.data[0]?.total_cost || 0);
+
+      console.log("Данные получены:", resData.data);
     } catch (error) {
       console.error("Ошибка при получении данных:", error);
       setProductsData([]);
+      setTotalCount(0);
+      setTotalSum(0);
       if (WebApp) {
         WebApp.showAlert("Ошибка при загрузке данных");
       }
@@ -130,6 +149,7 @@ const ProductsForm = () => {
     // Разблокируем кнопку через 5 секунд
     setTimeout(() => {
       setIsRefreshDisabled(false);
+      setIsControlsDisabled(false);
     }, REFRESH_COOLDOWN);
   }, [lastRefreshTime, selectedReportType, selectedDate, tg_user_id, WebApp]);
 
@@ -156,6 +176,7 @@ const ProductsForm = () => {
               dateFormat="yyyy-MM-dd"
               className="twa-datepicker"
               placeholderText="Выберите дату"
+              disabled={isControlsDisabled}
             />
           </div>
           <div className="twa-report-type-container">
@@ -163,6 +184,7 @@ const ProductsForm = () => {
               value={selectedReportType}
               onChange={(e) => setSelectedReportType(Number(e.target.value))}
               className="twa-select"
+              disabled={isControlsDisabled}
             >
               {reportTypes.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -179,6 +201,19 @@ const ProductsForm = () => {
               enabled={!isRefreshDisabled}
               onClick={handleRefresh}
             />
+          </div>
+        </div>
+
+        <div className="twa-summary-container">
+          <div className="twa-summary-item">
+            <span className="twa-summary-label">Кол-во:</span>
+            <span className="twa-summary-value">{totalCount}</span>
+          </div>
+          <div className="twa-summary-item">
+            <span className="twa-summary-label">Итого:</span>
+            <span className="twa-summary-value total">
+              {totalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽
+            </span>
           </div>
         </div>
 

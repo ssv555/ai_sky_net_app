@@ -26,6 +26,12 @@ const MainPage = () => {
             fullWidth
             onClick={() => handleNavigation("CarList")}
           />
+          <Button
+            title="Товары"
+            variant="primary"
+            fullWidth
+            onClick={() => handleNavigation("ProductsForm")}
+          />
           <Button>
             <span>
               <h3>Строка 1</h3>

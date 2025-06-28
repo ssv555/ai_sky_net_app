@@ -4,7 +4,149 @@
 }
 
 .twa-header {
-  margin-bottom: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--tg-theme-bg-color, #313030);
+  border-bottom: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  padding: 12px 16px;
+  margin-bottom: 0;
+}
+
+.twa-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: 40px;
+  gap: 12px;
+}
+
+.twa-datepicker-container {
+  display: flex;
+  align-items: center;
+}
+
+.twa-report-type-container {
+  display: flex;
+  align-items: center;
+}
+
+.twa-refresh-button-container {
+  display: flex;
+  align-items: center;
+}
+
+.twa-refresh-button-container .telegram-button {
+  padding: 8px 16px;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.twa-datepicker {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+  border: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--tg-theme-text-color, #ffffff);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.twa-datepicker:focus {
+  border-color: var(--tg-theme-button-color, #2481cc);
+  box-shadow: 0 0 0 2px rgba(36, 129, 204, 0.2);
+}
+
+.twa-datepicker::placeholder {
+  color: var(--tg-theme-hint-color, #8e8e8e);
+}
+
+.twa-select {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+  border: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  border-radius: 8px;
+  padding: 8px 12px;
+  color: var(--tg-theme-text-color, #ffffff);
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease;
+  min-width: 140px;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238e8e8e' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.twa-select:focus {
+  border-color: var(--tg-theme-button-color, #2481cc);
+  box-shadow: 0 0 0 2px rgba(36, 129, 204, 0.2);
+}
+
+.twa-select option {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+  color: var(--tg-theme-text-color, #ffffff);
+}
+
+/* Стили для календаря DatePicker */
+.react-datepicker {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a) !important;
+  border: 1px solid var(--tg-theme-hint-color, #4a4a4a) !important;
+  border-radius: 12px !important;
+  font-family: inherit !important;
+}
+
+.react-datepicker__header {
+  background-color: var(--tg-theme-bg-color, #313030) !important;
+  border-bottom: 1px solid var(--tg-theme-hint-color, #4a4a4a) !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.react-datepicker__current-month {
+  color: var(--tg-theme-text-color, #ffffff) !important;
+  font-weight: 500 !important;
+}
+
+.react-datepicker__day-name {
+  color: var(--tg-theme-hint-color, #8e8e8e) !important;
+}
+
+.react-datepicker__day {
+  color: var(--tg-theme-text-color, #ffffff) !important;
+  border-radius: 6px !important;
+}
+
+.react-datepicker__day:hover {
+  background-color: var(--tg-theme-button-color, #2481cc) !important;
+  color: var(--tg-theme-button-text-color, #ffffff) !important;
+}
+
+.react-datepicker__day--selected {
+  background-color: var(--tg-theme-button-color, #2481cc) !important;
+  color: var(--tg-theme-button-text-color, #ffffff) !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--tg-theme-button-color, #2481cc) !important;
+  color: var(--tg-theme-button-text-color, #ffffff) !important;
+}
+
+.react-datepicker__navigation {
+  border-color: var(--tg-theme-hint-color, #8e8e8e) !important;
+}
+
+.react-datepicker__navigation:hover {
+  border-color: var(--tg-theme-text-color, #ffffff) !important;
+}
+
+.react-datepicker__month-container {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a) !important;
 }
 
 .twa-page {

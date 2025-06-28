@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   base: BASE_PATH || "/",
   server: {
-    port: 3000,
+    port: 31000,
     open: true,
     host: true,
     allowedHosts: ["v570907.hosted-by-vdsina.ru"],

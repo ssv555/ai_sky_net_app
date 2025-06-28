@@ -7,7 +7,7 @@ const apiCar = {
       const endpoint = "/car/brands/";
       return await apiService().get(endpoint, params);
     } catch (error) {
-      console.error("getBrands. Ошибка при получении данных:", error);
+      console.error("getBrands. Ошибка получения данных:", error);
       throw error;
     }
   },
@@ -16,7 +16,7 @@ const apiCar = {
       const endpoint = `/car/models/?car_brand_id=${car_brand_id}`;
       return await apiService().get(endpoint);
     } catch (error) {
-      console.error("getModels. Ошибка при получении данных:", error);
+      console.error("getModels. Ошибка получения данных:", error);
       throw error;
     }
   },
@@ -27,7 +27,7 @@ const apiCar = {
       const endpoint = `/car/carlist/?tg_user_id=${user_id}`;
       return await apiService().get(endpoint);
     } catch (error) {
-      console.error("getModels. Ошибка при получении данных:", error);
+      console.error("getCarList. Ошибка получения данных:", error);
       throw error;
     }
   },

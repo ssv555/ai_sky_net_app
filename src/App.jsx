@@ -2,10 +2,11 @@ import "./App.css";
 import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
+import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
-import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import ProductsForm from "./components/Products/ProductsForm";
 
 function App() {
   const { twa } = useTelegram();
@@ -48,6 +49,11 @@ function App() {
             path="CarForm"
             element={<CarForm />}
             errorElement={<ErrorBoundary pageTitle="Форма автомобиля" />}
+          />
+          <Route
+            path="ProductsForm"
+            element={<ProductsForm />}
+            errorElement={<ErrorBoundary pageTitle="Товары" />}
           />
         </Routes>
       </div>

@@ -22,8 +22,14 @@
 }
 
 .telegram-button.secondary {
-  background-color: var(--tg-theme-secondary-bg-color, #f0f0f0);
-  color: var(--tg-theme-text-color, #000000);
+  background-color: var(--tg-theme-bg-color, #1a1a1a);
+  color: var(--tg-theme-text-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+}
+
+.telegram-button.secondary:hover:not(.disabled) {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+  border-color: var(--tg-theme-button-color, #2aabee);
 }
 
 .telegram-button:hover:not(.disabled) {

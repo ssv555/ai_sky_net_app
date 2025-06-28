@@ -23,13 +23,12 @@ const ProductsForm = () => {
   const [selectedReportType, setSelectedReportType] = useState(0);
   const [lastRefreshTime, setLastRefreshTime] = useState(0);
   const [isRefreshDisabled, setIsRefreshDisabled] = useState(false);
-  const [isControlsDisabled, setIsControlsDisabled] = useState(false);
   const [productsData, setProductsData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
 
-  const REFRESH_COOLDOWN = 3000; // 5 секунд в миллисекундах
+  const REFRESH_COOLDOWN = 2000; // в миллисекундах
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
@@ -93,9 +92,10 @@ const ProductsForm = () => {
       console.log("Обновление заблокировано - слишком частое нажатие");
       return;
     }
+
+    console.log("Начинаем блокировку контролов...");
     setLastRefreshTime(now);
     setIsRefreshDisabled(true);
-    setIsControlsDisabled(true);
     setIsLoading(true);
     console.log("Обновление данных...");
 
@@ -123,50 +123,115 @@ const ProductsForm = () => {
           resTotal = await apiProducts.getYearSum(user_id, dateStr);
           break;
         default:
-          resData = { data: [] };
+          return;
       }
 
-      setProductsData(resData.data || []);
+      // Правильно обрабатываем данные в зависимости от структуры ответа
+      const dataArray = Array.isArray(resData)
+        ? resData
+        : resData?.data && Array.isArray(resData.data)
+        ? resData.data
+        : resData?.items && Array.isArray(resData.items)
+        ? resData.items
+        : [];
 
-      // Обновляем тестовые данные для количества и суммы
-      // console.log(`resTotal:`, resTotal);
-      setTotalCount(resTotal.data[0]?.total_items || 0);
-      setTotalSum(resTotal.data[0]?.total_cost || 0);
+      const totalData = resTotal?.data?.[0] || resTotal || {};
 
-      console.log("Данные получены:", resData.data);
+      setProductsData(dataArray);
+      setTotalCount(totalData.total_items || 0);
+      setTotalSum(totalData.total_cost || 0);
     } catch (error) {
-      console.error("Ошибка при получении данных:", error);
-      setProductsData([]);
-      setTotalCount(0);
-      setTotalSum(0);
-      if (WebApp) {
-        WebApp.showAlert("Ошибка при загрузке данных");
-      }
+      console.error("Ошибка при обновлении данных:", error);
     } finally {
+      console.log("Разблокируем контролы...");
       setIsLoading(false);
+      setTimeout(() => {
+        console.log("Разблокируем кнопку обновления...");
+        setIsRefreshDisabled(false);
+      }, REFRESH_COOLDOWN);
+    }
+  }, [selectedDate, selectedReportType, tg_user_id, isDevMode]);
+
+  const handleCopy = useCallback(async () => {
+    if (
+      !productsData ||
+      !Array.isArray(productsData) ||
+      productsData.length === 0
+    ) {
+      console.log("Нет данных для копирования");
+      return;
     }
 
-    // Разблокируем кнопку через 5 секунд
-    setTimeout(() => {
-      setIsRefreshDisabled(false);
-      setIsControlsDisabled(false);
-    }, REFRESH_COOLDOWN);
-  }, [lastRefreshTime, selectedReportType, selectedDate, tg_user_id, WebApp]);
+    try {
+      // Создаем заголовки CSV
+      const csvSeparator = ";";
+      const headers = tableColumns.map((col) => col.title).join(csvSeparator);
+
+      // Создаем строки данных
+      const rows = productsData.map((item) => {
+        return tableColumns
+          .map((col) => {
+            let value = item[col.key];
+
+            // Применяем рендер функцию если есть
+            if (col.render) {
+              value = col.render(value);
+            }
+
+            // Экранируем запятые и кавычки в значениях
+            if (
+              typeof value === "string" &&
+              (value.includes(csvSeparator) || value.includes('"'))
+            ) {
+              value = `"${value.replace(/"/g, '""')}"`;
+            }
+
+            return value || "";
+          })
+          .join(csvSeparator);
+      });
+
+      // Объединяем заголовки и данные
+      const csvContent = [headers, ...rows].join("\n");
+
+      // Копируем в буфер обмена
+      await navigator.clipboard.writeText(csvContent);
+      console.log("Данные скопированы в буфер обмена");
+
+      // Показываем уведомление пользователю
+      if (WebApp?.showAlert) {
+        WebApp.showAlert("Данные скопированы в буфер обмена");
+      }
+    } catch (error) {
+      console.error("Ошибка при копировании:", error);
+      if (WebApp?.showAlert) {
+        WebApp.showAlert("Ошибка при копировании данных");
+      }
+    }
+  }, [productsData, tableColumns, WebApp]);
 
   const handleRowClick = useCallback((row, index) => {
     console.log("Клик по строке:", row, index);
     // Здесь можно добавить логику для обработки клика по строке
   }, []);
 
-  // Автоматическая загрузка данных при изменении параметров
+  // Автоматическая загрузка данных только при изменении пользователя
   useEffect(() => {
-    handleRefresh();
-  }, [selectedReportType, selectedDate, tg_user_id, WebApp]);
+    if (tg_user_id) {
+      handleRefresh();
+    }
+  }, [tg_user_id]);
 
   return (
     <div className="twa-container">
       <div className="twa-page">
         <h1 className="twa-title">Товары</h1>
+
+        {/* Отладочная информация */}
+        <div style={{ fontSize: "10px", color: "#666", marginBottom: "10px" }}>
+          isRefreshDisabled: {isRefreshDisabled.toString()}, isLoading:{" "}
+          {isLoading.toString()}
+        </div>
 
         <div className="twa-header-content">
           <div className="twa-datepicker-container">
@@ -176,7 +241,7 @@ const ProductsForm = () => {
               dateFormat="yyyy-MM-dd"
               className="twa-datepicker"
               placeholderText="Выберите дату"
-              disabled={isControlsDisabled}
+              disabled={isRefreshDisabled}
             />
           </div>
           <div className="twa-report-type-container">
@@ -184,7 +249,7 @@ const ProductsForm = () => {
               value={selectedReportType}
               onChange={(e) => setSelectedReportType(Number(e.target.value))}
               className="twa-select"
-              disabled={isControlsDisabled}
+              disabled={isRefreshDisabled}
             >
               {reportTypes.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -196,10 +261,21 @@ const ProductsForm = () => {
           <div className="twa-refresh-button-container">
             <Button
               name="refresh"
-              title="Обновить"
+              title="🔄 Обновить"
               variant="primary"
               enabled={!isRefreshDisabled}
               onClick={handleRefresh}
+            />
+            <Button
+              name="copy"
+              title="📋 Копировать"
+              variant="secondary"
+              enabled={
+                Array.isArray(productsData) &&
+                productsData.length > 0 &&
+                !isRefreshDisabled
+              }
+              onClick={handleCopy}
             />
           </div>
         </div>

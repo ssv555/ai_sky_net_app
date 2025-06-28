@@ -21,24 +21,12 @@ export const copyToClipboard = async (text) => {
 export const showMessage = (WebApp, message, title = "Сообщение") => {
   if (!WebApp) return;
 
-  WebApp.showPopup(
-    {
-      title: title,
-      message: message,
-      buttons: [
-        {
-          id: "copy",
-          type: "ok",
-          text: "Копировать",
-        },
-      ],
-    },
-    (buttonId) => {
-      if (buttonId === "copy") {
-        copyToClipboard(message);
-      }
-    }
-  );
+  // Используем showAlert вместо showPopup для совместимости с версией 6.0
+  const fullMessage = title !== "Сообщение" ? `${title}: ${message}` : message;
+  WebApp.showAlert(fullMessage);
+
+  // Копируем сообщение в буфер обмена автоматически
+  copyToClipboard(message);
 };
 
 /**

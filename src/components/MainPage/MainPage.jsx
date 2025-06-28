@@ -32,12 +32,12 @@ const MainPage = () => {
             fullWidth
             onClick={() => handleNavigation("ProductsForm")}
           />
-          <Button>
+          {/* <Button>
             <span>
               <h3>Строка 1</h3>
               <h4>Строка 2</h4>
             </span>
-          </Button>
+          </Button> */}
         </div>
       </div>
     </div>

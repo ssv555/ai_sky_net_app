@@ -163,11 +163,7 @@ const CarForm = () => {
     }
 
     if (message) {
-      WebApp.showPopup({
-        title: "Ошибка",
-        message: message,
-        buttons: [{ type: "ok" }],
-      });
+      WebApp.showAlert(message);
       return false;
     }
 

@@ -18,6 +18,13 @@
   pointer-events: none;
 }
 
+/* Стили для контейнера с кнопками */
+.twa-refresh-button-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 /* Стили для контейнера с итоговыми данными */
 .twa-summary-container {
   display: flex;

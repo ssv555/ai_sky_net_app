@@ -196,7 +196,7 @@ const ProductsForm = () => {
     return [headers, ...rows].join("\n");
   }, [productsData, tableColumns]);
 
-  const handleCopy = useCallback(async () => {
+  const handleCopyTable = useCallback(async () => {
     const csvContent = generateCSVContent();
     if (!csvContent) {
       console.log("Нет данных для копирования");
@@ -205,44 +205,28 @@ const ProductsForm = () => {
     }
 
     try {
-      // Копируем в буфер обмена
-      await navigator.clipboard.writeText(csvContent);
+      await navigator.clipboard.writeText(csvContent); // Копируем в буфер обмена
       console.log("Данные скопированы в буфер обмена");
-
-      // Показываем уведомление пользователю
-      showNotification("Данные скопированы в буфер обмена", "success");
+      showNotification("Данные скопированы в буфер обмена", "success"); // Показываем уведомление пользователю
     } catch (error) {
       console.error("Ошибка при копировании:", error);
       showNotification("Ошибка при копировании данных", "error");
     }
   }, [generateCSVContent, showNotification]);
 
-  const handleCopyWin1251 = useCallback(async () => {
-    const csvContent = generateCSVContent();
+  const handleCopyTotal = useCallback(async () => {
+    let csvContent = generateCSVContent();
     if (!csvContent) {
       console.log("Нет данных для копирования");
       showNotification("Нет данных для копирования", "info");
       return;
     }
+    csvContent += `\nКол-во;${totalCount};Итого;${totalSum}`;
 
     try {
-      // Конвертируем в Win-1251
-      const encoder = new TextEncoder();
-      const decoder = new TextDecoder("windows-1251");
-
-      // Сначала конвертируем в UTF-8 байты, затем в Win-1251
-      const utf8Bytes = encoder.encode(csvContent);
-      const win1251Content = decoder.decode(utf8Bytes);
-
-      // Копируем в буфер обмена
-      await navigator.clipboard.writeText(win1251Content);
-      console.log("Данные скопированы в буфер обмена (Win-1251)");
-
-      // Показываем уведомление пользователю
-      showNotification(
-        "Данные скопированы в буфер обмена (Win-1251)",
-        "success"
-      );
+      await navigator.clipboard.writeText(csvContent); // Копируем в буфер обмена
+      console.log("Данные скопированы в буфер обмена");
+      showNotification("Данные скопированы в буфер обмена", "success"); // Показываем уведомление пользователю
     } catch (error) {
       console.error("Ошибка при копировании:", error);
       showNotification("Ошибка при копировании данных", "error");
@@ -252,22 +236,22 @@ const ProductsForm = () => {
   const handleDropdownItemClick = useCallback(
     (item) => {
       switch (item.action) {
-        case "copy":
-          handleCopy();
+        case "copyTable":
+          handleCopyTable();
           break;
-        case "copyWin1251":
-          handleCopyWin1251();
+        case "copyTotal":
+          handleCopyTotal();
           break;
         default:
           break;
       }
     },
-    [handleCopy, handleCopyWin1251]
+    [handleCopyTable, handleCopyTotal]
   );
 
   const copyDropdownItems = [
-    { label: "UTF8", action: "copy" },
-    { label: "Win-1251", action: "copyWin1251" },
+    { label: "Таблица", action: "copyTable" },
+    { label: "Таблица + Итог", action: "copyTotal" },
   ];
 
   const handleRowClick = useCallback((row, index) => {

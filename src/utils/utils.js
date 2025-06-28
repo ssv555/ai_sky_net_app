@@ -1,5 +1,3 @@
-import { encode, decode } from "windows-1251";
-
 /**
  * Копирует текст в буфер обмена
  * @param {string} text - Текст для копирования
@@ -50,21 +48,3 @@ export const handleError = (error, WebApp) => {
 
   showMessage(errorMessage, "Ошибка");
 };
-
-/**
- * Конвертирует строку из UTF-8 в Windows-1251 (Uint8Array)
- * @param {string} utf8Str
- * @returns {Uint8Array}
- */
-export function utf8ToWin1251(utf8Str) {
-  return encode(utf8Str);
-}
-
-/**
- * Конвертирует Uint8Array из Windows-1251 в строку UTF-8
- * @param {Uint8Array} win1251Arr
- * @returns {string}
- */
-export function win1251ToUtf8(win1251Arr) {
-  return decode(win1251Arr);
-}

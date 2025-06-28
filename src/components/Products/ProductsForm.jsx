@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import { useTelegram } from "../../hooks/useTelegram";
 import apiProducts from "../../services/apiProducts";
 import DatePicker from "react-datepicker";
@@ -19,18 +25,17 @@ const ProductsForm = () => {
     showNotification,
     isTelegramEnvironment,
   } = useTelegram();
+  let lastRefreshTime = 0;
+  let isRefreshDisabled = false;
+  const REFRESH_COOLDOWN = 3000; // в миллисекундах
   const tg_user_id = user?.id || (isDevMode() === true ? 1264828537 : null);
 
+  const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedReportType, setSelectedReportType] = useState(0);
-  const [lastRefreshTime, setLastRefreshTime] = useState(0);
-  const [isRefreshDisabled, setIsRefreshDisabled] = useState(false);
   const [productsData, setProductsData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
-
-  const REFRESH_COOLDOWN = 2000; // в миллисекундах
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
@@ -89,16 +94,19 @@ const ProductsForm = () => {
   }, [selectedReportType]);
 
   const handleRefresh = useCallback(async () => {
+    if (!tg_user_id || isRefreshDisabled) {
+      return;
+    }
     const now = Date.now();
     if (now - lastRefreshTime < REFRESH_COOLDOWN) {
-      console.log("Обновление заблокировано - слишком частое нажатие");
+      console.log("Обновление заблокировано - слишком частое обновление.");
       return;
     }
 
-    setLastRefreshTime(now);
-    setIsRefreshDisabled(true);
+    lastRefreshTime = now;
+    isRefreshDisabled = true;
     setIsLoading(true);
-    console.log("Обновление данных...");
+    console.log(`${new Date(now).toISOString()}`, "Обновление данных...");
 
     try {
       let resData; // Данные
@@ -141,8 +149,7 @@ const ProductsForm = () => {
     } finally {
       setIsLoading(false);
       setTimeout(() => {
-        console.log("Разблокируем кнопку обновления...");
-        setIsRefreshDisabled(false);
+        isRefreshDisabled = false;
       }, REFRESH_COOLDOWN);
     }
   }, [selectedDate, selectedReportType, tg_user_id]);
@@ -273,12 +280,6 @@ const ProductsForm = () => {
     <div className="twa-container">
       <div className="twa-page">
         <h1 className="twa-title">Товары</h1>
-
-        {/* Отладочная информация */}
-        <div style={{ fontSize: "10px", color: "#666", marginBottom: "10px" }}>
-          isRefreshDisabled: {isRefreshDisabled.toString()}, isLoading:{" "}
-          {isLoading.toString()}
-        </div>
 
         <div className="twa-header-content">
           <div className="twa-datepicker-container">

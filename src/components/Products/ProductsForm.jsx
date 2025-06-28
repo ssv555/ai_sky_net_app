@@ -106,7 +106,10 @@ const ProductsForm = () => {
     lastRefreshTime = now;
     isRefreshDisabled = true;
     setIsLoading(true);
-    console.log(`${new Date(now).toISOString()}`, "Обновление данных...");
+    console.log(
+      `${new Date(now).toISOString().replace("T", " ").replace("Z", "")}`,
+      "Обновление данных..."
+    );
 
     try {
       let resData; // Данные

@@ -25,7 +25,7 @@
 }
 
 .twa-table-header-cell {
-  padding: 12px 8px;
+  padding: 8px 8px;
   text-align: left;
   font-weight: 600;
   color: var(--tg-theme-text-color, #ffffff);
@@ -63,7 +63,7 @@
 }
 
 .twa-table-cell {
-  padding: 12px 8px;
+  padding: 8px 8px;
   color: var(--tg-theme-text-color, #ffffff);
   border-right: 1px solid var(--tg-theme-hint-color, #4a4a4a);
   vertical-align: middle;
@@ -94,7 +94,7 @@
 @media (max-width: 768px) {
   .twa-table-header-cell,
   .twa-table-cell {
-    padding: 8px 4px;
+    padding: 6px 4px;
     font-size: 12px;
   }
 

@@ -208,6 +208,92 @@ const ProductsForm = () => {
     }
   }, [productsData, tableColumns]);
 
+  const handleCopyWin1251 = useCallback(async () => {
+    if (
+      !productsData ||
+      !Array.isArray(productsData) ||
+      productsData.length === 0
+    ) {
+      console.log("Нет данных для копирования");
+      return;
+    }
+
+    try {
+      // Создаем заголовки CSV
+      const csvSeparator = ";";
+      const headers = tableColumns.map((col) => col.title).join(csvSeparator);
+
+      // Создаем строки данных
+      const rows = productsData.map((item) => {
+        return tableColumns
+          .map((col) => {
+            let value = item[col.key];
+
+            // Применяем рендер функцию если есть
+            if (col.render) {
+              value = col.render(value);
+            }
+
+            // Экранируем запятые и кавычки в значениях
+            if (
+              typeof value === "string" &&
+              (value.includes(csvSeparator) || value.includes('"'))
+            ) {
+              value = `"${value.replace(/"/g, '""')}"`;
+            }
+
+            return value || "";
+          })
+          .join(csvSeparator);
+      });
+
+      // Объединяем заголовки и данные
+      const csvContent = [headers, ...rows].join("\n");
+
+      // Конвертируем в Win-1251
+      const encoder = new TextEncoder();
+      const decoder = new TextDecoder("windows-1251");
+
+      // Сначала конвертируем в UTF-8 байты, затем в Win-1251
+      const utf8Bytes = encoder.encode(csvContent);
+      const win1251Content = decoder.decode(utf8Bytes);
+
+      // Копируем в буфер обмена
+      await navigator.clipboard.writeText(win1251Content);
+      console.log("Данные скопированы в буфер обмена (Win-1251)");
+
+      // Показываем уведомление пользователю
+      showNotification(
+        "Данные скопированы в буфер обмена (Win-1251)",
+        "success"
+      );
+    } catch (error) {
+      console.error("Ошибка при копировании:", error);
+      showNotification("Ошибка при копировании данных", "error");
+    }
+  }, [productsData, tableColumns]);
+
+  const handleDropdownItemClick = useCallback(
+    (item) => {
+      switch (item.action) {
+        case "copy":
+          handleCopy();
+          break;
+        case "copyWin1251":
+          handleCopyWin1251();
+          break;
+        default:
+          break;
+      }
+    },
+    [handleCopy, handleCopyWin1251]
+  );
+
+  const copyDropdownItems = [
+    { label: "UTF8", action: "copy" },
+    { label: "Win-1251", action: "copyWin1251" },
+  ];
+
   const handleRowClick = useCallback((row, index) => {
     console.log("Клик по строке:", row, index);
     // Здесь можно добавить логику для обработки клика по строке
@@ -273,7 +359,8 @@ const ProductsForm = () => {
                 productsData.length > 0 &&
                 !isRefreshDisabled
               }
-              onClick={handleCopy}
+              dropdownItems={copyDropdownItems}
+              onDropdownItemClick={handleDropdownItemClick}
             />
           </div>
         </div>

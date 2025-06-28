@@ -51,3 +51,111 @@
   cursor: not-allowed;
   opacity: 0.7;
 }
+
+.twa-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  min-height: 36px;
+  gap: 8px;
+}
+
+.twa-button-primary {
+  background-color: var(--tg-theme-secondary-bg-color, #2b2b2b);
+  color: var(--tg-theme-text-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #666666);
+}
+
+.twa-button-primary:hover:not(.twa-button-disabled) {
+  background-color: var(--tg-theme-bg-color, #1a1a1a);
+  border-color: var(--tg-theme-text-color, #ffffff);
+}
+
+.twa-button-secondary {
+  background-color: var(--tg-theme-secondary-bg-color, #2b2b2b);
+  color: var(--tg-theme-text-color, #ffffff);
+  border: 1px solid var(--tg-theme-hint-color, #666666);
+}
+
+.twa-button-secondary:hover:not(.twa-button-disabled) {
+  background-color: var(--tg-theme-bg-color, #1a1a1a);
+  border-color: var(--tg-theme-text-color, #ffffff);
+}
+
+.twa-button-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.twa-button-disabled:hover {
+  background-color: inherit;
+}
+
+/* Контейнер для кнопки с выпадающим меню */
+.button-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Кнопка с выпадающим меню */
+.twa-button-with-dropdown {
+  padding-right: 12px;
+}
+
+.button-dropdown-arrow {
+  font-size: 10px;
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+  color: var(--tg-theme-text-color, #ffffff);
+}
+
+.button-container:hover .button-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Выпадающее меню */
+.button-dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  background: var(--tg-theme-bg-color, #1a1a1a);
+  border: 1px solid var(--tg-theme-hint-color, #666666);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  margin-top: 4px;
+}
+
+.button-dropdown-item {
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--tg-theme-text-color, #ffffff);
+  transition: background-color 0.2s ease;
+}
+
+.button-dropdown-item:hover {
+  background-color: var(--tg-theme-button-color, #0088cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+.button-dropdown-item:first-child {
+  border-radius: 8px 8px 0 0;
+}
+
+.button-dropdown-item:last-child {
+  border-radius: 0 0 8px 8px;
+}
+
+.button-dropdown-item:only-child {
+  border-radius: 8px;
+}

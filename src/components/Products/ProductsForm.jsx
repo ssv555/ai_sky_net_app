@@ -19,7 +19,7 @@ const ProductsForm = () => {
     showNotification,
     isTelegramEnvironment,
   } = useTelegram();
-  const tg_user_id = user?.id;
+  const tg_user_id = user?.id || (isDevMode() === true ? 1264828537 : null);
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedReportType, setSelectedReportType] = useState(0);
@@ -95,7 +95,6 @@ const ProductsForm = () => {
       return;
     }
 
-    console.log("Начинаем блокировку контролов...");
     setLastRefreshTime(now);
     setIsRefreshDisabled(true);
     setIsLoading(true);
@@ -106,23 +105,18 @@ const ProductsForm = () => {
       let resTotal; // Итоги
       const dateStr = selectedDate.toISOString().split("T")[0];
 
-      const user_id = tg_user_id || (isDevMode() === true ? 1264828537 : null);
-      console.log(
-        `user_id: ${user_id}, dateStr: ${dateStr}, selectedReportType: ${selectedReportType}`
-      );
-
       switch (selectedReportType) {
         case 0:
-          resData = await apiProducts.getDay(user_id, dateStr);
-          resTotal = await apiProducts.getDaySum(user_id, dateStr);
+          resData = await apiProducts.getDay(tg_user_id, dateStr);
+          resTotal = await apiProducts.getDaySum(tg_user_id, dateStr);
           break;
         case 1:
-          resData = await apiProducts.getMonth(user_id, dateStr);
-          resTotal = await apiProducts.getMonthSum(user_id, dateStr);
+          resData = await apiProducts.getMonth(tg_user_id, dateStr);
+          resTotal = await apiProducts.getMonthSum(tg_user_id, dateStr);
           break;
         case 2:
-          resData = await apiProducts.getYear(user_id, dateStr);
-          resTotal = await apiProducts.getYearSum(user_id, dateStr);
+          resData = await apiProducts.getYear(tg_user_id, dateStr);
+          resTotal = await apiProducts.getYearSum(tg_user_id, dateStr);
           break;
         default:
           return;
@@ -145,14 +139,13 @@ const ProductsForm = () => {
     } catch (error) {
       console.error("Ошибка при обновлении данных:", error);
     } finally {
-      console.log("Разблокируем контролы...");
       setIsLoading(false);
       setTimeout(() => {
         console.log("Разблокируем кнопку обновления...");
         setIsRefreshDisabled(false);
       }, REFRESH_COOLDOWN);
     }
-  }, [selectedDate, selectedReportType, tg_user_id, isDevMode]);
+  }, [selectedDate, selectedReportType, tg_user_id]);
 
   // Функция для генерации CSV контента
   const generateCSVContent = useCallback(() => {
@@ -265,6 +258,16 @@ const ProductsForm = () => {
       handleRefresh();
     }
   }, [tg_user_id]);
+
+  // Автоматическое обновление при изменении даты или типа отчета
+  useEffect(() => {
+    if (tg_user_id && !isRefreshDisabled) {
+      const timer = setTimeout(() => {
+        handleRefresh();
+      }, 300); // Небольшая задержка для избежания частых запросов
+      return () => clearTimeout(timer);
+    }
+  }, [selectedDate, selectedReportType, handleRefresh]);
 
   return (
     <div className="twa-container">

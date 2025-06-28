@@ -16,6 +16,8 @@ const ProductsForm = () => {
     isDevMode,
     CHAT_ID,
     BOT_USERNAME,
+    showNotification,
+    isTelegramEnvironment,
   } = useTelegram();
   const tg_user_id = user?.id;
 
@@ -199,16 +201,12 @@ const ProductsForm = () => {
       console.log("Данные скопированы в буфер обмена");
 
       // Показываем уведомление пользователю
-      if (WebApp?.showAlert) {
-        WebApp.showAlert("Данные скопированы в буфер обмена");
-      }
+      showNotification("Данные скопированы в буфер обмена", "success");
     } catch (error) {
       console.error("Ошибка при копировании:", error);
-      if (WebApp?.showAlert) {
-        WebApp.showAlert("Ошибка при копировании данных");
-      }
+      showNotification("Ошибка при копировании данных", "error");
     }
-  }, [productsData, tableColumns, WebApp]);
+  }, [productsData, tableColumns]);
 
   const handleRowClick = useCallback((row, index) => {
     console.log("Клик по строке:", row, index);

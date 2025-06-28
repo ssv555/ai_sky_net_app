@@ -49,6 +49,52 @@ const setCachedResponse = (cacheKey, data) => {
 };
 
 /**
+ * Проверяет, запущено ли приложение в Telegram
+ * @returns {boolean} true если в Telegram, false если в браузере
+ */
+export const isTelegramEnvironment = () => {
+  // Проверяем наличие Telegram WebApp
+  const hasWebApp = !!window?.Telegram?.WebApp;
+
+  if (!hasWebApp) {
+    return false;
+  }
+
+  // Дополнительные проверки для определения Telegram
+  const isInTelegram =
+    // Проверяем URL параметры Telegram
+    window.location.search.includes("tgWebApp") ||
+    // Проверяем user agent (может быть ненадежно)
+    navigator.userAgent.includes("Telegram") ||
+    // Проверяем, что WebApp инициализирован (безопасно)
+    !!window.Telegram?.WebApp?.initDataUnsafe?.user;
+
+  return isInTelegram;
+};
+
+/**
+ * Показывает уведомление в зависимости от окружения
+ * @param {string} message - Сообщение для показа
+ * @param {string} type - Тип уведомления ('success', 'error', 'info')
+ */
+export const showNotification = (message, type = "info") => {
+  try {
+    // Проверяем, что мы в Telegram и WebApp доступен
+    if (isTelegramEnvironment() && window?.Telegram?.WebApp?.showAlert) {
+      window.Telegram.WebApp.showAlert(message);
+    } else {
+      // Альтернативное уведомление для браузера
+      const emoji = type === "success" ? "✅" : type === "error" ? "❌" : "ℹ️";
+      alert(`${emoji} ${message}`);
+    }
+  } catch (error) {
+    // Fallback на обычный alert если что-то пошло не так
+    console.warn("Ошибка при показе уведомления:", error);
+    alert(message);
+  }
+};
+
+/**
  * Хук для работы с Telegram WebApp
  * @returns {Object} Объект с методами и данными Telegram WebApp
  * @property {string} BOT_USERNAME - Имя бота
@@ -62,7 +108,7 @@ const setCachedResponse = (cacheKey, data) => {
 export const useTelegram = () => {
   const WebApp = window?.Telegram?.WebApp;
   const MainButton = window?.Telegram?.WebApp?.MainButton;
-  const user = WebApp.initDataUnsafe?.user;
+  const user = WebApp?.initDataUnsafe?.user || null;
   const API_BASE_URL = getApiUrl();
   const abortControllerRef = useRef(null);
 
@@ -96,7 +142,7 @@ export const useTelegram = () => {
     async (data) => {
       if (!WebApp) return;
       if (!data) {
-        WebApp.showAlert("Данные для отправки отсутствуют");
+        showNotification("Данные для отправки отсутствуют", "error");
         return;
       }
 
@@ -105,7 +151,7 @@ export const useTelegram = () => {
       const cachedResponse = getCachedResponse(cacheKey);
 
       if (cachedResponse) {
-        WebApp.showAlert("Данные успешно отправлены (из кэша)");
+        showNotification("Данные успешно отправлены (из кэша)", "success");
         return cachedResponse;
       }
 
@@ -148,7 +194,7 @@ export const useTelegram = () => {
 
             const result = await response.json();
             setCachedResponse(cacheKey, result);
-            WebApp.showAlert("Данные успешно отправлены");
+            showNotification("Данные успешно отправлены", "success");
             return result;
           } catch (error) {
             lastError = error;
@@ -199,7 +245,9 @@ export const useTelegram = () => {
 
     isDevMode,
     onClose,
-    onToggleButton: toggleMainButton,
+    toggleMainButton,
     sendDataToServer,
+    isTelegramEnvironment,
+    showNotification,
   };
 };

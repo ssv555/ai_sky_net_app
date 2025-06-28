@@ -36,12 +36,13 @@ const CarForm = () => {
   const {
     WebApp,
     MainButton,
+    user,
     sendDataToServer,
     isDevMode,
     CHAT_ID,
     BOT_USERNAME,
+    showNotification,
   } = useTelegram();
-  const { user } = useTelegram();
 
   const [carData, setCarData] = useState({
     car_garage_id: "",
@@ -163,12 +164,12 @@ const CarForm = () => {
     }
 
     if (message) {
-      WebApp.showAlert(message);
+      showNotification(message, "error");
       return false;
     }
 
     return true;
-  }, [WebApp, carData]);
+  }, [WebApp, carData, showNotification]);
 
   const onSendData = useCallback(() => {
     if (!WebApp) return;

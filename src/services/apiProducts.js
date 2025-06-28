@@ -7,7 +7,7 @@ const apiProducts = {
   },
   async getProducts(tg_user_id, date) {
     try {
-      return await getCommon(tg_user_id, date, "get");
+      return await this.getCommon(tg_user_id, date, "get");
     } catch (error) {
       console.error("apiProducts.getProducts. Ошибка:", error);
       throw error;
@@ -15,7 +15,7 @@ const apiProducts = {
   },
   async getSum(tg_user_id, date) {
     try {
-      return await getCommon(tg_user_id, date, "get_sum");
+      return await this.getCommon(tg_user_id, date, "get_sum");
     } catch (error) {
       console.error("apiProducts.getSum. Ошибка:", error);
       throw error;
@@ -23,7 +23,7 @@ const apiProducts = {
   },
   async getSumMonByDays(tg_user_id, date) {
     try {
-      return await getCommon(tg_user_id, date, "get_sum_mon_by_days");
+      return await this.getCommon(tg_user_id, date, "get_sum_mon_by_days");
     } catch (error) {
       console.error("apiProducts.getSumMonByDays. Ошибка:", error);
       throw error;
@@ -31,7 +31,7 @@ const apiProducts = {
   },
   async getSumMon(tg_user_id, date) {
     try {
-      return await getCommon(tg_user_id, date, "get_sum_mon");
+      return await this.getCommon(tg_user_id, date, "get_sum_mon");
     } catch (error) {
       console.error("apiProducts.getSumMon. Ошибка:", error);
       throw error;

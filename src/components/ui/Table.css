@@ -1,0 +1,135 @@
+.twa-table-container {
+  width: 100%;
+  background-color: var(--tg-theme-bg-color, #313030);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.twa-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.twa-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.twa-table-header {
+  background-color: var(--tg-theme-bg-color, #313030);
+  border-bottom: 2px solid var(--tg-theme-hint-color, #4a4a4a);
+}
+
+.twa-table-header-cell {
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--tg-theme-text-color, #ffffff);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+}
+
+.twa-table-body {
+  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
+}
+
+.twa-table-row {
+  border-bottom: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  transition: background-color 0.2s ease;
+}
+
+.twa-table-row:last-child {
+  border-bottom: none;
+}
+
+.twa-table-row:hover {
+  background-color: var(--tg-theme-bg-color, #313030);
+}
+
+.twa-table-row-clickable {
+  cursor: pointer;
+}
+
+.twa-table-row-clickable:hover {
+  background-color: var(--tg-theme-button-color, #2481cc);
+  color: var(--tg-theme-button-text-color, #ffffff);
+}
+
+.twa-table-cell {
+  padding: 12px 8px;
+  color: var(--tg-theme-text-color, #ffffff);
+  border-right: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  vertical-align: middle;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+.twa-table-cell:last-child {
+  border-right: none;
+}
+
+.twa-table-loading {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--tg-theme-hint-color, #8e8e8e);
+  font-size: 14px;
+}
+
+.twa-table-empty {
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--tg-theme-hint-color, #8e8e8e);
+  font-size: 14px;
+  font-style: italic;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .twa-table-header-cell,
+  .twa-table-cell {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  .twa-table-header-cell {
+    font-size: 11px;
+  }
+}
+
+/* Стили для числовых данных */
+.twa-table-cell[style*="text-align: right"] {
+  font-family: "Courier New", monospace;
+  font-weight: 500;
+}
+
+/* Стили для статусов */
+.twa-table-cell .status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.twa-table-cell .status.success {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+}
+
+.twa-table-cell .status.warning {
+  background-color: rgba(255, 152, 0, 0.2);
+  color: #ff9800;
+}
+
+.twa-table-cell .status.error {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+}

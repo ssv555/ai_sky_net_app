@@ -17,19 +17,19 @@
 }
 
 .telegram-button.primary {
-  background-color: var(--tg-theme-button-color, #2aabee);
+  background-color: var(--tg-theme-button-color, #3390ec);
   color: var(--tg-theme-button-text-color, #ffffff);
 }
 
 .telegram-button.secondary {
-  background-color: var(--tg-theme-bg-color, #1a1a1a);
-  color: var(--tg-theme-text-color, #ffffff);
-  border: 1px solid var(--tg-theme-hint-color, #4a4a4a);
+  background-color: var(--tg-theme-bg-color, #17212b);
+  color: var(--tg-theme-text-color, #fff);
+  border: 1px solid var(--tg-theme-hint-color, #7da2c1);
 }
 
 .telegram-button.secondary:hover:not(.disabled) {
-  background-color: var(--tg-theme-secondary-bg-color, #2a2a2a);
-  border-color: var(--tg-theme-button-color, #2aabee);
+  background-color: var(--tg-theme-secondary-bg-color, #232e3a);
+  border-color: var(--tg-theme-button-color, #3390ec);
 }
 
 .telegram-button:hover:not(.disabled) {
@@ -69,25 +69,25 @@
 }
 
 .twa-button-primary {
-  background-color: var(--tg-theme-secondary-bg-color, #2b2b2b);
-  color: var(--tg-theme-text-color, #ffffff);
-  border: 1px solid var(--tg-theme-hint-color, #666666);
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+  border: 1px solid var(--tg-theme-hint-color, #7da2c1);
 }
 
 .twa-button-primary:hover:not(.twa-button-disabled) {
-  background-color: var(--tg-theme-bg-color, #1a1a1a);
-  border-color: var(--tg-theme-text-color, #ffffff);
+  background-color: var(--tg-theme-button-color, #3390ec);
+  border-color: var(--tg-theme-hint-color, #7da2c1);
 }
 
 .twa-button-secondary {
-  background-color: var(--tg-theme-secondary-bg-color, #2b2b2b);
-  color: var(--tg-theme-text-color, #ffffff);
-  border: 1px solid var(--tg-theme-hint-color, #666666);
+  background-color: var(--tg-theme-secondary-bg-color, #232e3a);
+  color: var(--tg-theme-text-color, #fff);
+  border: 1px solid var(--tg-theme-hint-color, #7da2c1);
 }
 
 .twa-button-secondary:hover:not(.twa-button-disabled) {
-  background-color: var(--tg-theme-bg-color, #1a1a1a);
-  border-color: var(--tg-theme-text-color, #ffffff);
+  background-color: var(--tg-theme-bg-color, #17212b);
+  border-color: var(--tg-theme-hint-color, #7da2c1);
 }
 
 .twa-button-disabled {
@@ -127,25 +127,26 @@
   top: 100%;
   right: 0;
   left: 0;
-  background: var(--tg-theme-bg-color, #1a1a1a);
-  border: 1px solid var(--tg-theme-hint-color, #666666);
+  background: var(--tg-theme-bg-color, #17212b);
+  border: 1px solid var(--tg-theme-hint-color, #7da2c1);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   z-index: 1000;
   margin-top: 4px;
+  min-width: 300px;
 }
 
 .button-dropdown-item {
   padding: 8px 12px;
   cursor: pointer;
   font-size: 14px;
-  color: var(--tg-theme-text-color, #ffffff);
+  color: var(--tg-theme-text-color, #fff);
   transition: background-color 0.2s ease;
 }
 
 .button-dropdown-item:hover {
-  background-color: var(--tg-theme-button-color, #0088cc);
-  color: var(--tg-theme-button-text-color, #ffffff);
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
 }
 
 .button-dropdown-item:first-child {

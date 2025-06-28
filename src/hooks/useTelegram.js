@@ -251,3 +251,26 @@ export const useTelegram = () => {
     showNotification,
   };
 };
+
+// Применяет CSS-переменные Telegram WebApp к :root
+export function applyTelegramTheme(themeParams) {
+  if (!themeParams || typeof window === "undefined") return;
+  const root = document.documentElement;
+  Object.entries(themeParams).forEach(([key, value]) => {
+    if (key && value) {
+      root.style.setProperty(`--tg-theme-${key.replace(/_/g, "-")}`, value);
+    }
+  });
+}
+
+// Хук для автоматического применения темы Telegram
+export function useApplyTelegramTheme() {
+  useEffect(() => {
+    if (window?.Telegram?.WebApp?.themeParams) {
+      window?.Telegram?.WebApp?.ready();
+      applyTelegramTheme(window.Telegram.WebApp.colorScheme);
+      //const themeParams = Telegram.WebApp.themeParams;
+      //const colorScheme = Telegram.WebApp.colorScheme;
+    }
+  }, []);
+}

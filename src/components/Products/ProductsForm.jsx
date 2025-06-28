@@ -5,13 +5,13 @@ import React, {
   useMemo,
   useRef,
 } from "react";
-import { useTelegram } from "../../hooks/useTelegram";
+import "react-datepicker/dist/react-datepicker.css";
+import "./ProductsForm.css";
+import { useTelegram, useApplyTelegramTheme } from "../../hooks/useTelegram";
 import apiProducts from "../../services/apiProducts";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import Button from "../ui/Button";
 import Table from "../ui/Table";
-import "./ProductsForm.css";
 
 const ProductsForm = () => {
   const {
@@ -25,6 +25,7 @@ const ProductsForm = () => {
     showNotification,
     isTelegramEnvironment,
   } = useTelegram();
+  useApplyTelegramTheme();
   let lastRefreshTime = 0;
   let isRefreshDisabled = false;
   const REFRESH_COOLDOWN = 3000; // в миллисекундах
@@ -236,6 +237,56 @@ const ProductsForm = () => {
     }
   }, [generateCSVContent, showNotification]);
 
+  const handleDownloadCSV = useCallback(async () => {
+    const csvContent = generateCSVContent();
+    if (!csvContent) {
+      console.log("Нет данных для скачивания");
+      showNotification("Нет данных для скачивания", "info");
+      return;
+    }
+
+    try {
+      // Добавляем итоговую строку
+      const fullContent =
+        csvContent + `\nКол-во;${totalCount};Итого;${totalSum}`;
+
+      // Создаем Blob с BOM для корректного отображения кириллицы в Excel
+      const BOM = "\uFEFF";
+      const blob = new Blob([BOM + fullContent], {
+        type: "text/csv;charset=utf-8;",
+      });
+
+      // Создаем ссылку для скачивания
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+
+      // Формируем имя файла с датой
+      const dateStr = selectedDate.toISOString().split("T")[0];
+      const reportTypeNames = ["day", "month", "year"];
+      const fileName = `products_${reportTypeNames[selectedReportType]}_${dateStr}.csv`;
+
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log("Файл CSV скачан");
+      showNotification("Файл CSV скачан", "success");
+    } catch (error) {
+      console.error("Ошибка при скачивании файла:", error);
+      showNotification("Ошибка при скачивании файла", "error");
+    }
+  }, [
+    generateCSVContent,
+    totalCount,
+    totalSum,
+    selectedDate,
+    selectedReportType,
+    showNotification,
+  ]);
+
   const handleDropdownItemClick = useCallback(
     (item) => {
       switch (item.action) {
@@ -245,16 +296,20 @@ const ProductsForm = () => {
         case "copyTotal":
           handleCopyTotal();
           break;
+        case "downloadCSV":
+          handleDownloadCSV();
+          break;
         default:
           break;
       }
     },
-    [handleCopyTable, handleCopyTotal]
+    [handleCopyTable, handleCopyTotal, handleDownloadCSV]
   );
 
-  const copyDropdownItems = [
-    { label: "Таблица", action: "copyTable" },
-    { label: "Таблица + Итог", action: "copyTotal" },
+  const exportDropdownItems = [
+    { label: "Буфер обмена - Таблица", action: "copyTable" },
+    { label: "Буфер обмена - Таблица + Итог", action: "copyTotal" },
+    { label: "Файл CSV", action: "downloadCSV" },
   ];
 
   const handleRowClick = useCallback((row, index) => {
@@ -313,20 +368,20 @@ const ProductsForm = () => {
             <Button
               name="refresh"
               title="🔄 Обновить"
-              variant="primary"
+              variant="secondary"
               enabled={!isRefreshDisabled}
               onClick={handleRefresh}
             />
             <Button
-              name="copy"
-              title="📋 Копировать"
+              name="export"
+              title="📋 Экспорт"
               variant="secondary"
               enabled={
                 Array.isArray(productsData) &&
                 productsData.length > 0 &&
                 !isRefreshDisabled
               }
-              dropdownItems={copyDropdownItems}
+              dropdownItems={exportDropdownItems}
               onDropdownItemClick={handleDropdownItemClick}
             />
           </div>

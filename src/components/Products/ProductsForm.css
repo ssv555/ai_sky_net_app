@@ -2,13 +2,13 @@
 .twa-datepicker:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: #f5f5f5;
+  background-color: var(--tg-theme-bg-color, #17212b);
 }
 
 .twa-select:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-  background-color: #f5f5f5;
+  background-color: var(--tg-theme-bg-color, #17212b);
 }
 
 /* Стили для контейнеров с отключенными контролами */
@@ -62,4 +62,57 @@
 
 .twa-summary-value.total {
   min-width: 210px;
+}
+
+.twa-container {
+  background-color: var(--tg-theme-bg-color, #17212b);
+}
+
+.twa-page {
+  background-color: var(--tg-theme-bg-color, #17212b);
+}
+
+.twa-title {
+  color: var(--tg-theme-text-color, #fff);
+}
+
+.twa-select {
+  background-color: var(--tg-theme-secondary-bg-color, #232e3a);
+  color: var(--tg-theme-text-color, #fff);
+  border: 1px solid var(--tg-theme-hint-color, #7da2c1);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.twa-select:focus,
+.twa-select:hover {
+  border-color: var(--tg-theme-button-color, #3390ec);
+  outline: none;
+}
+
+.twa-select option {
+  background-color: var(--tg-theme-secondary-bg-color, #232e3a);
+  color: var(--tg-theme-text-color, #fff);
+}
+
+.twa-select option:checked,
+.twa-select option:focus,
+.twa-select option:hover {
+  background-color: var(--tg-theme-button-color, #3390ec);
+  color: var(--tg-theme-button-text-color, #fff);
+}
+
+.react-datepicker__header,
+.react-datepicker__month-container .react-datepicker__header {
+  background-color: var(--tg-theme-secondary-bg-color, #232e3a) !important;
+  color: var(--tg-theme-text-color, #fff) !important;
+  border-bottom: 1px solid var(--tg-theme-hint-color, #7da2c1) !important;
+}
+
+.react-datepicker__current-month {
+  color: var(--tg-theme-text-color, #fff) !important;
+  background: transparent !important;
 }

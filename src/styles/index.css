@@ -16,10 +16,13 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+html,
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  color: var(--tg-theme-text-color, #fff);
+  background-color: var(--tg-theme-bg-color, #17212b);
 }
 
 #root {

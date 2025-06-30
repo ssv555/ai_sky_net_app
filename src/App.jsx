@@ -7,10 +7,16 @@ import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
 import ProductsForm from "./components/Products/ProductsForm";
+import { initTelegramUtils } from "./utils/telegramUtils";
 
 function App() {
-  const { twa } = useTelegram();
+  const { WebApp, isTelegramEnvironment, twa } = useTelegram();
   const location = useLocation();
+
+  // Инициализируем утилиты для работы с Telegram
+  useEffect(() => {
+    initTelegramUtils(WebApp, isTelegramEnvironment);
+  }, [WebApp, isTelegramEnvironment]);
 
   const getPageTitle = () => {
     switch (location.pathname.replace(/^\//, "")) {
@@ -20,6 +26,8 @@ function App() {
         return "Список автомобилей";
       case "CarForm":
         return "Форма автомобиля";
+      case "ProductsForm":
+        return "Товары";
       default:
         return "Main Page";
     }

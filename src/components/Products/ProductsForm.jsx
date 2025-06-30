@@ -4,6 +4,7 @@ import React, {
   useCallback,
   useMemo,
   useRef,
+  useLayoutEffect,
 } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import "./ProductsForm.css";
@@ -12,6 +13,7 @@ import apiProducts from "../../services/apiProducts";
 import DatePicker from "react-datepicker";
 import Button from "../ui/Button";
 import Table from "../ui/Table";
+import { showConfirmation } from "../../utils/telegramUtils";
 
 const ProductsForm = () => {
   const {
@@ -308,51 +310,45 @@ const ProductsForm = () => {
     [handleCopyTable, handleCopyTotal, handleDownloadCSV]
   );
 
-  const doDuplicateSelected = () => {
+  const doDuplicateSelected = async () => {
     console.log("Дублирование выбранных строк:", selectedRows);
+    const params = { tg_user_id, id: [selectedRows] };
+    const resData = await apiProducts.doDuplicate(params);
+
+    if (resData?.success === true) {
+      await handleRefresh();
+      const productIdsString = resData.data
+        .map((item) => item.product_id)
+        .join(", ");
+      const msg = `Успешное дублирование товаров:\n${productIdsString}`;
+      setTimeout(() => {
+        showNotification(msg, "info");
+      }, 100); // 100 мс достаточно для рендера
+    } else {
+      console.log("resData:", resData);
+      showNotification(resData?.message, "error");
+    }
+  };
+
+  const doDeleteSelected = () => {
+    console.log("Дублирование выбранных строк:", selectedRows);
+    showNotification("Удаление товаров...", "info");
   };
 
   const handleDuplicateSelected = useCallback(() => {
     const message = `Дублировать выбранные товары (${selectedRows.length} шт.)?`;
-
-    if (isTelegramEnvironment && WebApp && WebApp.showConfirm) {
-      WebApp.showConfirm(message, (confirmed) => {
-        if (confirmed) {
-          showNotification("Дублирование товаров...", "info");
-          doDuplicateSelected(); // Дублирование выбранных строк.
-        }
-      });
-    } else {
-      // Fallback для браузера
-      const confirmDuplicate = window.confirm(message);
-      if (confirmDuplicate) {
-        showNotification("Дублирование товаров...", "info");
-        doDuplicateSelected(); // Дублирование выбранных строк.
-      }
-    }
-  }, [selectedRows, isTelegramEnvironment, WebApp, showNotification]);
+    showConfirmation(message, () => {
+      doDuplicateSelected();
+    });
+  }, [selectedRows, showNotification]);
 
   const handleDeleteSelected = useCallback(() => {
     const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
-
-    if (isTelegramEnvironment && WebApp && WebApp.showConfirm) {
-      WebApp.showConfirm(message, (confirmed) => {
-        if (confirmed) {
-          console.log("Удаление выбранных строк:", selectedRows);
-          showNotification("Удаление товаров...", "info");
-          // TODO: Реализовать удаление выбранных строк
-        }
-      });
-    } else {
-      // Fallback для браузера
-      const confirmDelete = window.confirm(message);
-      if (confirmDelete) {
-        console.log("Удаление выбранных строк:", selectedRows);
-        showNotification("Удаление товаров...", "info");
-        // TODO: Реализовать удаление выбранных строк
-      }
-    }
-  }, [selectedRows, isTelegramEnvironment, WebApp, showNotification]);
+    showConfirmation(message, () => {
+      console.log("Удаление выбранных строк:", selectedRows);
+      doDeleteSelected();
+    });
+  }, [selectedRows, showNotification]);
 
   const handleActionItemClick = useCallback(
     (item) => {
@@ -407,8 +403,6 @@ const ProductsForm = () => {
           return [...prev, productId];
         }
       });
-
-      console.log("Клик по строке:", row, index, "product_id:", productId);
     },
     [selectedReportType, productsData]
   );

@@ -49,12 +49,15 @@ const Table = ({
             {data.map((row, rowIndex) => {
               const isSelected =
                 enableRowSelection && selectedRows.includes(row.product_id);
+              const isOdd = rowIndex % 2 === 1;
               return (
                 <tr
                   key={rowIndex}
                   className={`twa-table-row ${
                     onRowClick ? "twa-table-row-clickable" : ""
-                  } ${isSelected ? "twa-table-row-selected" : ""}`}
+                  } ${isSelected ? "twa-table-row-selected" : ""} ${
+                    isOdd ? "twa-table-row--odd" : ""
+                  }`}
                   onClick={() => onRowClick && onRowClick(row, rowIndex)}
                 >
                   {columns.map((column) => (

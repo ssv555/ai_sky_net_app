@@ -330,9 +330,22 @@ const ProductsForm = () => {
     }
   };
 
-  const doDeleteSelected = () => {
-    console.log("Дублирование выбранных строк:", selectedRows);
-    showNotification("Удаление товаров...", "info");
+  const doDeleteSelected = async () => {
+    console.log("Удаление выбранных строк:", selectedRows);
+    const params = { tg_user_id, id: [selectedRows] };
+    const resData = await apiProducts.doDelete(params);
+
+    if (resData?.success === true) {
+      await handleRefresh();
+      const productIdsString = selectedRows.map((item) => item).join(", ");
+      const msg = `Успешно удалены:\n${productIdsString}`;
+      setTimeout(() => {
+        showNotification(msg, "info");
+      }, 100); // 100 мс достаточно для рендера
+    } else {
+      console.log("resData:", resData);
+      showNotification(resData?.message, "error");
+    }
   };
 
   const handleDuplicateSelected = useCallback(() => {
@@ -345,7 +358,6 @@ const ProductsForm = () => {
   const handleDeleteSelected = useCallback(() => {
     const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
     showConfirmation(message, () => {
-      console.log("Удаление выбранных строк:", selectedRows);
       doDeleteSelected();
     });
   }, [selectedRows, showNotification]);

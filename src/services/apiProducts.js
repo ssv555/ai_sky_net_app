@@ -67,6 +67,14 @@ const apiProducts = {
       throw error;
     }
   },
+  async doDelete(params) {
+    try {
+      return await this.commonPost(params, "delete");
+    } catch (error) {
+      console.error("apiProducts.doDelete. Ошибка:", error);
+      throw error;
+    }
+  },
 };
 
 export default apiProducts;

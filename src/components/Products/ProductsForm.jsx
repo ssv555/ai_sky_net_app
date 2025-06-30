@@ -37,6 +37,7 @@ const ProductsForm = () => {
   const [productsData, setProductsData] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
@@ -107,6 +108,7 @@ const ProductsForm = () => {
     lastRefreshTime = now;
     isRefreshDisabled = true;
     setIsLoading(true);
+    setSelectedRows([]); // Очищаем выбранные строки при обновлении
     console.log(
       `${new Date(now).toISOString().replace("T", " ").replace("Z", "")}`,
       "Обновление данных..."
@@ -306,16 +308,110 @@ const ProductsForm = () => {
     [handleCopyTable, handleCopyTotal, handleDownloadCSV]
   );
 
+  const doDuplicateSelected = () => {
+    console.log("Дублирование выбранных строк:", selectedRows);
+  };
+
+  const handleDuplicateSelected = useCallback(() => {
+    const message = `Дублировать выбранные товары (${selectedRows.length} шт.)?`;
+
+    if (isTelegramEnvironment && WebApp && WebApp.showConfirm) {
+      WebApp.showConfirm(message, (confirmed) => {
+        if (confirmed) {
+          showNotification("Дублирование товаров...", "info");
+          doDuplicateSelected(); // Дублирование выбранных строк.
+        }
+      });
+    } else {
+      // Fallback для браузера
+      const confirmDuplicate = window.confirm(message);
+      if (confirmDuplicate) {
+        showNotification("Дублирование товаров...", "info");
+        doDuplicateSelected(); // Дублирование выбранных строк.
+      }
+    }
+  }, [selectedRows, isTelegramEnvironment, WebApp, showNotification]);
+
+  const handleDeleteSelected = useCallback(() => {
+    const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
+
+    if (isTelegramEnvironment && WebApp && WebApp.showConfirm) {
+      WebApp.showConfirm(message, (confirmed) => {
+        if (confirmed) {
+          console.log("Удаление выбранных строк:", selectedRows);
+          showNotification("Удаление товаров...", "info");
+          // TODO: Реализовать удаление выбранных строк
+        }
+      });
+    } else {
+      // Fallback для браузера
+      const confirmDelete = window.confirm(message);
+      if (confirmDelete) {
+        console.log("Удаление выбранных строк:", selectedRows);
+        showNotification("Удаление товаров...", "info");
+        // TODO: Реализовать удаление выбранных строк
+      }
+    }
+  }, [selectedRows, isTelegramEnvironment, WebApp, showNotification]);
+
+  const handleActionItemClick = useCallback(
+    (item) => {
+      switch (item.action) {
+        case "duplicate":
+          handleDuplicateSelected();
+          break;
+        case "delete":
+          handleDeleteSelected();
+          break;
+        default:
+          break;
+      }
+    },
+    [handleDuplicateSelected, handleDeleteSelected]
+  );
+
   const exportDropdownItems = [
     { label: "Буфер обмена - Таблица", action: "copyTable" },
     { label: "Буфер обмена - Таблица + Итог", action: "copyTotal" },
     { label: "Файл CSV", action: "downloadCSV" },
   ];
 
-  const handleRowClick = useCallback((row, index) => {
-    console.log("Клик по строке:", row, index);
-    // Здесь можно добавить логику для обработки клика по строке
-  }, []);
+  const actionDropdownItems = [
+    { label: "Дублировать...", action: "duplicate" },
+    { label: "Удалить...", action: "delete" },
+  ];
+
+  const handleRowClick = useCallback(
+    (row, index) => {
+      // Работаем только при selectedReportType === 0 и наличии данных
+      if (
+        selectedReportType !== 0 ||
+        !productsData ||
+        productsData.length === 0
+      ) {
+        return;
+      }
+
+      const productId = row.product_id;
+      if (!productId) {
+        return;
+      }
+
+      setSelectedRows((prev) => {
+        const isSelected = prev.includes(productId);
+        if (isSelected) {
+          // Удаляем из массива
+          return prev.filter((id) => id !== productId);
+        } else {
+          // Добавляем в массив
+          return [...prev, productId];
+        }
+      });
+
+      console.log("Клик по строке:", row, index, "product_id:", productId);
+    },
+    [selectedReportType, productsData]
+  );
 
   // Автоматическая загрузка данных только при изменении пользователя
   useEffect(() => {
@@ -384,6 +480,19 @@ const ProductsForm = () => {
               dropdownItems={exportDropdownItems}
               onDropdownItemClick={handleDropdownItemClick}
             />
+            <Button
+              name="action"
+              title="⚡ Действие"
+              variant="secondary"
+              enabled={
+                selectedReportType === 0 &&
+                Array.isArray(selectedRows) &&
+                selectedRows.length > 0 &&
+                !isRefreshDisabled
+              }
+              dropdownItems={actionDropdownItems}
+              onDropdownItemClick={handleActionItemClick}
+            />
           </div>
         </div>
 
@@ -406,6 +515,10 @@ const ProductsForm = () => {
             data={productsData}
             onRowClick={handleRowClick}
             isLoading={isLoading}
+            selectedRows={selectedRows}
+            enableRowSelection={
+              selectedReportType === 0 && productsData.length > 0
+            }
           />
         </div>
 

@@ -9,6 +9,8 @@ const Table = ({
   emptyMessage = "Нет данных",
   onRowClick,
   className = "",
+  selectedRows = [],
+  enableRowSelection = false,
 }) => {
   if (isLoading) {
     return (
@@ -44,30 +46,34 @@ const Table = ({
             </tr>
           </thead>
           <tbody className="twa-table-body">
-            {data.map((row, rowIndex) => (
-              <tr
-                key={rowIndex}
-                className={`twa-table-row ${
-                  onRowClick ? "twa-table-row-clickable" : ""
-                }`}
-                onClick={() => onRowClick && onRowClick(row, rowIndex)}
-              >
-                {columns.map((column) => (
-                  <td
-                    key={column.key}
-                    className="twa-table-cell"
-                    style={{
-                      textAlign: column.align || "left",
-                      width: column.width,
-                    }}
-                  >
-                    {column.render
-                      ? column.render(row[column.key], row)
-                      : row[column.key]}
-                  </td>
-                ))}
-              </tr>
-            ))}
+            {data.map((row, rowIndex) => {
+              const isSelected =
+                enableRowSelection && selectedRows.includes(row.product_id);
+              return (
+                <tr
+                  key={rowIndex}
+                  className={`twa-table-row ${
+                    onRowClick ? "twa-table-row-clickable" : ""
+                  } ${isSelected ? "twa-table-row-selected" : ""}`}
+                  onClick={() => onRowClick && onRowClick(row, rowIndex)}
+                >
+                  {columns.map((column) => (
+                    <td
+                      key={column.key}
+                      className="twa-table-cell"
+                      style={{
+                        textAlign: column.align || "left",
+                        width: column.width,
+                      }}
+                    >
+                      {column.render
+                        ? column.render(row[column.key], row)
+                        : row[column.key]}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -90,6 +96,8 @@ Table.propTypes = {
   emptyMessage: PropTypes.string,
   onRowClick: PropTypes.func,
   className: PropTypes.string,
+  selectedRows: PropTypes.array,
+  enableRowSelection: PropTypes.bool,
 };
 
 export default Table;

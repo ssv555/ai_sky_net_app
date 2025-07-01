@@ -31,7 +31,7 @@ const ProductsForm = () => {
   let lastRefreshTime = 0;
   let isRefreshDisabled = false;
   const REFRESH_COOLDOWN = 3000; // в миллисекундах
-  const tg_user_id = user?.id || (isDevMode() === true ? 1264828537 : null);
+  const tg_user_id = user?.id; // || (isDevMode() === true ? 1264828537 : null);
 
   const [isLoading, setIsLoading] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -99,8 +99,11 @@ const ProductsForm = () => {
 
   const handleRefresh = useCallback(async () => {
     if (!tg_user_id || isRefreshDisabled) {
+      console.log("isRefreshDisabled:", isRefreshDisabled);
+      console.log("tg_user_id:", tg_user_id);
       return;
     }
+
     const now = Date.now();
     if (now - lastRefreshTime < REFRESH_COOLDOWN) {
       console.log("Обновление заблокировано - слишком частое обновление.");

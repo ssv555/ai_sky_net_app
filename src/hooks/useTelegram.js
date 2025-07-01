@@ -19,8 +19,14 @@ const isDevMode = () => {
 export const getApiUrl = () => {
   return isDevMode()
     ? `http://localhost:${SERVER_PORT}/api/dev/srv`
-    : `http://195.2.75.212:${SERVER_PORT}/api/prod/srv`;
+    : `https://v570907.hosted-by-vdsina.ru/api/prod/srv`;
 };
+
+console.log(`SERVER_PORT:  ${SERVER_PORT}`);
+console.log(`BOT_USERNAME: ${BOT_USERNAME}`);
+console.log(`USER_ID:      ${USER_ID}`);
+console.log(`CHAT_ID:      ${CHAT_ID}`);
+console.log(`isDevMode:    ${isDevMode()}`);
 
 const MAX_RETRIES = 3;
 const TIMEOUT = 10000; // 10 секунд
@@ -108,9 +114,11 @@ export const showNotification = (message, type = "info") => {
 export const useTelegram = () => {
   const WebApp = window?.Telegram?.WebApp;
   const MainButton = window?.Telegram?.WebApp?.MainButton;
-  const user = WebApp?.initDataUnsafe?.user || null;
+  const user = WebApp?.initDataUnsafe?.user || { id: USER_ID } || null;
   const API_BASE_URL = getApiUrl();
   const abortControllerRef = useRef(null);
+
+  console.log(`user:         ${JSON.stringify(user)}`); // TODO: Удалить через некоторое время, написано 2025-07-01.
 
   /**
    * Закрывает Telegram WebApp

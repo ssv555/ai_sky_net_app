@@ -26,11 +26,23 @@
 }
 
 .twa-header-content {
+  position: fixed; /* Изменяем на fixed для жесткой фиксации */
+  top: 0; /* Прикрепляем к верхней части окна */
+  left: 0; /* Растягиваем на всю ширину */
+  right: 0; /* Растягиваем на всю ширину */
+  z-index: 100; /* Устанавливаем высокий z-index, чтобы он был поверх содержимого */
+  background: var(
+    --tg-theme-bg-color,
+    #222c35
+  ); /* Фон, чтобы перекрывать содержимое */
+  border-bottom: 1px solid var(--tg-theme-hint-color, #333); /* Разделительная линия */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12); /* Тень для эффекта поднятия */
+  padding: 10px 16px; /* Добавляем горизонтальный паддинг */
+  box-sizing: border-box; /* Учитываем паддинг в общей ширине */
   display: flex;
   flex-direction: column;
   gap: 5px;
   width: 100%;
-  padding: 0px 0;
   height: auto;
   min-height: unset;
 }
@@ -95,6 +107,7 @@
 
 .twa-page {
   background-color: var(--tg-theme-bg-color, #17212b);
+  padding-top: 190px; /* Добавляем отступ сверху, чтобы контент не перекрывался фиксированным заголовком. Значение может потребоваться скорректировать. */
 }
 
 .twa-select {

@@ -511,6 +511,10 @@ const ProductsForm = () => {
             <span className="twa-summary-value">{totalCount}</span>
           </div>
           <div className="twa-summary-item">
+            <span className="twa-summary-label">Выделено:</span>
+            <span className="twa-summary-value">{selectedRows.length}</span>
+          </div>
+          <div className="twa-summary-item">
             <span className="twa-summary-label">Итого:</span>
             <span className="twa-summary-value total">
               {totalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽

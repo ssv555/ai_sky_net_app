@@ -4,22 +4,29 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
 }
 
 .twa-table-wrapper {
   overflow-x: auto;
   max-width: 100%;
+  max-height: calc(100vh - 220px); /* Высота с учетом хедера и футера */
+  overflow-y: auto;
 }
 
 .twa-table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   background-color: var(--tg-theme-secondary-bg-color, #232e3a);
   font-size: 14px;
   line-height: 1.4;
 }
 
 .twa-table-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   background-color: var(--tg-theme-secondary-bg-color, #232e3a);
   border-bottom: 2px solid var(--tg-theme-hint-color, #7da2c1);
 }

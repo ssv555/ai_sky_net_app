@@ -108,11 +108,30 @@
 
 .twa-container {
   background-color: var(--tg-theme-bg-color, #17212b);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.twa-header-content {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--tg-theme-bg-color, #17212b);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 10px 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
 }
 
 .twa-page {
   background-color: var(--tg-theme-bg-color, #17212b);
-  padding-top: 190px; /* Добавляем отступ сверху, чтобы контент не перекрывался фиксированным заголовком. Значение может потребоваться скорректировать. */
+  flex: 1;
+  overflow: auto;
+  padding-bottom: 70px; /* Отступ для футера */
 }
 
 .twa-select {

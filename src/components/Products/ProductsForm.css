@@ -45,6 +45,11 @@
   width: 100%;
   height: 142px;
   min-height: unset;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--tg-theme-bg-color, #17212b);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .twa-title {

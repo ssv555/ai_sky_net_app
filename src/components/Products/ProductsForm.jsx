@@ -442,8 +442,7 @@ const ProductsForm = () => {
 
   return (
     <div className="twa-container">
-      <div className="twa-page">
-        <div className="twa-header-content">
+<div className="twa-header-content">
           <h1 className="twa-title">Товары</h1>
           <div className="twa-controls-container">
             <div className="twa-datepicker-container">
@@ -519,7 +518,7 @@ const ProductsForm = () => {
             </div>
           </div>
         </div>
-
+      <div className="twa-page">
         <div className="twa-content">
           <Table
             columns={tableColumns}

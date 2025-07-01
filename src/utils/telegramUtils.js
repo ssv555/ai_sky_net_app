@@ -36,3 +36,37 @@ export const showConfirmation = (message, onConfirm) => {
     }
   }
 };
+
+/**
+ * Сохраняет параметры из URL в localStorage
+ */
+export function saveParamsFromUrlToStorage(
+  paramNames = ["user_id", "bot_username", "port", "chat_id"]
+) {
+  const params = new URLSearchParams(window.location.search);
+  let changed = false;
+  paramNames.forEach((name) => {
+    const value = params.get(name);
+    if (value !== null) {
+      localStorage.setItem(`tgapp_${name}`, value);
+      changed = true;
+    }
+  });
+  return changed;
+}
+
+/**
+ * Получает параметры из localStorage
+ */
+export function getParamsFromStorage(
+  paramNames = ["user_id", "bot_username", "port", "chat_id"]
+) {
+  const result = {};
+  paramNames.forEach((name) => {
+    const value = localStorage.getItem(`tgapp_${name}`);
+    if (value !== null) {
+      result[name] = value;
+    }
+  });
+  return result;
+}

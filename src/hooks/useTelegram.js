@@ -1,16 +1,18 @@
 import { useCallback, useEffect, useState, useRef } from "react";
 import { copyToClipboard, showMessage, handleError } from "../utils/utils";
+import { getParamsFromStorage } from "../utils/telegramUtils";
 
-const SERVER_PORT =
-  new URLSearchParams(window.location.search).get("port") || 5000;
+const urlParams = new URLSearchParams(window.location.search);
+const storageParams = getParamsFromStorage();
+
+const SERVER_PORT = urlParams.get("port") || storageParams.port || 5000;
 
 const BOT_USERNAME =
-  new URLSearchParams(window.location.search).get("bot_username") ||
-  "ssv_test_bot";
+  urlParams.get("bot_username") || storageParams.bot_username || "ssv_test_bot";
 
-const USER_ID = new URLSearchParams(window.location.search).get("user_id") || 0;
+const USER_ID = urlParams.get("user_id") || storageParams.user_id || 0;
 
-const CHAT_ID = new URLSearchParams(window.location.search).get("chat_id") || 0;
+const CHAT_ID = urlParams.get("chat_id") || storageParams.chat_id || 0;
 
 const isDevMode = () => {
   return BOT_USERNAME.toLowerCase().trim() !== "ai_sky_net_bot";

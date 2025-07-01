@@ -7,7 +7,10 @@ import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
 import ProductsForm from "./components/Products/ProductsForm";
-import { initTelegramUtils } from "./utils/telegramUtils";
+import {
+  initTelegramUtils,
+  saveParamsFromUrlToStorage,
+} from "./utils/telegramUtils";
 
 function App() {
   const { WebApp, isTelegramEnvironment, twa } = useTelegram();
@@ -17,6 +20,11 @@ function App() {
   useEffect(() => {
     initTelegramUtils(WebApp, isTelegramEnvironment);
   }, [WebApp, isTelegramEnvironment]);
+
+  // Сохраняем параметры из URL в localStorage при каждом монтировании/переходе
+  useEffect(() => {
+    saveParamsFromUrlToStorage();
+  }, [location]);
 
   const getPageTitle = () => {
     switch (location.pathname.replace(/^\//, "")) {

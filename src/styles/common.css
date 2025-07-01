@@ -13,14 +13,6 @@
   margin-bottom: 0;
 }
 
-.twa-header-content {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 40px;
-  gap: 12px;
-}
-
 .twa-datepicker-container {
   display: flex;
   align-items: center;

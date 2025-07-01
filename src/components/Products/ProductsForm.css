@@ -25,6 +25,31 @@
   align-items: center;
 }
 
+.twa-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  width: 100%;
+  padding: 0px 0;
+  height: auto;
+  min-height: unset;
+}
+
+.twa-title {
+  color: var(--tg-theme-text-color, #fff);
+  width: 100%;
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+/* Контейнер для контролов (DatePicker, Select, Buttons) */
+.twa-controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  width: 100%;
+}
+
 /* Стили для контейнера с итоговыми данными */
 .twa-summary-container {
   display: flex;
@@ -70,10 +95,6 @@
 
 .twa-page {
   background-color: var(--tg-theme-bg-color, #17212b);
-}
-
-.twa-title {
-  color: var(--tg-theme-text-color, #fff);
 }
 
 .twa-select {

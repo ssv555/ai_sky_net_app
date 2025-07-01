@@ -12,10 +12,14 @@ const FooterNav = ({ hideBack = false, backRoute = "/" }) => {
   };
 
   const handleClose = () => {
+    // TODO: не работает в телеграме, поэтому используем handleBack()
+    // showNotification(`tg: ${tg}`, "info");
+    // showNotification(`tg.close: ${tg && tg.close}`, "info");
+
     if (tg && tg.close) {
       tg.close();
     } else {
-      window.close();
+      handleBack();
     }
   };
 

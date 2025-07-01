@@ -3,12 +3,12 @@ import "./FooterNav.css";
 import { useNavigate } from "react-router-dom";
 import { useTelegram } from "../../hooks/useTelegram";
 
-const FooterNav = ({ hideBack = false }) => {
+const FooterNav = ({ hideBack = false, backRoute = "/" }) => {
   const navigate = useNavigate();
   const { tg } = useTelegram();
 
-  const handleBack = () => {
-    navigate(-1);
+  const handleBack = (route = backRoute) => {
+    navigate(route);
   };
 
   const handleClose = () => {
@@ -30,7 +30,7 @@ const FooterNav = ({ hideBack = false }) => {
           {!hideBack && (
             <button
               className="footer-nav__btn footer-nav__btn--secondary"
-              onClick={handleBack}
+              onClick={() => handleBack()}
             >
               Назад
             </button>

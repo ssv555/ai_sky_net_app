@@ -3,6 +3,7 @@ import "./CarList.css";
 import "../../styles/common.css";
 import apiCar from "../../services/apiCar";
 import { useTelegram } from "../../hooks/useTelegram";
+import FooterNav from "../ui/FooterNav";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -90,6 +91,7 @@ const CarList = () => {
           </div>
         </div>
       </div>
+      <FooterNav />
     </div>
   );
 };

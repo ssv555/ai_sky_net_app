@@ -14,6 +14,7 @@ import DatePicker from "react-datepicker";
 import Button from "../ui/Button";
 import Table from "../ui/Table";
 import { showConfirmation } from "../../utils/telegramUtils";
+import FooterNav from "../ui/FooterNav";
 
 const ProductsForm = () => {
   const {
@@ -533,6 +534,7 @@ const ProductsForm = () => {
 
         <div className="twa-footer-debug"></div>
       </div>
+      <FooterNav />
     </div>
   );
 };

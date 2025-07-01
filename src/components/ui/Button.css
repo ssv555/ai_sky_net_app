@@ -160,3 +160,18 @@
 .button-dropdown-item:only-child {
   border-radius: 8px;
 }
+
+.footer-nav__btn > .button-container {
+  display: flex !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  box-sizing: border-box !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.footer-nav__btn .telegram-button {
+  max-width: none; /* Снимаем ограничение max-width для кнопок в футере */
+}

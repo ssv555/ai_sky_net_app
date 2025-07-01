@@ -11,6 +11,7 @@ import {
   setMercedesBrand,
 } from "../../groups/amg45";
 import { useAmg45Logic } from "./CarForm.amg45";
+import FooterNav from "../ui/FooterNav";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
@@ -419,6 +420,7 @@ const CarForm = () => {
         </div>
         <div className="twa-footer-debug"></div>
       </div>
+      <FooterNav />
     </div>
   );
 };

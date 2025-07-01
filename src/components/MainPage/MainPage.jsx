@@ -4,6 +4,7 @@ import "../../styles/common.css";
 import "./MainPage.css";
 import Button from "../ui/Button";
 import { useTelegram } from "../../hooks/useTelegram";
+import FooterNav from "../ui/FooterNav";
 
 const MainPage = () => {
   const navigate = useNavigate();
@@ -81,6 +82,7 @@ const MainPage = () => {
           </Button> */}
         </div>
       </div>
+      <FooterNav hideBack />
     </div>
   );
 };

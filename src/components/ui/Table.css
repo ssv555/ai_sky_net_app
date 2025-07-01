@@ -10,7 +10,7 @@
 .twa-table-wrapper {
   overflow-x: auto;
   max-width: 100%;
-  max-height: calc(100vh - 220px); /* Высота с учетом хедера и футера */
+  max-height: calc(100vh - 142px - 70px); /* 142px (высота хедера) + 70px (отступ для футера) */
   overflow-y: auto;
 }
 

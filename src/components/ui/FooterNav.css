@@ -5,7 +5,7 @@
   bottom: 0;
   background: var(--tg-theme-bg-color, #222c35);
   border-top: 1px solid var(--tg-theme-hint-color, #333);
-  padding: 10px 0;
+  padding: 7px 0;
   z-index: 100;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.12);
 }
@@ -14,7 +14,7 @@
   display: flex;
   margin: 0 auto;
   width: 100%;
-  padding: 0 16px;
+  padding: 0 15px;
   gap: 20px;
 }
 

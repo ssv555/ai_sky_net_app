@@ -442,82 +442,82 @@ const ProductsForm = () => {
 
   return (
     <div className="twa-container">
-<div className="twa-header-content">
-          <h1 className="twa-title">Товары</h1>
-          <div className="twa-controls-container">
-            <div className="twa-datepicker-container">
-              <DatePicker
-                selected={selectedDate}
-                onChange={(date) => setSelectedDate(date)}
-                dateFormat="yyyy-MM-dd"
-                className="twa-datepicker"
-                placeholderText="Выберите дату"
-                disabled={isRefreshDisabled}
-              />
-            </div>
-            <div className="twa-report-type-container">
-              <select
-                value={selectedReportType}
-                onChange={(e) => setSelectedReportType(Number(e.target.value))}
-                className="twa-select"
-                disabled={isRefreshDisabled}
-              >
-                {reportTypes.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="twa-refresh-button-container">
-              <Button
-                name="refresh"
-                title="🔄 Обновить"
-                variant="secondary"
-                enabled={!isRefreshDisabled}
-                onClick={handleRefresh}
-              />
-              <Button
-                name="export"
-                title="📋 Экспорт"
-                variant="secondary"
-                enabled={
-                  Array.isArray(productsData) &&
-                  productsData.length > 0 &&
-                  !isRefreshDisabled
-                }
-                dropdownItems={exportDropdownItems}
-                onDropdownItemClick={handleDropdownItemClick}
-              />
-              <Button
-                name="action"
-                title="⚡ Действие"
-                variant="secondary"
-                enabled={
-                  selectedReportType === 0 &&
-                  Array.isArray(selectedRows) &&
-                  selectedRows.length > 0 &&
-                  !isRefreshDisabled
-                }
-                dropdownItems={actionDropdownItems}
-                onDropdownItemClick={handleActionItemClick}
-              />
-            </div>
+      <div className="twa-header-content">
+        <h1 className="twa-title">Товары</h1>
+        <div className="twa-controls-container">
+          <div className="twa-datepicker-container">
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              dateFormat="yyyy-MM-dd"
+              className="twa-datepicker"
+              placeholderText="Выберите дату"
+              disabled={isRefreshDisabled}
+            />
           </div>
-
-          <div className="twa-summary-container">
-            <div className="twa-summary-item">
-              <span className="twa-summary-label">Кол-во:</span>
-              <span className="twa-summary-value">{totalCount}</span>
-            </div>
-            <div className="twa-summary-item">
-              <span className="twa-summary-label">Итого:</span>
-              <span className="twa-summary-value total">
-                {totalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽
-              </span>
-            </div>
+          <div className="twa-report-type-container">
+            <select
+              value={selectedReportType}
+              onChange={(e) => setSelectedReportType(Number(e.target.value))}
+              className="twa-select"
+              disabled={isRefreshDisabled}
+            >
+              {reportTypes.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="twa-refresh-button-container">
+            <Button
+              name="refresh"
+              title="🔄 Обновить"
+              variant="secondary"
+              enabled={!isRefreshDisabled}
+              onClick={handleRefresh}
+            />
+            <Button
+              name="export"
+              title="📋 Экспорт"
+              variant="secondary"
+              enabled={
+                Array.isArray(productsData) &&
+                productsData.length > 0 &&
+                !isRefreshDisabled
+              }
+              dropdownItems={exportDropdownItems}
+              onDropdownItemClick={handleDropdownItemClick}
+            />
+            <Button
+              name="action"
+              title="⚡ Действие"
+              variant="secondary"
+              enabled={
+                selectedReportType === 0 &&
+                Array.isArray(selectedRows) &&
+                selectedRows.length > 0 &&
+                !isRefreshDisabled
+              }
+              dropdownItems={actionDropdownItems}
+              onDropdownItemClick={handleActionItemClick}
+            />
           </div>
         </div>
+
+        <div className="twa-summary-container">
+          <div className="twa-summary-item">
+            <span className="twa-summary-label">Кол-во:</span>
+            <span className="twa-summary-value">{totalCount}</span>
+          </div>
+          <div className="twa-summary-item">
+            <span className="twa-summary-label">Итого:</span>
+            <span className="twa-summary-value total">
+              {totalSum.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")} ₽
+            </span>
+          </div>
+        </div>
+      </div>
       <div className="twa-page">
         <div className="twa-content">
           <Table
@@ -540,5 +540,3 @@ const ProductsForm = () => {
 };
 
 export default ProductsForm;
-
-// <div className="twa-form"></div>

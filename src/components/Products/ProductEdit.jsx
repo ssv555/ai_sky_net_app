@@ -67,16 +67,6 @@ const ProductEdit = (props) => {
                   value={value ?? ""}
                   readOnly={read_only.includes(key)}
                   onChange={(e) => handleChange(key, e.target.value)}
-                  style={
-                    read_only.includes(key)
-                      ? {
-                          background: "#eee",
-                          color: "#888",
-                          cursor: "not-allowed",
-                          border: "1.5px solid #bbb",
-                        }
-                      : {}
-                  }
                 />
               </div>
             ))}

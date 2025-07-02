@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../styles/common.css";
 import "./MainPage.css";
 import Button from "../ui/Button";
 import { useTelegram } from "../../hooks/useTelegram";

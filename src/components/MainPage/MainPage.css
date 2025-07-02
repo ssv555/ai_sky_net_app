@@ -8,7 +8,23 @@
 }
 
 .twa-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   background-color: var(--tg-theme-bg-color, #17212b) !important;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+.twa-content .button-container {
+  width: 100%;
+}
+
+.twa-content button,
+.twa-content .twa-button {
+  width: 100% !important;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .twa-title {

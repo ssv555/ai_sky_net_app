@@ -1,4 +1,3 @@
-import "../../styles/common.css";
 import "./CarForm.css";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTelegram } from "../../hooks/useTelegram";

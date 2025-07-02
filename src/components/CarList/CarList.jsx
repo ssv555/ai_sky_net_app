@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "./CarList.css";
-import "../../styles/common.css";
 import apiCar from "../../services/apiCar";
 import { useTelegram } from "../../hooks/useTelegram";
 import FooterNav from "../ui/FooterNav";

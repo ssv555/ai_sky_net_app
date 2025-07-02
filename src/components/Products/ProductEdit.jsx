@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./ProductsForm.css";
 import Button from "../ui/Button";
 import FooterNav from "../ui/FooterNav";
 import { useNavigate } from "react-router-dom";
@@ -27,7 +26,7 @@ const ProductEdit = ({
 
   return (
     <div className="twa-container">
-      <div className="twa-header-content">
+      <div className="twa-header-content-edit">
         <h1 className="twa-title">{titleEditForm}</h1>
         <div className="twa-controls-container">
           <Button

@@ -93,12 +93,12 @@
   z-index: 100;
   width: 100%;
   height: 142px;
-  
+
   /* Внешний вид */
   background-color: var(--tg-theme-bg-color, #17212b);
   border-bottom: 1px solid var(--tg-theme-hint-color, #333);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);  
-  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+
   /* Внутренняя структура */
   padding: 10px 16px;
   box-sizing: border-box;
@@ -153,4 +153,60 @@
 .react-datepicker__current-month {
   color: var(--tg-theme-text-color, #fff) !important;
   background: transparent !important;
+}
+
+.twa-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+.twa-edit-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.twa-edit-label {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 2px;
+}
+.twa-edit-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+  background: #f9f9f9;
+  color: #222;
+}
+.twa-edit-input[readonly] {
+  background: #eee;
+  color: #888;
+  cursor: not-allowed;
+}
+.twa-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+.twa-title {
+  flex: 1 1 auto;
+}
+.twa-controls-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-left: 16px;
+}
+
+body,
+.App,
+.twa-container,
+.twa-page {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
 }

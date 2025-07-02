@@ -15,6 +15,7 @@ import Button from "../ui/Button";
 import Table from "../ui/Table";
 import { showConfirmation } from "../../utils/telegramUtils";
 import FooterNav from "../ui/FooterNav";
+import ProductEdit from "./ProductEdit";
 
 const ProductsForm = () => {
   const {
@@ -41,6 +42,8 @@ const ProductsForm = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [showEdit, setShowEdit] = useState(false);
+  const [editObject, setEditObject] = useState(null);
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
@@ -354,8 +357,20 @@ const ProductsForm = () => {
       );
       return;
     }
-    //
-  }, [selectedRows, showNotification]);
+    const objEdit = productsData.find(
+      (item) => item.product_id === selectedRows[0]
+    );
+    setEditObject(objEdit);
+    setShowEdit(true);
+  }, [selectedRows, productsData, showNotification]);
+
+  const handleSaveEdit = (updatedObject) => {
+    // Тут логика сохранения (например, API-запрос)
+    setShowEdit(false);
+    setEditObject(null);
+    showNotification("Изменения сохранены", "success");
+    handleRefresh();
+  };
 
   const handleDeleteSelected = useCallback(() => {
     const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
@@ -499,6 +514,17 @@ const ProductsForm = () => {
     { label: "Редактировать...", action: "edit" },
     { label: "Удалить...", action: "delete" },
   ];
+
+  if (showEdit && editObject) {
+    return (
+      <ProductEdit
+        titleEditForm="Редактирование товара"
+        editObject={editObject}
+        readOnly={["product_id", "tg_user_id", "text", "datetime_ins"]}
+        onSaveEdit={handleSaveEdit}
+      />
+    );
+  }
 
   return (
     <div className="twa-container">

@@ -34,6 +34,15 @@
   margin-left: 0;
   align-items: center;
   justify-content: flex-end;
+  padding-right: 16px;
+}
+.twa-controls-container-edit {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  padding-right: 16px;
+  gap: 4px;
 }
 .twa-container,
 .twa-page,
@@ -53,4 +62,9 @@ body,
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+.twa-edit-input--readonly {
+  background: #eee !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
 }

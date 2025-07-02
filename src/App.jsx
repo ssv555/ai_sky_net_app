@@ -7,6 +7,7 @@ import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
 import CarForm from "./components/CarForm/CarForm";
 import ProductsForm from "./components/Products/ProductsForm";
+import ProductEdit from "./components/Products/ProductEdit";
 import {
   initTelegramUtils,
   saveParamsFromUrlToStorage,
@@ -70,6 +71,11 @@ function App() {
             path="ProductsForm"
             element={<ProductsForm />}
             errorElement={<ErrorBoundary pageTitle="Товары" />}
+          />
+          <Route
+            path="ProductsForm/edit/:id"
+            element={<ProductsForm />}
+            errorElement={<ErrorBoundary pageTitle="Редактирование" />}
           />
         </Routes>
       </div>

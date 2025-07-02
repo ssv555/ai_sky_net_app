@@ -16,6 +16,7 @@ import Table from "../ui/Table";
 import { showConfirmation } from "../../utils/telegramUtils";
 import FooterNav from "../ui/FooterNav";
 import ProductEdit from "./ProductEdit";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ProductsForm = () => {
   const {
@@ -42,14 +43,15 @@ const ProductsForm = () => {
   const [totalCount, setTotalCount] = useState(0);
   const [totalSum, setTotalSum] = useState(0);
   const [selectedRows, setSelectedRows] = useState([]);
-  const [showEdit, setShowEdit] = useState(false);
-  const [editObject, setEditObject] = useState(null);
 
   const reportTypes = [
     { value: 0, label: "Товары за день" },
     { value: 1, label: "Сумма за месяц" },
     { value: 2, label: "Сумма за год" },
   ];
+
+  const navigate = useNavigate();
+  const params = useParams();
 
   // Конфигурация колонок для таблицы
   const tableColumns = useMemo(() => {
@@ -357,18 +359,16 @@ const ProductsForm = () => {
       );
       return;
     }
-    const objEdit = productsData.find(
-      (item) => item.product_id === selectedRows[0]
-    );
-    setEditObject(objEdit);
-    setShowEdit(true);
-  }, [selectedRows, productsData, showNotification]);
+    const product_id = selectedRows[0];
+    navigate(`/ProductsForm/edit/${product_id}`);
+  }, [selectedRows, showNotification, navigate]);
 
   const handleSaveEdit = (updatedObject) => {
-    // Тут логика сохранения (например, API-запрос)
-    setShowEdit(false);
-    setEditObject(null);
-    showNotification("Изменения сохранены", "success");
+    navigate("/ProductsForm");
+    showNotification(
+      `Изменения сохранены:\n${updatedObject.product}`,
+      "success"
+    );
     handleRefresh();
   };
 
@@ -504,6 +504,17 @@ const ProductsForm = () => {
     }
   }, [selectedDate, selectedReportType, handleRefresh]);
 
+  // useEffect для обработки query-параметра edited
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("edited") === "1") {
+      handleRefresh();
+      showNotification("Изменения сохранены", "success");
+      // Чистим query-параметр, чтобы не было повторных срабатываний
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   const actionDropdownItems = [
     { label: "Буфер обмена - Строка", action: "copyRecord" },
     { label: "Буфер обмена - Таблица", action: "copyTable" },
@@ -515,13 +526,30 @@ const ProductsForm = () => {
     { label: "Удалить...", action: "delete" },
   ];
 
-  if (showEdit && editObject) {
+  // --- КЛЮЧЕВОЕ: определяем editId из params ---
+  const editId = params.id;
+  const editObject = editId
+    ? productsData.find((item) => String(item.product_id) === String(editId))
+    : null;
+
+  // --- Если есть editId и объект найден, рендерим ProductEdit ---
+  if (editObject) {
     return (
       <ProductEdit
-        titleEditForm="Редактирование товара"
-        editObject={editObject}
-        readOnly={["product_id", "tg_user_id", "text", "datetime_ins"]}
+        pageTitle="Редактирование товара"
+        object_edit={editObject}
         onSaveEdit={handleSaveEdit}
+        read_only={["product_id", "tg_user_id", "text", "datetime_ins"]}
+        titles={{
+          product_id: "product_id",
+          tg_user_id: "user_id",
+          product: "Товар",
+          cost: "Цена",
+          type_sell_name: "Тип оплаты",
+          payer: "Оплатил",
+          text: "Текст",
+          datetime_ins: "Дата",
+        }}
       />
     );
   }

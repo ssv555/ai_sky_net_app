@@ -1,20 +1,25 @@
 import React, { useState } from "react";
 import Button from "../ui/Button";
 import FooterNav from "../ui/FooterNav";
-import { useNavigate } from "react-router-dom";
 
-const ProductEdit = ({
-  titleEditForm = "Редактирование",
-  editObject = {},
-  readOnly = [],
-  onSaveEdit,
-}) => {
-  const [formState, setFormState] = useState(editObject);
+const ProductEdit = (props) => {
+  const {
+    object_edit = {},
+    onSaveEdit,
+    read_only = [],
+    titles = {},
+    backPage = "/ProductsForm",
+  } = props;
+  const page_title = props.pageTitle || "Редактирование";
+  const [formState, setFormState] = useState(object_edit || {});
 
-  // Проверка изменений только по редактируемым полям
-  const isChanged = Object.keys(formState).some(
-    (key) => !readOnly.includes(key) && formState[key] !== editObject[key]
-  );
+  const isChanged =
+    formState && object_edit && Object.keys(formState).length > 0
+      ? Object.keys(formState).some(
+          (key) =>
+            !read_only.includes(key) && formState[key] !== object_edit[key]
+        )
+      : false;
 
   const handleChange = (key, value) => {
     setFormState((prev) => ({ ...prev, [key]: value }));
@@ -24,11 +29,15 @@ const ProductEdit = ({
     if (onSaveEdit && isChanged) onSaveEdit(formState);
   };
 
+  if (!formState || Object.keys(formState).length === 0) {
+    return <div>Товар не найден или загрузка...</div>;
+  }
+
   return (
     <div className="twa-container">
       <div className="twa-header-content-edit">
-        <h1 className="twa-title">{titleEditForm}</h1>
-        <div className="twa-controls-container">
+        <h1 className="twa-title">{page_title}</h1>
+        <div className="twa-controls-container-edit">
           <Button
             name="save"
             title="💾 Сохранить"
@@ -49,12 +58,14 @@ const ProductEdit = ({
           >
             {Object.entries(formState).map(([key, value]) => (
               <div key={key} className="twa-edit-row">
-                <label className="twa-edit-label">{key}</label>
+                <label className="twa-edit-label">{titles[key] || key}</label>
                 <input
-                  className="twa-edit-input"
+                  className={`twa-edit-input${
+                    read_only.includes(key) ? " twa-edit-input--readonly" : ""
+                  }`}
                   type="text"
                   value={value ?? ""}
-                  readOnly={readOnly.includes(key)}
+                  readOnly={read_only.includes(key)}
                   onChange={(e) => handleChange(key, e.target.value)}
                 />
               </div>
@@ -63,7 +74,7 @@ const ProductEdit = ({
         </div>
         <div className="twa-footer-debug"></div>
       </div>
-      <FooterNav />
+      <FooterNav backRoute={backPage} />
     </div>
   );
 };

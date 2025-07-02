@@ -226,6 +226,50 @@ const ProductsForm = () => {
     }
   }, [generateCSVContent, showNotification]);
 
+  // Копирование только выделенных строк (красиво)
+  const handleCopyRecords = useCallback(async () => {
+    if (!selectedRows || selectedRows.length === 0) {
+      showNotification("Выделите строку для копирования", "info");
+      return;
+    }
+    if (!productsData || productsData.length === 0) {
+      showNotification("Нет данных для копирования", "info");
+      return;
+    }
+    const csvSeparator = ";";
+    const headers = tableColumns.map((col) => col.title).join(csvSeparator);
+    const rows = selectedRows
+      .map((id) => {
+        const row = productsData.find((item) => item.product_id === id);
+        if (!row) return null;
+        return tableColumns
+          .map((col) => {
+            let value = row[col.key];
+            if (col.render) value = col.render(value);
+            if (
+              typeof value === "string" &&
+              (value.includes(csvSeparator) || value.includes('"'))
+            ) {
+              value = `"${value.replace(/"/g, '""')}"`;
+            }
+            return value || "";
+          })
+          .join(csvSeparator);
+      })
+      .filter(Boolean);
+    if (rows.length === 0) {
+      showNotification("Строки не найдены", "error");
+      return;
+    }
+    const result = [headers, ...rows].join("\n");
+    try {
+      await navigator.clipboard.writeText(result);
+      showNotification(`Скопировано строк: ${rows.length}`, "success");
+    } catch (error) {
+      showNotification("Ошибка копирования", "error");
+    }
+  }, [selectedRows, productsData, tableColumns, showNotification]);
+
   const handleCopyTotal = useCallback(async () => {
     let csvContent = generateCSVContent();
     if (!csvContent) {
@@ -295,9 +339,46 @@ const ProductsForm = () => {
     showNotification,
   ]);
 
-  const handleDropdownItemClick = useCallback(
+  const handleDuplicateSelected = useCallback(() => {
+    const message = `Дублировать выбранные товары (${selectedRows.length} шт.)?`;
+    showConfirmation(message, () => {
+      doDuplicateSelected();
+    });
+  }, [selectedRows, showNotification]);
+
+  const handleEditSelected = useCallback(() => {
+    if (selectedRows.length !== 1) {
+      showNotification(
+        "Для редактирования должна быть выделена одна запись.",
+        "info"
+      );
+      return;
+    }
+    //
+  }, [selectedRows, showNotification]);
+
+  const handleDeleteSelected = useCallback(() => {
+    const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
+    showConfirmation(message, () => {
+      doDeleteSelected();
+    });
+  }, [selectedRows, showNotification]);
+
+  const handleActionItemClick = useCallback(
     (item) => {
       switch (item.action) {
+        case "duplicate":
+          handleDuplicateSelected();
+          break;
+        case "edit":
+          handleEditSelected();
+          break;
+        case "delete":
+          handleDeleteSelected();
+          break;
+        case "copyRecord":
+          handleCopyRecords();
+          break;
         case "copyTable":
           handleCopyTable();
           break;
@@ -311,7 +392,16 @@ const ProductsForm = () => {
           break;
       }
     },
-    [handleCopyTable, handleCopyTotal, handleDownloadCSV]
+    [
+      handleDuplicateSelected,
+      handleEditSelected,
+      handleDeleteSelected,
+      handleCopyRecords,
+      handleCopyTable,
+      handleCopyTotal,
+      handleDownloadCSV,
+      showNotification,
+    ]
   );
 
   const doDuplicateSelected = async () => {
@@ -351,47 +441,6 @@ const ProductsForm = () => {
       showNotification(resData?.message, "error");
     }
   };
-
-  const handleDuplicateSelected = useCallback(() => {
-    const message = `Дублировать выбранные товары (${selectedRows.length} шт.)?`;
-    showConfirmation(message, () => {
-      doDuplicateSelected();
-    });
-  }, [selectedRows, showNotification]);
-
-  const handleDeleteSelected = useCallback(() => {
-    const message = `Удалить выбранные товары (${selectedRows.length} шт.)?`;
-    showConfirmation(message, () => {
-      doDeleteSelected();
-    });
-  }, [selectedRows, showNotification]);
-
-  const handleActionItemClick = useCallback(
-    (item) => {
-      switch (item.action) {
-        case "duplicate":
-          handleDuplicateSelected();
-          break;
-        case "delete":
-          handleDeleteSelected();
-          break;
-        default:
-          break;
-      }
-    },
-    [handleDuplicateSelected, handleDeleteSelected]
-  );
-
-  const exportDropdownItems = [
-    { label: "Буфер обмена - Таблица", action: "copyTable" },
-    { label: "Буфер обмена - Таблица + Итог", action: "copyTotal" },
-    { label: "Файл CSV", action: "downloadCSV" },
-  ];
-
-  const actionDropdownItems = [
-    { label: "Дублировать...", action: "duplicate" },
-    { label: "Удалить...", action: "delete" },
-  ];
 
   const handleRowClick = useCallback(
     (row, index) => {
@@ -440,6 +489,17 @@ const ProductsForm = () => {
     }
   }, [selectedDate, selectedReportType, handleRefresh]);
 
+  const actionDropdownItems = [
+    { label: "Буфер обмена - Строка", action: "copyRecord" },
+    { label: "Буфер обмена - Таблица", action: "copyTable" },
+    { label: "Буфер обмена - Таблица + Итог", action: "copyTotal" },
+    { label: "Файл CSV", action: "downloadCSV" },
+    { label: "________________________" },
+    { label: "Дублировать...", action: "duplicate" },
+    { label: "Редактировать...", action: "edit" },
+    { label: "Удалить...", action: "delete" },
+  ];
+
   return (
     <div className="twa-container">
       <div className="twa-header-content">
@@ -476,18 +536,6 @@ const ProductsForm = () => {
               variant="secondary"
               enabled={!isRefreshDisabled}
               onClick={handleRefresh}
-            />
-            <Button
-              name="export"
-              title="📋 Экспорт"
-              variant="secondary"
-              enabled={
-                Array.isArray(productsData) &&
-                productsData.length > 0 &&
-                !isRefreshDisabled
-              }
-              dropdownItems={exportDropdownItems}
-              onDropdownItemClick={handleDropdownItemClick}
             />
             <Button
               name="action"

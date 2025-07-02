@@ -366,7 +366,7 @@ const ProductsForm = () => {
   const handleSaveEdit = (updatedObject) => {
     navigate("/ProductsForm");
     showNotification(
-      `Изменения сохранены:\n${updatedObject.product}`,
+      `Изменения сохранены:\n${JSON.stringify(updatedObject, null, 2)}`,
       "success"
     );
     handleRefresh();
@@ -545,7 +545,8 @@ const ProductsForm = () => {
           tg_user_id: "user_id",
           product: "Товар",
           cost: "Цена",
-          type_sell_name: "Тип оплаты",
+          type_sell: "Тип оплаты id",
+          type_sell_name: "Тип оплаты название",
           payer: "Оплатил",
           text: "Текст",
           datetime_ins: "Дата",

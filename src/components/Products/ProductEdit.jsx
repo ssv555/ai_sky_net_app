@@ -26,7 +26,7 @@ const ProductEdit = (props) => {
   };
 
   const handleSave = () => {
-    if (onSaveEdit && isChanged) onSaveEdit(formState);
+    if (onSaveEdit && isChanged) onSaveEdit({ ...object_edit, ...formState });
   };
 
   if (!formState || Object.keys(formState).length === 0) {
@@ -67,6 +67,16 @@ const ProductEdit = (props) => {
                   value={value ?? ""}
                   readOnly={read_only.includes(key)}
                   onChange={(e) => handleChange(key, e.target.value)}
+                  style={
+                    read_only.includes(key)
+                      ? {
+                          background: "#eee",
+                          color: "#888",
+                          cursor: "not-allowed",
+                          border: "1.5px solid #bbb",
+                        }
+                      : {}
+                  }
                 />
               </div>
             ))}

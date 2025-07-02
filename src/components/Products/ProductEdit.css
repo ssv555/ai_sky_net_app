@@ -67,4 +67,12 @@ body,
   background: #eee !important;
   color: #888 !important;
   cursor: not-allowed !important;
+  border: 1.5px solid #bbb !important;
+}
+
+input.twa-edit-input--readonly {
+  background: #eee !important;
+  color: #888 !important;
+  cursor: not-allowed !important;
+  border: 1.5px solid #bbb !important;
 }

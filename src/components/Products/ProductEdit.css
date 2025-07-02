@@ -1,0 +1,32 @@
+.twa-header-content {
+  position: sticky;
+  z-index: 100;
+  width: 100%;
+  background-color: var(--tg-theme-bg-color, #17212b);
+  border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  padding: 4px 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.twa-title {
+  color: var(--tg-theme-text-color, #fff);
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0;
+  padding: 0;
+  line-height: 1.1;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+.twa-controls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  width: 100%;
+  margin-left: 0;
+  align-items: center;
+  justify-content: flex-end;
+}

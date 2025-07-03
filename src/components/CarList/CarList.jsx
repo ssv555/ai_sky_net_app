@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useMemo } from "react";
-import "./CarList.css";
+import { useNavigate } from "react-router-dom";
 import apiCar from "../../services/apiCar";
 import { useTelegram } from "../../hooks/useTelegram";
-import FooterNav from "../ui/FooterNav";
+import { Button } from "@mui/material";
 
 const CarList = () => {
   const [cars, setCars] = useState([]);
@@ -90,7 +90,9 @@ const CarList = () => {
           </div>
         </div>
       </div>
-      <FooterNav />
+      <div className="twa-footer-debug">
+        <div className="twa-footer-debug__content">{debugContent}</div>
+      </div>
     </div>
   );
 };

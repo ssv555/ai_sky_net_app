@@ -1,13 +1,14 @@
-import "./App.css";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { createTelegramTheme } from "./theme/telegramTheme";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
+import BasePage from "./components/ui/BasePage";
+
 import MainPage from "./components/MainPage/MainPage";
-import CarList from "./components/CarList/CarList";
-import CarForm from "./components/CarForm/CarForm";
+// import CarList from "./components/CarList/CarList";
+// import CarForm from "./components/CarForm/CarForm";
 import ProductsForm from "./components/Products/ProductsForm";
 import ProductEdit from "./components/Products/ProductEdit";
 import {
@@ -19,11 +20,8 @@ function App() {
   const { WebApp, isTelegramEnvironment, twa } = useTelegram();
   const location = useLocation();
 
-  // Создаем тему на основе цветовой схемы Telegram
-  const theme = useMemo(() => {
-    const colorScheme = WebApp?.colorScheme || "light";
-    return createTelegramTheme(colorScheme);
-  }, [WebApp?.colorScheme]);
+  // Создаем тему
+  const theme = createTelegramTheme();
 
   // Инициализируем утилиты для работы с Telegram
   useEffect(() => {
@@ -34,21 +32,6 @@ function App() {
   useEffect(() => {
     saveParamsFromUrlToStorage();
   }, [location]);
-
-  const getPageTitle = () => {
-    switch (location.pathname.replace(/^\//, "")) {
-      case "":
-        return "Главная страница";
-      case "CarList":
-        return "Список автомобилей";
-      case "CarForm":
-        return "Форма автомобиля";
-      case "ProductsForm":
-        return "Товары";
-      default:
-        return "Main Page";
-    }
-  };
 
   useEffect(() => {
     if (twa) {
@@ -67,7 +50,7 @@ function App() {
               element={<MainPage />}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
-            <Route
+            {/* <Route
               path="CarList"
               element={<CarList />}
               errorElement={<ErrorBoundary pageTitle="Список автомобилей" />}
@@ -76,7 +59,7 @@ function App() {
               path="CarForm"
               element={<CarForm />}
               errorElement={<ErrorBoundary pageTitle="Форма автомобиля" />}
-            />
+            /> */}
             <Route
               path="ProductsForm"
               element={<ProductsForm />}
@@ -86,6 +69,31 @@ function App() {
               path="ProductsForm/edit/:id"
               element={<ProductsForm />}
               errorElement={<ErrorBoundary pageTitle="Редактирование" />}
+            />
+            <Route
+              path="BasePage"
+              element={
+                <BasePage
+                  pageTitle="Тестовая страница"
+                  isShowControls={true}
+                  titleBtnBack={true}
+                  titleBtnClose={true}
+                  onBackClick={() => console.log("Back clicked")}
+                  onCloseClick={() => console.log("Close clicked")}
+                  controls={
+                    <div style={{ padding: "8px" }}>
+                      <h4>Панель управления</h4>
+                      <p>Здесь могут быть фильтры или другие контролы</p>
+                    </div>
+                  }
+                >
+                  <div>
+                    <h2>Тестовый контент</h2>
+                    <p>Это демонстрационная страница для BasePage компонента</p>
+                  </div>
+                </BasePage>
+              }
+              errorElement={<ErrorBoundary pageTitle="Базовая страница" />}
             />
           </Routes>
         </div>

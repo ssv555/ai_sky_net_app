@@ -6,27 +6,25 @@ import React, {
   useRef,
   useLayoutEffect,
 } from "react";
-import "react-datepicker/dist/react-datepicker.css";
-import "./ProductsForm.css";
-import { useTelegram, useApplyTelegramTheme } from "../../hooks/useTelegram";
-import apiProducts from "../../services/apiProducts";
-import DatePicker from "react-datepicker";
-import {
-  Button,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
-  Checkbox,
-} from "@mui/material";
-import { showConfirmation } from "../../utils/telegramUtils";
-import FooterNav from "../ui/FooterNav";
-import ProductEdit from "./ProductEdit";
 import { useNavigate, useParams } from "react-router-dom";
+import apiProducts from "../../services/apiProducts";
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+} from "@mui/material";
+import { useTelegram } from "../../hooks/useTelegram";
+import { showConfirmation } from "../../utils/telegramUtils";
+import ProductEdit from "./ProductEdit";
+import DatePicker from "react-datepicker";
 
 const ProductsForm = () => {
   const {
@@ -40,7 +38,6 @@ const ProductsForm = () => {
     showNotification,
     isTelegramEnvironment,
   } = useTelegram();
-  useApplyTelegramTheme();
   let lastRefreshTime = 0;
   let isRefreshDisabled = false;
   const REFRESH_COOLDOWN = 3000; // в миллисекундах
@@ -728,9 +725,10 @@ const ProductsForm = () => {
           </TableContainer>
         </div>
 
-        <div className="twa-footer-debug"></div>
+        <div className="twa-footer-debug">
+          <div className="twa-footer-debug__content">{debugContent}</div>
+        </div>
       </div>
-      <FooterNav />
     </div>
   );
 };

@@ -1,81 +1,72 @@
 import React, { useState } from "react";
 import { Button } from "@mui/material";
-import FooterNav from "../ui/FooterNav";
+import { useNavigate } from "react-router-dom";
 
-const ProductEdit = (props) => {
-  const {
-    object_edit = {},
-    onSaveEdit,
-    read_only = [],
-    titles = {},
-    backPage = "/ProductsForm",
-  } = props;
-  const page_title = props.pageTitle || "Редактирование";
-  const [formState, setFormState] = useState(object_edit || {});
+const ProductEdit = ({
+  titleEditForm = "Редактирование",
+  editObject = {},
+  readOnly = [],
+  onSaveEdit,
+}) => {
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState(editObject);
+  const [debugContent, setDebugContent] = useState("");
 
-  const isChanged =
-    formState && object_edit && Object.keys(formState).length > 0
-      ? Object.keys(formState).some(
-          (key) =>
-            !read_only.includes(key) && formState[key] !== object_edit[key]
-        )
-      : false;
-
-  const handleChange = (key, value) => {
-    setFormState((prev) => ({ ...prev, [key]: value }));
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSave = () => {
-    if (onSaveEdit && isChanged) onSaveEdit({ ...object_edit, ...formState });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSaveEdit(formData);
   };
-
-  if (!formState || Object.keys(formState).length === 0) {
-    return <div>Товар не найден или загрузка...</div>;
-  }
 
   return (
-    <div className="twa-container">
-      <div className="twa-header-content-edit">
-        <h1 className="twa-title">{page_title}</h1>
-        <div className="twa-controls-container-edit">
-          <Button
-            variant="contained"
-            onClick={handleSave}
-            disabled={!isChanged}
-            startIcon="💾"
-          >
-            Сохранить
-          </Button>
+    <div className="container">
+      <div className="content">
+        <h2>{titleEditForm}</h2>
+        <form onSubmit={handleSubmit}>
+          {Object.entries(formData).map(([key, value]) => (
+            <div key={key} className="form-group">
+              <label htmlFor={key}>{key}:</label>
+              <input
+                type="text"
+                id={key}
+                name={key}
+                value={value}
+                onChange={handleInputChange}
+                disabled={readOnly.includes(key)}
+              />
+            </div>
+          ))}
+          <div className="button-group">
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              fullWidth
+              sx={{ mb: 1 }}
+            >
+              Сохранить
+            </Button>
+            <Button
+              variant="outlined"
+              color="secondary"
+              fullWidth
+              onClick={() => navigate(-1)}
+            >
+              Отмена
+            </Button>
+          </div>
+        </form>
+        <div className="twa-footer-debug">
+          <div className="twa-footer-debug__content">{debugContent}</div>
         </div>
       </div>
-      <div className="twa-page">
-        <div className="twa-content">
-          <form
-            className="twa-edit-form"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSave();
-            }}
-          >
-            {Object.entries(formState).map(([key, value]) => (
-              <div key={key} className="twa-edit-row">
-                <label className="twa-edit-label">{titles[key] || key}</label>
-                <input
-                  className={`twa-edit-input${
-                    read_only.includes(key) ? " twa-edit-input--readonly" : ""
-                  }`}
-                  type="text"
-                  value={value ?? ""}
-                  readOnly={read_only.includes(key)}
-                  onChange={(e) => handleChange(key, e.target.value)}
-                />
-              </div>
-            ))}
-          </form>
-        </div>
-        <div className="twa-footer-debug"></div>
-      </div>
-      <FooterNav backRoute={backPage} />
     </div>
   );
 };

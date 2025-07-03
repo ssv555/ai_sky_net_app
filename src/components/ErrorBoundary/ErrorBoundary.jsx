@@ -1,6 +1,5 @@
 import React from "react";
 import { Button } from "@mui/material";
-import "./ErrorBoundary.css";
 
 class ErrorBoundary extends React.Component {
   constructor(props) {

@@ -1,16 +1,16 @@
-import "./CarForm.css";
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTelegram } from "../../hooks/useTelegram";
+import { useNavigate } from "react-router-dom";
 import apiCar from "../../services/apiCar";
+import { isAmg45Group, getCarFormLogic, useAmg45Logic } from "./CarForm.amg45";
 import {
-  setAmg45Model,
-  isAmg45Group,
-  handleModelSelection,
-  handleEnginePower,
-  setMercedesBrand,
-} from "../../groups/amg45";
-import { useAmg45Logic } from "./CarForm.amg45";
-import FooterNav from "../ui/FooterNav";
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+} from "@mui/material";
 
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
@@ -419,7 +419,9 @@ const CarForm = () => {
         </div>
         <div className="twa-footer-debug"></div>
       </div>
-      <FooterNav />
+      <div className="car-form-debug">
+        <div className="car-form-debug__content">{debugContent}</div>
+      </div>
     </div>
   );
 };

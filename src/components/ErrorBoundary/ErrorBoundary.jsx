@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../ui/Button";
+import { Button } from "@mui/material";
 import "./ErrorBoundary.css";
 
 class ErrorBoundary extends React.Component {
@@ -40,11 +40,12 @@ class ErrorBoundary extends React.Component {
           )}
 
           <Button
-            title="Перезагрузить страницу"
-            variant="primary"
+            variant="contained"
             fullWidth
             onClick={() => window.location.reload()}
-          />
+          >
+            Перезагрузить страницу
+          </Button>
         </div>
       );
     }

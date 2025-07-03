@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./MainPage.css";
-import Button from "../ui/Button";
+import { Button } from "@mui/material";
 import { useTelegram } from "../../hooks/useTelegram";
 import FooterNav from "../ui/FooterNav";
 
@@ -56,23 +56,24 @@ const MainPage = () => {
         <h1 className="twa-title">Главная страница</h1>
         <div className="twa-content">
           <Button
-            title="Гараж"
-            variant="primary"
+            variant="contained"
             fullWidth
             onClick={() => handleNavigation("CarList")}
-          />
+            sx={{ mb: 2 }}
+          >
+            Гараж
+          </Button>
           <Button
-            title="Товары"
-            variant="primary"
+            variant="contained"
             fullWidth
             onClick={() => handleNavigation("ProductsForm")}
-          />
-          <Button
-            title="Диагностика темы"
-            variant="secondary"
-            fullWidth
-            onClick={handleThemeDiagnostics}
-          />
+            sx={{ mb: 2 }}
+          >
+            Товары
+          </Button>
+          <Button variant="outlined" fullWidth onClick={handleThemeDiagnostics}>
+            Диагностика темы
+          </Button>
           {/* <Button>
             <span>
               <h3>Строка 1</h3>

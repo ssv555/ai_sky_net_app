@@ -11,8 +11,18 @@ import "./ProductsForm.css";
 import { useTelegram, useApplyTelegramTheme } from "../../hooks/useTelegram";
 import apiProducts from "../../services/apiProducts";
 import DatePicker from "react-datepicker";
-import Button from "../ui/Button";
-import Table from "../ui/Table";
+import {
+  Button,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Checkbox,
+} from "@mui/material";
 import { showConfirmation } from "../../utils/telegramUtils";
 import FooterNav from "../ui/FooterNav";
 import ProductEdit from "./ProductEdit";
@@ -586,25 +596,46 @@ const ProductsForm = () => {
           </div>
           <div className="twa-refresh-button-container">
             <Button
-              name="refresh"
-              title="🔄 Обновить"
-              variant="secondary"
-              enabled={!isRefreshDisabled}
+              variant="contained"
               onClick={handleRefresh}
-            />
+              disabled={isLoading}
+              startIcon="🔄"
+            >
+              Обновить
+            </Button>
             <Button
-              name="action"
-              title="⚡ Действие"
-              variant="secondary"
-              enabled={
-                selectedReportType === 0 &&
-                Array.isArray(selectedRows) &&
-                selectedRows.length > 0 &&
-                !isRefreshDisabled
-              }
-              dropdownItems={actionDropdownItems}
-              onDropdownItemClick={handleActionItemClick}
-            />
+              variant="outlined"
+              onClick={handleCopyTable}
+              disabled={!productsData.length}
+              startIcon="📋"
+            >
+              Копировать
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleCopyRecords}
+              disabled={!selectedRows.length}
+              startIcon="✂️"
+            >
+              Копировать выбранное
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={doDuplicateSelected}
+              disabled={!selectedRows.length}
+              startIcon="📝"
+            >
+              Дублировать
+            </Button>
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={doDeleteSelected}
+              disabled={!selectedRows.length}
+              startIcon="🗑️"
+            >
+              Удалить
+            </Button>
           </div>
         </div>
 
@@ -627,16 +658,74 @@ const ProductsForm = () => {
       </div>
       <div className="twa-page">
         <div className="twa-content">
-          <Table
-            columns={tableColumns}
-            data={productsData}
-            onRowClick={handleRowClick}
-            isLoading={isLoading}
-            selectedRows={selectedRows}
-            enableRowSelection={
-              selectedReportType === 0 && productsData.length > 0
-            }
-          />
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={
+                        selectedRows.length > 0 &&
+                        selectedRows.length < productsData.length
+                      }
+                      checked={selectedRows.length === productsData.length}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setSelectedRows(
+                            productsData.map((row) => row.product_id)
+                          );
+                        } else {
+                          setSelectedRows([]);
+                        }
+                      }}
+                    />
+                  </TableCell>
+                  {tableColumns.map((column) => (
+                    <TableCell
+                      key={column.key}
+                      align={column.align || "left"}
+                      style={{ width: column.width }}
+                    >
+                      {column.title}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {productsData.map((row) => (
+                  <TableRow
+                    key={row.product_id}
+                    selected={selectedRows.includes(row.product_id)}
+                    hover
+                    onClick={() => {
+                      const isSelected = selectedRows.includes(row.product_id);
+                      setSelectedRows(
+                        isSelected
+                          ? selectedRows.filter((id) => id !== row.product_id)
+                          : [...selectedRows, row.product_id]
+                      );
+                    }}
+                  >
+                    <TableCell padding="checkbox">
+                      <Checkbox
+                        checked={selectedRows.includes(row.product_id)}
+                      />
+                    </TableCell>
+                    {tableColumns.map((column) => (
+                      <TableCell
+                        key={column.key}
+                        align={column.align || "left"}
+                      >
+                        {column.render
+                          ? column.render(row[column.key])
+                          : row[column.key]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
 
         <div className="twa-footer-debug"></div>

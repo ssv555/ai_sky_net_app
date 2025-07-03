@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Button from "../ui/Button";
+import { Button } from "@mui/material";
 import FooterNav from "../ui/FooterNav";
 
 const ProductEdit = (props) => {
@@ -39,12 +39,13 @@ const ProductEdit = (props) => {
         <h1 className="twa-title">{page_title}</h1>
         <div className="twa-controls-container-edit">
           <Button
-            name="save"
-            title="💾 Сохранить"
-            variant="secondary"
+            variant="contained"
             onClick={handleSave}
-            enabled={isChanged}
-          />
+            disabled={!isChanged}
+            startIcon="💾"
+          >
+            Сохранить
+          </Button>
         </div>
       </div>
       <div className="twa-page">

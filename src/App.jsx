@@ -1,7 +1,9 @@
 import "./App.css";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { ThemeProvider, CssBaseline } from "@mui/material";
+import { createTelegramTheme } from "./theme/telegramTheme";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import MainPage from "./components/MainPage/MainPage";
 import CarList from "./components/CarList/CarList";
@@ -16,6 +18,12 @@ import {
 function App() {
   const { WebApp, isTelegramEnvironment, twa } = useTelegram();
   const location = useLocation();
+
+  // Создаем тему на основе цветовой схемы Telegram
+  const theme = useMemo(() => {
+    const colorScheme = WebApp?.colorScheme || "light";
+    return createTelegramTheme(colorScheme);
+  }, [WebApp?.colorScheme]);
 
   // Инициализируем утилиты для работы с Telegram
   useEffect(() => {
@@ -49,37 +57,40 @@ function App() {
   }, [twa]);
 
   return (
-    <ErrorBoundary>
-      <div className="App">
-        <Routes>
-          <Route
-            index
-            element={<MainPage />}
-            errorElement={<ErrorBoundary pageTitle="Главная страница" />}
-          />
-          <Route
-            path="CarList"
-            element={<CarList />}
-            errorElement={<ErrorBoundary pageTitle="Список автомобилей" />}
-          />
-          <Route
-            path="CarForm"
-            element={<CarForm />}
-            errorElement={<ErrorBoundary pageTitle="Форма автомобиля" />}
-          />
-          <Route
-            path="ProductsForm"
-            element={<ProductsForm />}
-            errorElement={<ErrorBoundary pageTitle="Товары" />}
-          />
-          <Route
-            path="ProductsForm/edit/:id"
-            element={<ProductsForm />}
-            errorElement={<ErrorBoundary pageTitle="Редактирование" />}
-          />
-        </Routes>
-      </div>
-    </ErrorBoundary>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <ErrorBoundary>
+        <div className="App">
+          <Routes>
+            <Route
+              index
+              element={<MainPage />}
+              errorElement={<ErrorBoundary pageTitle="Главная страница" />}
+            />
+            <Route
+              path="CarList"
+              element={<CarList />}
+              errorElement={<ErrorBoundary pageTitle="Список автомобилей" />}
+            />
+            <Route
+              path="CarForm"
+              element={<CarForm />}
+              errorElement={<ErrorBoundary pageTitle="Форма автомобиля" />}
+            />
+            <Route
+              path="ProductsForm"
+              element={<ProductsForm />}
+              errorElement={<ErrorBoundary pageTitle="Товары" />}
+            />
+            <Route
+              path="ProductsForm/edit/:id"
+              element={<ProductsForm />}
+              errorElement={<ErrorBoundary pageTitle="Редактирование" />}
+            />
+          </Routes>
+        </div>
+      </ErrorBoundary>
+    </ThemeProvider>
   );
 }
 

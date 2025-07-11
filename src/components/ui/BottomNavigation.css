@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: var(--tg-theme-bg-color, #17212b);
+  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
   border-top: 1px solid var(--tg-theme-hint-color, #333);
   padding: 4px 0;
   position: fixed;
@@ -25,7 +25,7 @@
 }
 
 .twa-nav-item.active {
-  color: var(--tg-theme-button-color, #2AABEE);
+  color: var(--theme-primary-color, var(--tg-theme-button-color, #2AABEE));
 }
 
 .twa-nav-icon {
@@ -36,9 +36,9 @@
 .twa-nav-label {
   font-size: 0.7rem !important;
   margin-top: -4px !important;
-  color: var(--tg-theme-text-color, #fff);
+  color: var(--theme-text-color, var(--tg-theme-text-color, #fff));
 }
 
 .twa-nav-item.active .twa-nav-label {
-  color: var(--tg-theme-button-color, #2AABEE);
+  color: var(--theme-primary-color, var(--tg-theme-button-color, #2AABEE));
 }

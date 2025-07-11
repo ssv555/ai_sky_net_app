@@ -2,7 +2,7 @@
   position: static;
   z-index: 100;
   width: 100%;
-  background-color: var(--tg-theme-bg-color, #17212b);
+  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
   border-bottom: 1px solid var(--tg-theme-hint-color, #333);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   padding: 0 8px 4px 8px !important;
@@ -12,12 +12,12 @@
   gap: 2px;
   margin-top: 0 !important;
   padding-top: 0 !important;
-  background: #f00 !important;
+  background: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b)) !important;
   height: auto !important;
   min-height: unset !important;
 }
 .twa-title {
-  color: var(--tg-theme-text-color, #fff);
+  color: var(--theme-text-color, var(--tg-theme-text-color, #fff));
   width: 100%;
   text-align: center;
   margin-bottom: 0;
@@ -50,11 +50,11 @@ body,
 #root {
   margin: 0 !important;
   padding: 0 !important;
-  background: #0f0 !important;
+  background: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b)) !important;
 }
 .twa-header-content-edit {
   width: 100%;
-  background-color: var(--tg-theme-bg-color, #17212b);
+  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
   border-bottom: 1px solid var(--tg-theme-hint-color, #333);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
   padding: 0 8px 4px 8px;

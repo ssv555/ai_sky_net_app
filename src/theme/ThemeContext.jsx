@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { createTelegramTheme, THEME_VARIANTS } from './telegramTheme';
 import { CssBaseline, ThemeProvider as MuiThemeProvider } from '@mui/material';
 
@@ -14,11 +14,33 @@ export const ThemeProvider = ({ children }) => {
   const changeTheme = (themeVariant) => {
     if (Object.values(THEME_VARIANTS).includes(themeVariant)) {
       setCurrentTheme(themeVariant);
+      // Сохраняем выбранную тему в localStorage
+      localStorage.setItem('selectedTheme', themeVariant);
     }
   };
 
+  // Загружаем сохраненную тему при монтировании компонента
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('selectedTheme');
+    if (savedTheme && Object.values(THEME_VARIANTS).includes(savedTheme)) {
+      setCurrentTheme(savedTheme);
+    }
+  }, []);
+
   // Создаем тему с выбранным вариантом
   const theme = createTelegramTheme(currentTheme);
+
+  // Применяем CSS-переменные для всего приложения при изменении темы
+  useEffect(() => {
+    const root = document.documentElement;
+    const selectedTheme = theme.palette;
+    
+    // Устанавливаем основные цвета как CSS-переменные
+    root.style.setProperty('--theme-bg-color', selectedTheme.background.default);
+    root.style.setProperty('--theme-text-color', selectedTheme.text.primary);
+    root.style.setProperty('--theme-primary-color', selectedTheme.primary.main);
+    root.style.setProperty('--theme-secondary-color', selectedTheme.text.secondary);
+  }, [theme]);
 
   // Значение контекста
   const contextValue = {

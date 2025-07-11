@@ -40,14 +40,14 @@ function App() {
         <div className="App">
           <Routes>
             <Route
-              path="basepage"
-              element={<BasePage pageTitle="Base Page"></BasePage>}
-              errorElement={<ErrorBoundary pageTitle="Base Page" />}
-            />
-            <Route
               index
               element={<BasePage pageTitle="Главная страница"><MainPage /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
+            />
+            <Route
+              path="BasePage"
+              element={<BasePage pageTitle="Base Page"></BasePage>}
+              errorElement={<ErrorBoundary pageTitle="Base Page" />}
             />
             <Route
               path="ProductsForm"

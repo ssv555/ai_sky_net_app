@@ -7,6 +7,7 @@ import BottomNavigation from './BottomNavigation';
 const BasePage = ({
   pageTitle,
   children,
+  menuItems,
 }) => {
 
   return (
@@ -19,7 +20,7 @@ const BasePage = ({
           {children}
          </div>
        </div>
-       <BottomNavigation />
+       <BottomNavigation menu={menuItems} />
      </div>
     );
 };
@@ -27,10 +28,18 @@ const BasePage = ({
 BasePage.propTypes = {
   pageTitle: PropTypes.string.isRequired,
   children: PropTypes.node,
+  menuItems: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      callback: PropTypes.func.isRequired,
+    })
+  ),
 };
 
 BasePage.defaultProps = {
   children: null,
+  menuItems: [],
 };
 
 export default BasePage;

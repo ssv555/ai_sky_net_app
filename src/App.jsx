@@ -16,7 +16,7 @@ import {
 } from "./utils/telegramUtils";
 
 function App() {
-  const { WebApp, isTelegramEnvironment, twa } = useTelegram();
+  const { WebApp, isTelegramEnvironment, twa, showNotification } = useTelegram();
   const location = useLocation();
 
   useEffect(() => {
@@ -33,6 +33,33 @@ function App() {
     }
   }, [twa]);
 
+  // Пример элементов меню с колбэками
+  const mainPageMenuItems = [
+    {
+      name: "products",
+      title: "Перейти к товарам",
+      callback: () => {
+        location.href = "/ProductsForm";
+        showNotification("Переход к товарам", "info");
+      }
+    },
+    {
+      name: "settings",
+      title: "Настройки",
+      callback: () => {
+        location.href = "/settings";
+        showNotification("Переход к настройкам", "info");
+      }
+    },
+    {
+      name: "notification",
+      title: "Показать уведомление",
+      callback: () => {
+        showNotification("Это тестовое уведомление", "success");
+      }
+    }
+  ];
+
   return (
     <ThemeProvider>
       <CssBaseline />
@@ -41,7 +68,7 @@ function App() {
           <Routes>
             <Route
               index
-              element={<BasePage pageTitle="Главная страница"><MainPage /></BasePage>}
+              element={<BasePage pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainPage /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
             <Route

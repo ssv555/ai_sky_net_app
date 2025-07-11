@@ -4,13 +4,12 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { ThemeProvider } from "./theme/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import BasePage from "./components/ui/BasePage";
-import ThemeSelector from "./components/ui/ThemeSelector";
+import { CssBaseline } from "@mui/material";
 
 import MainPage from "./components/MainPage/MainPage";
-// import CarList from "./components/CarList/CarList";
-// import CarForm from "./components/CarForm/CarForm";
 import ProductsForm from "./components/Products/ProductsForm";
 import ProductEdit from "./components/Products/ProductEdit";
+import SettingsPage from "./components/SettingsPage/SettingsPage";
 import {
   initTelegramUtils,
   saveParamsFromUrlToStorage,
@@ -20,12 +19,10 @@ function App() {
   const { WebApp, isTelegramEnvironment, twa } = useTelegram();
   const location = useLocation();
 
-  // Инициализируем утилиты для работы с Telegram
   useEffect(() => {
     initTelegramUtils(WebApp, isTelegramEnvironment);
   }, [WebApp, isTelegramEnvironment]);
 
-  // Сохраняем параметры из URL в localStorage при каждом монтировании/переходе
   useEffect(() => {
     saveParamsFromUrlToStorage();
   }, [location]);
@@ -38,44 +35,38 @@ function App() {
 
   return (
     <ThemeProvider>
+      <CssBaseline />
       <ErrorBoundary>
         <div className="App">
           <Routes>
-                <Route
-                  index
-                  element={<MainPage />}
+            <Route
+              path="basepage"
+              element={<BasePage pageTitle="Base Page"></BasePage>}
+              errorElement={<ErrorBoundary pageTitle="Base Page" />}
+            />
+            <Route
+              index
+              element={<BasePage pageTitle="Главная страница"><MainPage /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
-            {/* <Route
-              path="CarList"
-              element={<CarList />}
-              errorElement={<ErrorBoundary pageTitle="Список автомобилей" />}
-            />
-            <Route
-              path="CarForm"
-              element={<CarForm />}
-              errorElement={<ErrorBoundary pageTitle="Форма автомобиля" />}
-            /> */}
             <Route
               path="ProductsForm"
-              element={<ProductsForm />}
+              element={<BasePage pageTitle="Товары"><ProductsForm /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Товары" />}
             />
             <Route
               path="ProductsForm/edit/:id"
-              element={<ProductsForm />}
+              element={<BasePage pageTitle="Редактирование"><ProductEdit /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Редактирование" />}
             />
             <Route
-              path="BasePage"
-              element={
-                <ThemeSelector />
-              }
-              errorElement={<ErrorBoundary pageTitle="Базовая страница" />}
+              path="settings"
+              element={<BasePage pageTitle="Настройки"><SettingsPage /></BasePage>}
+              errorElement={<ErrorBoundary pageTitle="Настройки" />}
             />
-              </Routes>
-            </div>
-          </ErrorBoundary>
+          </Routes>
+        </div>
+      </ErrorBoundary>
     </ThemeProvider>
   );
 }

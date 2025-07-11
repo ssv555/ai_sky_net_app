@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, IconButton, Paper } from "@mui/material";
+import { Box, Typography, IconButton, Paper, Collapse } from "@mui/material";
 import { styled, alpha } from "@mui/material/styles";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import CloseIcon from "@mui/icons-material/Close";
@@ -16,7 +16,7 @@ const PageContainer = styled(Box)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const Header = styled(Paper)(({ theme }) => ({
+const Footer = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   backgroundColor: theme.palette.background.darker,
   color: theme.palette.text.primary,
@@ -89,14 +89,13 @@ const ButtonText = styled(Typography)(({ theme }) => ({
 const BasePage = ({
   pageTitle,
   isShowControls = false,
-  titleBtnBack,
-  titleBtnClose,
+  showBtnBack,
+  showBtnClose,
   onBackClick,
   onCloseClick,
   controls,
   children,
 }) => {
-  const [showControls] = useState(isShowControls);
   const [isControlsCollapsed, setIsControlsCollapsed] = useState(false);
 
   const toggleControls = () => {
@@ -107,10 +106,9 @@ const BasePage = ({
     <PageContainer>
       <Body>{children}</Body>
 
-      {showControls && (
+      {isShowControls && (
         <Controls
           sx={{
-            maxHeight: isControlsCollapsed ? "32px" : "300px",
             padding: isControlsCollapsed
               ? (theme) => theme.spacing(0.5, 1)
               : (theme) => theme.spacing(1),
@@ -131,23 +129,21 @@ const BasePage = ({
               )}
             </ControlsToggleButton>
           </Box>
-          <Box
-            sx={{
-              opacity: isControlsCollapsed ? 0 : 1,
-              transition: "opacity 0.2s ease-in-out",
-              visibility: isControlsCollapsed ? "hidden" : "visible",
-            }}
-          >
-            {controls}
-          </Box>
+          <Collapse in={!isControlsCollapsed} timeout="auto" unmountOnExit>
+            <Box>{controls}</Box>
+          </Collapse>
         </Controls>
       )}
 
-      <Header elevation={0}>
+      <Footer elevation={0}>
         <TitleContainer>
           <Box>
-            {titleBtnBack && (
-              <StyledIconButton edge="start" onClick={onBackClick}>
+            {showBtnBack && (
+              <StyledIconButton
+                edge="start"
+                onClick={onBackClick}
+                aria-label="Назад"
+              >
                 <ArrowBackIcon />
                 <ButtonText>Назад</ButtonText>
               </StyledIconButton>
@@ -166,15 +162,19 @@ const BasePage = ({
           </CenteredTitle>
 
           <Box>
-            {titleBtnClose && (
-              <StyledIconButton edge="end" onClick={onCloseClick}>
+            {showBtnClose && (
+              <StyledIconButton
+                edge="end"
+                onClick={onCloseClick}
+                aria-label="Закрыть"
+              >
                 <CloseIcon />
                 <ButtonText>Закрыть</ButtonText>
               </StyledIconButton>
             )}
           </Box>
         </TitleContainer>
-      </Header>
+      </Footer>
     </PageContainer>
   );
 };
@@ -182,12 +182,22 @@ const BasePage = ({
 BasePage.propTypes = {
   pageTitle: PropTypes.string.isRequired,
   isShowControls: PropTypes.bool,
-  titleBtnBack: PropTypes.bool,
-  titleBtnClose: PropTypes.bool,
+  showBtnBack: PropTypes.bool,
+  showBtnClose: PropTypes.bool,
   onBackClick: PropTypes.func,
   onCloseClick: PropTypes.func,
   controls: PropTypes.node,
   children: PropTypes.node,
+};
+
+BasePage.defaultProps = {
+  isShowControls: false,
+  showBtnBack: false,
+  showBtnClose: false,
+  onBackClick: undefined,
+  onCloseClick: undefined,
+  controls: null,
+  children: null,
 };
 
 export default BasePage;

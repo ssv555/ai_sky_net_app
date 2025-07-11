@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
-import { ThemeProvider, CssBaseline } from "@mui/material";
-import { createTelegramTheme } from "./theme/telegramTheme";
+import { ThemeProvider } from "./theme/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 import BasePage from "./components/ui/BasePage";
+import ThemeSelector from "./components/ui/ThemeSelector";
 
 import MainPage from "./components/MainPage/MainPage";
 // import CarList from "./components/CarList/CarList";
@@ -19,9 +19,6 @@ import {
 function App() {
   const { WebApp, isTelegramEnvironment, twa } = useTelegram();
   const location = useLocation();
-
-  // Создаем тему
-  const theme = createTelegramTheme();
 
   // Инициализируем утилиты для работы с Telegram
   useEffect(() => {
@@ -40,14 +37,13 @@ function App() {
   }, [twa]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
+    <ThemeProvider>
       <ErrorBoundary>
         <div className="App">
           <Routes>
-            <Route
-              index
-              element={<MainPage />}
+                <Route
+                  index
+                  element={<MainPage />}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
             {/* <Route
@@ -73,31 +69,13 @@ function App() {
             <Route
               path="BasePage"
               element={
-                <BasePage
-                  pageTitle="Тестовая страница"
-                  isShowControls={true}
-                  titleBtnBack={true}
-                  titleBtnClose={true}
-                  onBackClick={() => console.log("Back clicked")}
-                  onCloseClick={() => console.log("Close clicked")}
-                  controls={
-                    <div style={{ padding: "8px" }}>
-                      <h4>Панель управления</h4>
-                      <p>Здесь могут быть фильтры или другие контролы</p>
-                    </div>
-                  }
-                >
-                  <div>
-                    <h2>Тестовый контент</h2>
-                    <p>Это демонстрационная страница для BasePage компонента</p>
-                  </div>
-                </BasePage>
+                <ThemeSelector />
               }
               errorElement={<ErrorBoundary pageTitle="Базовая страница" />}
             />
-          </Routes>
-        </div>
-      </ErrorBoundary>
+              </Routes>
+            </div>
+          </ErrorBoundary>
     </ThemeProvider>
   );
 }

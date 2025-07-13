@@ -21,7 +21,7 @@ const isDevMode = () => {
 export const getApiUrl = () => {
   return isDevMode()
     ? `http://localhost:${SERVER_PORT}/api/dev/srv`
-    : `https://v570907.hosted-by-vdsina.ru/api/prod/srv`;
+    : `https://it-joy.ru/api/prod/srv`;
 };
 
 console.log(`SERVER_PORT:  ${SERVER_PORT}`);

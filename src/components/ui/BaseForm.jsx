@@ -17,14 +17,14 @@ const BaseForm = ({
   const { setBackButton, isTelegramEnvironment } = useTelegram();
   
   const isMainPage = location.pathname === '/';
-  const showBackInBrowser = !isMainPage && !isTelegramEnvironment();
+  const showBackInBrowser = !isMainPage && !isTelegramEnvironment;
 
   useEffect(() => {
     const handleBackClick = () => {
       navigate(-1);
     };
 
-    const isInTelegram = isTelegramEnvironment();
+    const isInTelegram = isTelegramEnvironment;
     console.log('BaseForm: isTelegramEnvironment =', isInTelegram);
     console.log('BaseForm: isMainPage =', isMainPage);
     console.log('BaseForm: location.pathname =', location.pathname);

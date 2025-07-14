@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "./theme/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
@@ -13,8 +13,9 @@ import ProductEdit from "./components/Products/ProductEdit";
 import SettingsForm from "./components/Settings/SettingsPage";
 
 function App() {
-  const { WebApp, isTelegramEnvironment, twa, showNotification } = useTelegram();
+  const { WebApp, isTelegramEnvironment, showNotification } = useTelegram();
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     initTelegramUtils(WebApp, isTelegramEnvironment);
@@ -25,18 +26,21 @@ function App() {
   }, [location]);
 
   useEffect(() => {
-    if (twa) {
-      twa.expand();
+    if (WebApp && isTelegramEnvironment) {
+      try {
+        WebApp.expand();
+      } catch (error) {
+        console.warn('Ошибка при расширении WebApp:', error);
+      }
     }
-  }, [twa]);
+  }, [WebApp, isTelegramEnvironment]);
 
-  // Пример элементов меню с колбэками
   const mainPageMenuItems = [
     {
       name: "products",
       title: "Перейти к товарам",
       callback: () => {
-        location.href = "/ProductsForm";
+        navigate("/ProductsForm");
         showNotification("Переход к товарам", "info");
       }
     },
@@ -44,7 +48,7 @@ function App() {
       name: "settings",
       title: "Настройки",
       callback: () => {
-        location.href = "/settings";
+        navigate("/settings");
         showNotification("Переход к настройкам", "info");
       }
     },
@@ -58,40 +62,35 @@ function App() {
   ];
 
   return (
+  <ErrorBoundary>
     <ThemeProvider>
       <CssBaseline />
-      <ErrorBoundary>
         <div className="App">
           <Routes>
             <Route
               index
               element={<BaseForm pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainForm /></BaseForm>}
-              errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
             <Route
               path="BaseForm"
               element={<BaseForm pageTitle="Base Form"></BaseForm>}
-              errorElement={<ErrorBoundary pageTitle="Base Form" />}
             />
             <Route
               path="ProductsForm"
               element={<BaseForm pageTitle="Товары"><ProductsForm /></BaseForm>}
-              errorElement={<ErrorBoundary pageTitle="Товары" />}
             />
             <Route
               path="ProductsForm/edit/:id"
               element={<BaseForm pageTitle="Редактирование"><ProductEdit /></BaseForm>}
-              errorElement={<ErrorBoundary pageTitle="Редактирование" />}
             />
             <Route
               path="settings"
               element={<BaseForm pageTitle="Настройки"><SettingsForm /></BaseForm>}
-              errorElement={<ErrorBoundary pageTitle="Настройки" />}
             />
           </Routes>
         </div>
-      </ErrorBoundary>
-    </ThemeProvider>
+      </ThemeProvider>
+    </ErrorBoundary>
   );
 }
 

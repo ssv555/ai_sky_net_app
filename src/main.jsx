@@ -4,6 +4,12 @@ import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import eruda from 'eruda';
 import { developers } from './constants/constants';
+import { createTelegramMock } from './utils/telegramMock';
+
+// Создаем мок Telegram WebApp для браузера
+if (typeof window !== 'undefined' && !window.Telegram) {
+  createTelegramMock();
+}
 
 const BASE_PATH = import.meta.env.VITE_BASE_PATH || "/";
 console.log("[AI SKY NET] BASE_PATH:", BASE_PATH);

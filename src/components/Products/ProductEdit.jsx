@@ -20,7 +20,7 @@ const ProductEdit = ({
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleFormSubmit = (e) => {
     e.preventDefault();
     onSaveEdit(formData);
   };
@@ -29,7 +29,7 @@ const ProductEdit = ({
     <div className="container">
       <div className="content">
         <h2>{titleEditForm}</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleFormSubmit}>
           {Object.entries(formData).map(([key, value]) => (
             <div key={key} className="form-group">
               <label htmlFor={key}>{key}:</label>

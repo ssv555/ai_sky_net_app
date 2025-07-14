@@ -25,6 +25,9 @@ import { useTelegram } from "../../hooks/useTelegram";
 import { showConfirmation } from "../../utils/telegramUtils";
 import ProductEdit from "./ProductEdit";
 import DatePicker from "react-datepicker";
+import { useAppForm } from '../../hooks/useForm';
+import { productSchema } from '../../schemas/validationSchemas';
+import { FormTextField, FormSelect } from '../ui/FormFields';
 
 const ProductsForm = () => {
   const {
@@ -533,6 +536,12 @@ const ProductsForm = () => {
     { label: "Удалить...", action: "delete" },
   ];
 
+  const { control, handleSubmit, reset } = useAppForm(productSchema);
+
+  const onSubmit = (data) => {
+    sendDataToServer(data);
+  };
+  
   // --- КЛЮЧЕВОЕ: определяем editId из params ---
   const editId = params.id;
   const editObject = editId
@@ -543,25 +552,14 @@ const ProductsForm = () => {
   if (editObject) {
     return (
       <ProductEdit
-        pageTitle="Редактирование товара"
-        object_edit={editObject}
+        titleEditForm="Редактирование товара"
+        editObject={editObject}
         onSaveEdit={handleSaveEdit}
-        read_only={["product_id", "tg_user_id", "text", "datetime_ins"]}
-        titles={{
-          product_id: "product_id",
-          tg_user_id: "user_id",
-          product: "Товар",
-          cost: "Цена",
-          type_sell: "Тип оплаты id",
-          type_sell_name: "Тип оплаты название",
-          payer: "Оплатил",
-          text: "Текст",
-          datetime_ins: "Дата",
-        }}
       />
     );
   }
-
+  
+  // Основной return компонента
   return (
     <div className="twa-container">
       <div className="twa-header-content">

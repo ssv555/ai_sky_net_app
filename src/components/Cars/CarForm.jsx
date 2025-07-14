@@ -12,6 +12,10 @@ import {
   MenuItem,
 } from "@mui/material";
 
+import { useAppForm } from '../../hooks/useForm';
+import { carSchema } from '../../schemas/validationSchemas';
+import { FormTextField, FormSelect } from '../ui/FormFields';
+
 const MAX_NAME_LENGTH = 256;
 const MAX_PRICE = 1000000000;
 
@@ -425,5 +429,33 @@ const CarForm = () => {
     </div>
   );
 };
+
+const onSubmit = (data) => {
+  if (!validateForm()) return;
+  sendDataToServer(data);
+};
+
+return (
+  <form onSubmit={handleSubmit(onSubmit)} className="twa-container">
+    <div className="twa-page">
+      <h1 className="twa-title">Автомобиль</h1>
+      <div className="twa-content">
+        <div className="twa-form">
+          <FormSelect
+            name="car_brand_id"
+            control={control}
+            label="Бренд"
+            options={brands.map(brand => ({
+              value: brand.car_brand_id,
+              label: brand.brand_name
+            }))}
+          />
+          {/* Аналогично преобразуем остальные поля */}
+        </div>
+      </div>
+    </div>
+  </form>
+);
+
 
 export default CarForm;

@@ -28,19 +28,29 @@ const MainPage = () => {
   );
 };
 
-export default MainPage;
+const MainForm = () => {
+  const navigate = useNavigate();
+  const { showNotification } = useTelegram();
 
-/*
-          <Button
-            title="Car list"
-            variant="primary"
-            fullWidth
-            onClick={() => handleNavigation("CarList")}
-          />
-          <Button
-            title="Car"
-            variant="primary"
-            fullWidth
-            onClick={() => handleNavigation("CarForm")}
-          />
-*/
+  const handleNavigation = (path) => {
+    try {
+      navigate(path);
+    } catch (error) {
+      showNotification(`Ошибка навигации: ${error.message}`, "error");
+    }
+  };
+
+  return (
+    <div>
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={() => handleNavigation("/ProductsForm")}
+      >
+        Товары
+      </Button>
+    </div>
+  );
+};
+
+export default MainForm;

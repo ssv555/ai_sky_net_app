@@ -1,19 +1,16 @@
 import { useEffect } from "react";
 import { useTelegram } from "./hooks/useTelegram";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "./theme/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import BasePage from "./components/ui/BasePage";
-import { CssBaseline } from "@mui/material";
+import BasePage from "./components/ui/BaseForm";
+import { initTelegramUtils, saveParamsFromUrlToStorage } from "./utils/telegramUtils";
 
-import MainPage from "./components/MainPage/MainPage";
-import ProductsForm from "./components/Products/ProductsForm";
+import MainForm from "./components/Main/MainForm";
+import ProductsForm from "./components/Products/ProductsList";
 import ProductEdit from "./components/Products/ProductEdit";
-import SettingsPage from "./components/SettingsPage/SettingsPage";
-import {
-  initTelegramUtils,
-  saveParamsFromUrlToStorage,
-} from "./utils/telegramUtils";
+import SettingsForm from "./components/Settings/SettingsPage";
 
 function App() {
   const { WebApp, isTelegramEnvironment, twa, showNotification } = useTelegram();
@@ -68,7 +65,7 @@ function App() {
           <Routes>
             <Route
               index
-              element={<BasePage pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainPage /></BasePage>}
+              element={<BasePage pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainForm /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
             <Route
@@ -88,7 +85,7 @@ function App() {
             />
             <Route
               path="settings"
-              element={<BasePage pageTitle="Настройки"><SettingsPage /></BasePage>}
+              element={<BasePage pageTitle="Настройки"><SettingsForm /></BasePage>}
               errorElement={<ErrorBoundary pageTitle="Настройки" />}
             />
           </Routes>

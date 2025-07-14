@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@mui/material';
 import BottomNavigation from './BottomNavigation';
+import './BaseForm.css';
 
 const BaseForm = ({
   pageTitle,
@@ -20,14 +21,17 @@ const BaseForm = ({
     >
       <Box
         component="header"
+        className="header-with-separator"
         sx={{
           p: 0.5,
           borderBottom: 1,
           borderColor: 'divider',
-          textAlign: 'center'
+          textAlign: 'center',
+          position: 'relative'
         }}
       >
         <h1 style={{ margin: 0, fontSize: '1.25rem' }}>{pageTitle}</h1>
+        <div className="animated-separator top-separator"></div>
       </Box>
       <Box
         component="main"

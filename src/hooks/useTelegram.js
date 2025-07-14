@@ -61,23 +61,29 @@ const setCachedResponse = (cacheKey, data) => {
  * @returns {boolean} true если в Telegram, false если в браузере
  */
 export const isTelegramEnvironment = () => {
-  // Проверяем наличие Telegram WebApp
+  console.log('Проверка Telegram окружения:');
+  console.log('window.Telegram:', !!window?.Telegram);
+  console.log('window.Telegram.WebApp:', !!window?.Telegram?.WebApp);
+  console.log('location.search:', window.location.search);
+  console.log('userAgent:', navigator.userAgent);
+  
+  // Основная проверка - наличие Telegram WebApp
   const hasWebApp = !!window?.Telegram?.WebApp;
-
-  if (!hasWebApp) {
-    return false;
+  
+  if (hasWebApp) {
+    // В Telegram всегда есть WebApp объект
+    console.log('Найден Telegram WebApp');
+    return true;
   }
-
-  // Дополнительные проверки для определения Telegram
-  const isInTelegram =
-    // Проверяем URL параметры Telegram
-    window.location.search.includes("tgWebApp") ||
-    // Проверяем user agent (может быть ненадежно)
-    navigator.userAgent.includes("Telegram") ||
-    // Проверяем, что WebApp инициализирован (безопасно)
-    !!window.Telegram?.WebApp?.initDataUnsafe?.user;
-
-  return isInTelegram;
+  
+  // Дополнительные проверки для мобильных приложений
+  const isTelegramMobile = 
+    navigator.userAgent.includes('TelegramBot') ||
+    navigator.userAgent.includes('Telegram') ||
+    window.location.search.includes('tgWebApp');
+    
+  console.log('isTelegramMobile:', isTelegramMobile);
+  return isTelegramMobile;
 };
 
 /**
@@ -116,11 +122,10 @@ export const showNotification = (message, type = "info") => {
 export const useTelegram = () => {
   const WebApp = window?.Telegram?.WebApp;
   const MainButton = window?.Telegram?.WebApp?.MainButton;
+  const BackButton = window?.Telegram?.WebApp?.BackButton;
   const user = WebApp?.initDataUnsafe?.user || { id: USER_ID } || null;
   const API_BASE_URL = getApiUrl();
   const abortControllerRef = useRef(null);
-
-  console.log(`user:         ${JSON.stringify(user)}`); // TODO: Удалить через некоторое время, написано 2025-07-01.
 
   /**
    * Закрывает Telegram WebApp
@@ -242,10 +247,56 @@ export const useTelegram = () => {
     };
   }, []);
 
+  /**
+   * Показывает кнопку назад в заголовке Telegram
+   */
+  const showBackButton = useCallback((callback) => {
+    if (!BackButton) return;
+    
+    BackButton.show();
+    
+    if (callback && typeof callback === 'function') {
+      BackButton.onClick(callback);
+    }
+  }, [BackButton]);
+
+  /**
+   * Скрывает кнопку назад
+   */
+  const hideBackButton = useCallback(() => {
+    if (!BackButton) return;
+    BackButton.hide();
+    BackButton.offClick();
+  }, [BackButton]);
+
+  /**
+   * Управляет кнопкой назад в Telegram WebApp
+   */
+  const setBackButton = useCallback((show, callback) => {
+    if (!WebApp || !BackButton) return;
+    
+    if (show && callback) {
+      BackButton.offClick();
+      BackButton.show();
+      BackButton.onClick(callback);
+    } else {
+      BackButton.hide();
+      BackButton.offClick();
+    }
+  }, [WebApp, BackButton]);
+  
+  /**
+   * Проверка Telegram окружения
+   */
+  const isTelegramEnvironment = useCallback(() => {
+    return !!window?.Telegram?.WebApp;
+  }, []);
+
   return {
     user,
     WebApp,
     MainButton,
+    BackButton,
 
     USER_ID,
     CHAT_ID,
@@ -257,8 +308,11 @@ export const useTelegram = () => {
     onClose,
     toggleMainButton,
     sendDataToServer,
-    isTelegramEnvironment,
+    isTelegramEnvironment: isTelegramEnvironment,
     showNotification,
+    showBackButton,
+    hideBackButton,
+    setBackButton,
   };
 };
 

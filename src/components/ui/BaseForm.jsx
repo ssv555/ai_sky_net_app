@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Box } from '@mui/material';
+import { Box, IconButton } from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useTelegram } from '../../hooks/useTelegram';
 import BottomNavigation from './BottomNavigation';
 import './BaseForm.css';
 
@@ -9,6 +12,42 @@ const BaseForm = ({
   children,
   menuItems,
 }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { setBackButton, isTelegramEnvironment } = useTelegram();
+  
+  const isMainPage = location.pathname === '/';
+  const showBackInBrowser = !isMainPage && !isTelegramEnvironment();
+
+  useEffect(() => {
+    const handleBackClick = () => {
+      navigate(-1);
+    };
+
+    const isInTelegram = isTelegramEnvironment();
+    console.log('BaseForm: isTelegramEnvironment =', isInTelegram);
+    console.log('BaseForm: isMainPage =', isMainPage);
+    console.log('BaseForm: location.pathname =', location.pathname);
+
+    if (isInTelegram) {
+      if (!isMainPage) {
+        console.log('Показываем кнопку назад в Telegram');
+        setBackButton(true, handleBackClick);
+      } else {
+        console.log('Скрываем кнопку назад (главная страница)');
+        setBackButton(false);
+      }
+    } else {
+      console.log('Не в Telegram окружении');
+    }
+
+    return () => {
+      if (isInTelegram) {
+        setBackButton(false);
+      }
+    };
+  }, [location.pathname, setBackButton, navigate, isMainPage, isTelegramEnvironment]);
+
   return (
     <Box
       sx={{
@@ -30,6 +69,20 @@ const BaseForm = ({
           position: 'relative'
         }}
       >
+        {showBackInBrowser && (
+          <IconButton
+            onClick={() => navigate(-1)}
+            sx={{
+              position: 'absolute',
+              left: 8,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: 'text.primary'
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+        )}
         <h1 style={{ margin: 0, fontSize: '1.25rem' }}>{pageTitle}</h1>
         <div className="animated-separator top-separator"></div>
       </Box>

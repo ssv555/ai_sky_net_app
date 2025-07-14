@@ -39,14 +39,25 @@ export const showMessage = (message, title = null) => {
  * @returns {void}
  */
 export const handleError = (error, WebApp) => {
-  if (!WebApp) return;
-
-  const errorMessage =
-    error.name === "AbortError"
-      ? "Запрос превысил время ожидания"
-      : `Ошибка: ${error.message}`;
-
-  showMessage(errorMessage, "Ошибка");
+  console.error('Обработка ошибки:', error);
+  
+  let errorMessage = 'Произошла неизвестная ошибка';
+  
+  if (error) {
+    if (error.name === "AbortError") {
+      errorMessage = "Запрос превысил время ожидания";
+    } else if (error.message) {
+      errorMessage = `Ошибка: ${error.message}`;
+    } else if (typeof error === 'string') {
+      errorMessage = error;
+    } else {
+      // Если ошибка - объект, попробуем извлечь полезную информацию
+      errorMessage = `Ошибка: ${JSON.stringify(error, null, 2)}`;
+    }
+  }
+  
+  console.log('Сообщение об ошибке:', errorMessage);
+  showMessage(errorMessage, "Что-то пошло не так");
 };
 
 export const isObject = (value) => {

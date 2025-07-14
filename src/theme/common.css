@@ -1,0 +1,105 @@
+:root {
+  /* Theme variables */
+  --theme-bg-color: var(--tg-theme-bg-color, #17212b);
+  --theme-text-color: var(--tg-theme-text-color, #fff);
+  --theme-hint-color: var(--tg-theme-hint-color, #333);
+  --theme-primary-color: var(--tg-theme-button-color, #2AABEE);
+  
+  /* Common sizes */
+  --header-height: 56px;
+  --bottom-nav-height: 56px;
+  --content-padding: 16px;
+}
+
+/* Common animations */
+@keyframes slideGlow {
+  0% {
+    background-position: -200% 0;
+    opacity: 0.4;
+  }
+  50% {
+    background-position: 0% 0;
+    opacity: 0.9;
+  }
+  100% {
+    background-position: 200% 0;
+    opacity: 0.4;
+  }
+}
+
+/* Common layouts */
+.twa-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--theme-bg-color);
+  color: var(--theme-text-color);
+}
+
+.twa-page {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: var(--bottom-nav-height);
+}
+
+.twa-content {
+  flex: 1;
+  padding: var(--content-padding);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--content-padding);
+}
+
+/* Common header styles */
+.twa-header-content {
+  position: static;
+  z-index: 100;
+  width: 100%;
+  background-color: var(--theme-bg-color);
+  padding: 8px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.twa-title {
+  color: var(--theme-text-color);
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  padding: 8px 0;
+  line-height: 1.1;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+/* Common separator styles */
+.animated-separator {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    #ff6600 20%,
+    #ff4500 50%,
+    #ff6600 80%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: slideGlow 9s ease-in-out infinite;
+  opacity: 0.9;
+}
+
+/* Reset styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

@@ -1,31 +1,12 @@
-.twa-header-content {
-  position: static;
-  z-index: 100;
-  width: 100%;
-  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
-  border-bottom: 1px solid var(--tg-theme-hint-color, #333);
+.twa-header-content.product-edit {
+  border-bottom: 1px solid var(--theme-hint-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  padding: 0 8px 4px 8px !important;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
+  padding: 0 8px 4px 8px;
   gap: 2px;
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-  background: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b)) !important;
-  height: auto !important;
-  min-height: unset !important;
+  height: auto;
+  min-height: unset;
 }
-.twa-title {
-  color: var(--theme-text-color, var(--tg-theme-text-color, #fff));
-  width: 100%;
-  text-align: center;
-  margin-bottom: 0;
-  padding: 0;
-  line-height: 1.1;
-  font-size: 1.1rem;
-  font-weight: 500;
-}
+
 .twa-controls-container {
   display: flex;
   flex-wrap: wrap;
@@ -34,43 +15,19 @@
   margin-left: 0;
   align-items: center;
   justify-content: flex-end;
-  padding-right: 16px;
+  padding-right: var(--content-padding);
 }
+
 .twa-controls-container-edit {
   display: flex;
   justify-content: flex-end;
   align-items: center;
   width: 100%;
-  padding-right: 16px;
+  padding-right: var(--content-padding);
   gap: 4px;
 }
-.twa-container,
-.twa-page,
-body,
-#root {
-  margin: 0 !important;
-  padding: 0 !important;
-  background: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b)) !important;
-}
-.twa-header-content-edit {
-  width: 100%;
-  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
-  border-bottom: 1px solid var(--tg-theme-hint-color, #333);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
-  padding: 0 8px 4px 8px;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.twa-edit-input--readonly {
-  background: #eee !important;
-  color: #888 !important;
-  cursor: not-allowed !important;
-  border: 1.5px solid #bbb !important;
-}
 
-input.twa-edit-input--readonly {
+.twa-edit-input--readonly {
   background: #eee !important;
   color: #888 !important;
   cursor: not-allowed !important;

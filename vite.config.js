@@ -14,7 +14,53 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       outDir: "dist",
-      sourcemap: true,
+      sourcemap: mode === "development",
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ["react", "react-dom", "react-router-dom"],
+            ui: [
+              "@mui/material",
+              "@mui/icons-material",
+              "@emotion/react",
+              "@emotion/styled",
+            ],
+          },
+          assetFileNames: (assetInfo) => {
+            if (assetInfo.name.endsWith(".css")) {
+              return "assets/css/[name]-[hash][extname]";
+            }
+            return "assets/[name]-[hash][extname]";
+          },
+          chunkFileNames: "assets/js/[name]-[hash].js",
+          entryFileNames: "assets/js/[name]-[hash].js",
+        },
+      },
+      cssCodeSplit: true, // Разделяем CSS на чанки
+      cssMinify: true, // Минифицируем CSS
+      chunkSizeWarningLimit: 1000,
+      minify: "terser",
+      terserOptions: {
+        compress: {
+          drop_console: mode === "production",
+          drop_debugger: true,
+        },
+      },
+    },
+    optimizeDeps: {
+      include: ["react", "react-dom", "react-router-dom"],
+    },
+    css: {
+      modules: {
+        scopeBehaviour: "local",
+        localsConvention: "camelCase",
+      },
+      preprocessorOptions: {
+        less: {
+          javascriptEnabled: true,
+        },
+      },
+      devSourcemap: true,
     },
   };
 });

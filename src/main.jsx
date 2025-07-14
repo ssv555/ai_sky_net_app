@@ -1,8 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import "./theme/common.css"; // Импортируем общие стили первыми
 import App from "./App";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import eruda from 'eruda';
 import { developers } from './constants/constants';
 import { createTelegramMock } from './utils/telegramMock';
 import { suppressTelegramConsoleMessages } from './utils/consoleSuppressor';
@@ -37,13 +37,36 @@ const isDeveloper = () => {
   return developers.includes(userId) || developers.includes(parseInt(userIdFromUrl));
 };
 
-if (process.env.NODE_ENV === 'development' || isDeveloper() || window.location.href.includes('eruda=true')) {
-  eruda.init();
-  console.log('Eruda загружена для разработчика');
+if (isDeveloper() || process.env.NODE_ENV === 'development' || window.location.href.includes('eruda=true')) {
+  // Асинхронная загрузка eruda
+  import('eruda').then(module => {
+    const eruda = module.default;
+    eruda.init();
+    console.log('Eruda загружена для разработчика');
+    console.log(process.env.NODE_ENV);
+    console.log(window.location.href);
+  });
+}
+
+// Регистрируем сервис-воркер для кэширования
+if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then(registration => {
+        console.log('ServiceWorker registration successful');
+      })
+      .catch(err => {
+        console.log('ServiceWorker registration failed: ', err);
+      });
+  });
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  process.env.NODE_ENV === 'production' ? (
     <RouterProvider router={router} />
-  </React.StrictMode>
+  ) : (
+    <React.StrictMode>
+      <RouterProvider router={router} />
+    </React.StrictMode>
+  )
 );

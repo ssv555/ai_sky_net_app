@@ -2,15 +2,15 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  background-color: var(--theme-bg-color, var(--tg-theme-bg-color, #17212b));
-  border-top: 1px solid var(--tg-theme-hint-color, #333);
+  background-color: var(--theme-bg-color);
+  border-top: 1px solid var(--theme-hint-color);
   padding: 4px 0;
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 56px;
+  height: var(--bottom-nav-height);
   position: relative;
 }
 
@@ -46,7 +46,7 @@
 }
 
 .twa-nav-item.active {
-  color: var(--theme-primary-color, var(--tg-theme-button-color, #2AABEE));
+  color: var(--theme-primary-color);
 }
 
 .twa-nav-icon {
@@ -57,24 +57,9 @@
 .twa-nav-label {
   font-size: 0.7rem !important;
   margin-top: -4px !important;
-  color: var(--theme-text-color, var(--tg-theme-text-color, #fff));
+  color: var(--theme-text-color);
 }
 
 .twa-nav-item.active .twa-nav-label {
-  color: var(--theme-primary-color, var(--tg-theme-button-color, #2AABEE));
-}
-
-@keyframes slideGlow {
-  0% {
-    background-position: -200% 0;
-    opacity: 0.4;
-  }
-  50% {
-    background-position: 0% 0;
-    opacity: 0.9;
-  }
-  100% {
-    background-position: 200% 0;
-    opacity: 0.4;
-  }
+  color: var(--theme-primary-color);
 }

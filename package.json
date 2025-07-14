@@ -17,7 +17,6 @@
     "@mui/styled-engine": "^7.2.0",
     "@mui/system": "^7.2.0",
     "@telegram-apps/sdk-react": "^3.3.6",
-    "@telegram-mini-apps/ui": "^0.0.10",
     "eruda": "^3.4.3",
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
@@ -31,6 +30,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.6.0",
+    "terser": "^5.43.1",
     "vite": "^7.0.4"
   }
 }

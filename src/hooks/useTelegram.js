@@ -17,7 +17,18 @@ export const getApiUrl = () => {
 };
 
 export const isTelegramEnvironment = () => {
-  return !!window.Telegram?.WebApp;
+  if (typeof window === 'undefined') return false;
+  
+  // Более точная проверка среды Telegram
+  const isTelegramApp = 
+    window.location.href.includes('tgWebAppPlatform') || 
+    window.location.href.includes('tgWebAppVersion') ||
+    window.location.href.includes('tgWebAppThemeParams') ||
+    (window.parent !== window && window.parent.location.href.includes('telegram')) ||
+    (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initData) ||
+    document.referrer.includes('telegram');
+    
+  return isTelegramApp && !!window.Telegram?.WebApp;
 };
 
 // Основной хук
@@ -56,7 +67,13 @@ export const useTelegram = () => {
 
   // Управление кнопкой "Назад"
   const setBackButton = useCallback((show, callback) => {
-    if (!tg) return;
+    // Проверяем, что мы в Telegram, а не в браузере
+    if (!isTelegramEnvironment() || !tg?.BackButton) {
+      if (isDevelopment()) {
+        console.log('BackButton недоступна в браузере или не поддерживается');
+      }
+      return;
+    }
     
     try {
       if (show && callback) {
@@ -67,7 +84,9 @@ export const useTelegram = () => {
         tg.BackButton.offClick();
       }
     } catch (error) {
-      console.error('Ошибка управления кнопкой назад:', error);
+      if (isDevelopment()) {
+        console.error('Ошибка управления кнопкой назад:', error);
+      }
     }
   }, []);
 
@@ -116,11 +135,31 @@ export const useTelegram = () => {
   const MainButton = useMemo(() => {
     if (!tg) {
       return {
-        setText: (text) => console.log('MainButton setText:', text),
-        show: () => console.log('MainButton show'),
-        hide: () => console.log('MainButton hide'),
-        onClick: (callback) => console.log('MainButton onClick:', callback),
-        offClick: (callback) => console.log('MainButton offClick:', callback)
+        setText: (text) => {
+          if (isDevelopment()) {
+            console.log('MainButton setText:', text);
+          }
+        },
+        show: () => {
+          if (isDevelopment()) {
+            console.log('MainButton show');
+          }
+        },
+        hide: () => {
+          if (isDevelopment()) {
+            console.log('MainButton hide');
+          }
+        },
+        onClick: (callback) => {
+          if (isDevelopment()) {
+            console.log('MainButton onClick:', callback);
+          }
+        },
+        offClick: (callback) => {
+          if (isDevelopment()) {
+            console.log('MainButton offClick:', callback);
+          }
+        }
       };
     }
     return tg.MainButton;

@@ -15,17 +15,25 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
-      if (window.Telegram && window.Telegram.WebApp) {
+      // Проверяем, запущено ли приложение в Telegram
+      const isTelegramApp = window.location.href.includes('tgWebAppPlatform') || 
+                           window.location.href.includes('tgWebAppVersion') ||
+                           (window.parent !== window && window.parent.location.href.includes('telegram'));
+      
+      if (isTelegramApp && window.Telegram && window.Telegram.WebApp) {
         // Уже загружен в Telegram
         console.log('telegram-web-app version:', window.Telegram.WebApp.version);
-      } else {
-        // Загружаем последнюю версию API
+      } else if (isTelegramApp) {
+        // Загружаем API только если мы в Telegram
         const script = document.createElement('script');
         script.src = 'https://telegram.org/js/telegram-web-app.js?91';
         script.onload = () => {
           console.log('telegram-web-app version:', window.Telegram.WebApp.version);
         };
         document.head.appendChild(script);
+      } else {
+        // В браузере - не загружаем официальный API, будем использовать мок
+        console.log('Запуск в браузере - используется мок Telegram WebApp');
       }
     </script>
   </body>

@@ -1,6 +1,14 @@
 // Мок объект для эмуляции Telegram WebApp в браузере
 export const createTelegramMock = () => {
-  if (typeof window !== 'undefined' && !window.Telegram) {
+  // Проверяем, что мы в браузере и не в Telegram
+  const isBrowser = typeof window !== 'undefined';
+  const isTelegramApp = isBrowser && (
+    window.location.href.includes('tgWebAppPlatform') || 
+    window.location.href.includes('tgWebAppVersion') ||
+    (window.parent !== window && window.parent.location.href.includes('telegram'))
+  );
+  
+  if (isBrowser && !isTelegramApp && !window.Telegram) {
     window.Telegram = {
       WebApp: {
         initData: '',
@@ -19,6 +27,28 @@ export const createTelegramMock = () => {
         version: '6.0',
         platform: 'web',
         colorScheme: 'light',
+        BackButton: {
+          show: () => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] BackButton show');
+            }
+          },
+          hide: () => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] BackButton hide');
+            }
+          },
+          onClick: (callback) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] BackButton onClick set');
+            }
+          },
+          offClick: () => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] BackButton offClick');
+            }
+          }
+        },
         themeParams: {
           bg_color: '#ffffff',
           text_color: '#000000',
@@ -36,50 +66,76 @@ export const createTelegramMock = () => {
         isClosingConfirmationEnabled: false,
         
         // Методы
-        ready: () => console.log('[Mock] WebApp ready'),
+        ready: () => {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] WebApp ready');
+          }
+        },
         expand: () => {
-          console.log('[Mock] WebApp expand');
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] WebApp expand');
+          }
           window.Telegram.WebApp.isExpanded = true;
         },
-        close: () => console.log('[Mock] WebApp close'),
+        close: () => {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] WebApp close');
+          }
+        },
         
         showAlert: (message, callback) => {
-          console.log('[Mock] showAlert:', message);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] showAlert:', message);
+          }
           alert(message);
           if (callback) callback();
         },
         
         showConfirm: (message, callback) => {
-          console.log('[Mock] showConfirm:', message);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] showConfirm:', message);
+          }
           const result = confirm(message);
           if (callback) callback(result);
         },
         
         showPopup: (params, callback) => {
-          console.log('[Mock] showPopup:', params);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] showPopup:', params);
+          }
           const result = confirm(params.message || 'Popup');
           if (callback) callback(result ? 'ok' : 'cancel');
         },
         
         onEvent: (eventType, eventHandler) => {
-          console.log(`[Mock] onEvent: ${eventType}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[Mock] onEvent: ${eventType}`);
+          }
         },
         
         offEvent: (eventType, eventHandler) => {
-          console.log(`[Mock] offEvent: ${eventType}`);
+          if (process.env.NODE_ENV === 'development') {
+            console.log(`[Mock] offEvent: ${eventType}`);
+          }
         },
         
         sendData: (data) => {
-          console.log('[Mock] sendData:', data);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] sendData:', data);
+          }
         },
         
         openLink: (url) => {
-          console.log('[Mock] openLink:', url);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] openLink:', url);
+          }
           window.open(url, '_blank');
         },
         
         openTelegramLink: (url) => {
-          console.log('[Mock] openTelegramLink:', url);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Mock] openTelegramLink:', url);
+          }
           window.open(url, '_blank');
         },
         
@@ -94,74 +150,84 @@ export const createTelegramMock = () => {
           
           setText: function(text) {
             this.text = text;
-            console.log('[Mock] MainButton setText:', text);
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton setText:', text);
+            }
           },
           
           onClick: function(callback) {
             this._callback = callback;
-            console.log('[Mock] MainButton onClick set');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton onClick set');
+            }
           },
           
           show: function() {
             this.isVisible = true;
-            console.log('[Mock] MainButton show');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton show');
+            }
           },
           
           hide: function() {
             this.isVisible = false;
-            console.log('[Mock] MainButton hide');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton hide');
+            }
           },
           
           enable: function() {
             this.isActive = true;
-            console.log('[Mock] MainButton enable');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton enable');
+            }
           },
           
           disable: function() {
             this.isActive = false;
-            console.log('[Mock] MainButton disable');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton disable');
+            }
           },
           
           showProgress: function() {
             this.isProgressVisible = true;
-            console.log('[Mock] MainButton showProgress');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton showProgress');
+            }
           },
           
           hideProgress: function() {
             this.isProgressVisible = false;
-            console.log('[Mock] MainButton hideProgress');
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] MainButton hideProgress');
+            }
           }
         },
-        
-        // Кнопка назад
-        BackButton: {
-          isVisible: false,
-          
-          onClick: function(callback) {
-            this._callback = callback;
-            console.log('[Mock] BackButton onClick set');
-          },
-          
-          show: function() {
-            this.isVisible = true;
-            console.log('[Mock] BackButton show');
-          },
-          
-          hide: function() {
-            this.isVisible = false;
-            console.log('[Mock] BackButton hide');
-          }
-        },
-        
+               
         // Haptic Feedback
         HapticFeedback: {
-          impactOccurred: (style) => console.log(`[Mock] HapticFeedback impact: ${style}`),
-          notificationOccurred: (type) => console.log(`[Mock] HapticFeedback notification: ${type}`),
-          selectionChanged: () => console.log('[Mock] HapticFeedback selection changed')
+          impactOccurred: (style) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`[Mock] HapticFeedback impact: ${style}`);
+            }
+          },
+          notificationOccurred: (type) => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log(`[Mock] HapticFeedback notification: ${type}`);
+            }
+          },
+          selectionChanged: () => {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('[Mock] HapticFeedback selection changed');
+            }
+          }
         }
       }
     };
     
-    console.log('[Mock] Telegram WebApp объект создан для браузера');
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Mock] Telegram WebApp объект создан для браузера');
+    }
   }
 };

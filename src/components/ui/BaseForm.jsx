@@ -21,12 +21,13 @@ const BaseForm = ({
       <Box
         component="header"
         sx={{
-          p: 2,
+          p: 0.5,
           borderBottom: 1,
-          borderColor: 'divider'
+          borderColor: 'divider',
+          textAlign: 'center'
         }}
       >
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{pageTitle}</h1>
+        <h1 style={{ margin: 0, fontSize: '1.25rem' }}>{pageTitle}</h1>
       </Box>
       <Box
         component="main"

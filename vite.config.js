@@ -10,7 +10,7 @@ export default defineConfig(({ mode }) => {
       port: 31000,
       open: true,
       host: true,
-      allowedHosts: ["v570907.hosted-by-vdsina.ru"],
+      allowedHosts: ["it-joy.ru", "it-joy.com.ru", "v570907.hosted-by-vdsina.ru"],
     },
     build: {
       outDir: "dist",

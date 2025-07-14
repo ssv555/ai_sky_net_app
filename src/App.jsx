@@ -4,7 +4,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "./theme/ThemeContext";
 import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
-import BasePage from "./components/ui/BaseForm";
+import BaseForm from "./components/ui/BaseForm";
 import { initTelegramUtils, saveParamsFromUrlToStorage } from "./utils/telegramUtils";
 
 import MainForm from "./components/Main/MainForm";
@@ -65,27 +65,27 @@ function App() {
           <Routes>
             <Route
               index
-              element={<BasePage pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainForm /></BasePage>}
+              element={<BaseForm pageTitle="Главная страница" menuItems={mainPageMenuItems}><MainForm /></BaseForm>}
               errorElement={<ErrorBoundary pageTitle="Главная страница" />}
             />
             <Route
-              path="BasePage"
-              element={<BasePage pageTitle="Base Page"></BasePage>}
-              errorElement={<ErrorBoundary pageTitle="Base Page" />}
+              path="BaseForm"
+              element={<BaseForm pageTitle="Base Form"></BaseForm>}
+              errorElement={<ErrorBoundary pageTitle="Base Form" />}
             />
             <Route
               path="ProductsForm"
-              element={<BasePage pageTitle="Товары"><ProductsForm /></BasePage>}
+              element={<BaseForm pageTitle="Товары"><ProductsForm /></BaseForm>}
               errorElement={<ErrorBoundary pageTitle="Товары" />}
             />
             <Route
               path="ProductsForm/edit/:id"
-              element={<BasePage pageTitle="Редактирование"><ProductEdit /></BasePage>}
+              element={<BaseForm pageTitle="Редактирование"><ProductEdit /></BaseForm>}
               errorElement={<ErrorBoundary pageTitle="Редактирование" />}
             />
             <Route
               path="settings"
-              element={<BasePage pageTitle="Настройки"><SettingsForm /></BasePage>}
+              element={<BaseForm pageTitle="Настройки"><SettingsForm /></BaseForm>}
               errorElement={<ErrorBoundary pageTitle="Настройки" />}
             />
           </Routes>

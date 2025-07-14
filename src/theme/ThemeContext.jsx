@@ -6,14 +6,12 @@ import { THEME_VARIANTS } from './themeConfig';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  const [currentTheme, setCurrentTheme] = useState(THEME_VARIANTS.TELEGRAM_DARK);
-
-  useEffect(() => {
+  const [currentTheme, setCurrentTheme] = useState(() => {
     const savedTheme = localStorage.getItem('selectedTheme');
-    if (savedTheme && Object.values(THEME_VARIANTS).includes(savedTheme)) {
-      setCurrentTheme(savedTheme);
-    }
-  }, []);
+    return savedTheme && Object.values(THEME_VARIANTS).includes(savedTheme) 
+      ? savedTheme 
+      : THEME_VARIANTS.TELEGRAM_DARK;
+  });
 
   const changeTheme = (themeVariant) => {
     if (Object.values(THEME_VARIANTS).includes(themeVariant)) {
@@ -24,7 +22,6 @@ export const ThemeProvider = ({ children }) => {
 
   const theme = createTelegramTheme(currentTheme);
 
-  // Применяем CSS-переменные
   useEffect(() => {
     const root = document.documentElement;
     const selectedTheme = theme.palette;

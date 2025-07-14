@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useState, useRef } from "react";
+import { init, backButton, useSignal } from '@telegram-apps/sdk-react';
 import { copyToClipboard, showMessage, handleError } from "../utils/utils";
 import { getParamsFromStorage } from "../utils/telegramUtils";
+import { postEvent } from '@telegram-apps/sdk';
+
+// Инициализация SDK
+init();
 
 const urlParams = new URLSearchParams(window.location.search);
 const storageParams = getParamsFromStorage();
@@ -120,39 +125,28 @@ export const showNotification = (message, type = "info") => {
  * @property {Function} sendDataToServer - Функция отправки данных на сервер
  */
 export const useTelegram = () => {
+  // Используем window.Telegram.WebApp напрямую вместо импорта webApp
   const WebApp = window?.Telegram?.WebApp;
-  const MainButton = window?.Telegram?.WebApp?.MainButton;
-  const BackButton = window?.Telegram?.WebApp?.BackButton;
+  const BackButton = backButton;
+  const isBackButtonVisible = useSignal(backButton.isVisible);
   const user = WebApp?.initDataUnsafe?.user || { id: USER_ID } || null;
   const API_BASE_URL = getApiUrl();
   const abortControllerRef = useRef(null);
 
-  /**
-   * Закрывает Telegram WebApp
-   */
   const onClose = useCallback(() => {
     if (!WebApp) return;
     WebApp.close();
   }, [WebApp]);
 
-  /**
-   * Переключает видимость главной кнопки
-   */
   const toggleMainButton = useCallback(() => {
-    if (!MainButton) return;
-    if (MainButton.isVisible) {
-      MainButton.hide();
+    if (!WebApp?.MainButton) return;
+    if (WebApp.MainButton.isVisible) {
+      WebApp.MainButton.hide();
     } else {
-      MainButton.show();
+      WebApp.MainButton.show();
     }
-  }, [MainButton]);
+  }, [WebApp]);
 
-  /**
-   * Отправляет данные на сервер с поддержкой повторных попыток и CSRF защиты
-   * @param {Object} data - Данные для отправки
-   * @returns {Promise<Object>} Результат запроса
-   * @throws {Error} Ошибка при отправке данных
-   */
   const sendDataToServer = useCallback(
     async (data) => {
       if (!WebApp) return;
@@ -247,63 +241,65 @@ export const useTelegram = () => {
     };
   }, []);
 
-  /**
-   * Показывает кнопку назад в заголовке Telegram
-   */
+  const setBackButton = useCallback((isVisible, onClick = null) => {
+    try {
+      // Используем новый метод web_app_setup_back_button
+      postEvent('web_app_setup_back_button', { is_visible: isVisible });
+      
+      if (isVisible && onClick) {
+        // Устанавливаем обработчик события
+        window.Telegram?.WebApp?.onEvent('backButtonClicked', onClick);
+      } else if (!isVisible) {
+        // Убираем обработчик при скрытии кнопки
+        window.Telegram?.WebApp?.offEvent('backButtonClicked');
+      }
+    } catch (error) {
+      console.error('Ошибка настройки кнопки назад:', error);
+      // Fallback на старый метод
+      if (isVisible) {
+        backButton.show();
+        if (onClick) backButton.onClick(onClick);
+      } else {
+        backButton.hide();
+      }
+    }
+  }, []);
+
   const showBackButton = useCallback((callback) => {
-    if (!BackButton) return;
-    
-    BackButton.show();
-    
-    if (callback && typeof callback === 'function') {
-      BackButton.onClick(callback);
+    try {
+      if (!backButton.isMounted) {
+        backButton.mount();
+      }
+      backButton.show();
+      if (callback && typeof callback === 'function') {
+        backButton.on('click', callback);
+      }
+    } catch (error) {
+      console.warn('Ошибка при показе backButton:', error);
     }
-  }, [BackButton]);
+  }, []);
 
-  /**
-   * Скрывает кнопку назад
-   */
   const hideBackButton = useCallback(() => {
-    if (!BackButton) return;
-    BackButton.hide();
-    BackButton.offClick();
-  }, [BackButton]);
-
-  /**
-   * Управляет кнопкой назад в Telegram WebApp
-   */
-  const setBackButton = useCallback((show, callback) => {
-    if (!WebApp || !BackButton) return;
-    
-    if (show && callback) {
-      BackButton.offClick();
-      BackButton.show();
-      BackButton.onClick(callback);
-    } else {
-      BackButton.hide();
-      BackButton.offClick();
+    try {
+      if (backButton.isMounted && backButton.isVisible) {
+        backButton.hide();
+        backButton.off('click');
+      }
+    } catch (error) {
+      console.warn('Ошибка при скрытии backButton:', error);
     }
-  }, [WebApp, BackButton]);
-  
-  /**
-   * Проверка Telegram окружения
-   */
-  const isTelegramEnvironment = useCallback(() => {
-    return !!window?.Telegram?.WebApp;
   }, []);
 
   return {
     user,
     WebApp,
-    MainButton,
+    MainButton: WebApp?.MainButton,
     BackButton,
-
     USER_ID,
     CHAT_ID,
     BOT_USERNAME,
     SERVER_PORT,
     API_BASE_URL,
-
     isDevMode,
     onClose,
     toggleMainButton,

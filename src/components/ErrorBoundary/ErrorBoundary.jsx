@@ -1,34 +1,37 @@
-import React, { useEffect } from 'react';
-import { useErrorHandling } from '../../hooks/useErrorHandling';
+import React from 'react';
 import { ErrorDisplay } from './ErrorDisplay';
 
-const ErrorBoundary = ({ children }) => {
-  const { errorState, handleError } = useErrorHandling();
-
-  useEffect(() => {
-    const errorHandler = (error) => {
-      handleError(error, { componentStack: error.stack });
-    };
-
-    window.addEventListener('error', errorHandler);
-    window.addEventListener('unhandledrejection', errorHandler);
-
-    return () => {
-      window.removeEventListener('error', errorHandler);
-      window.removeEventListener('unhandledrejection', errorHandler);
-    };
-  }, [handleError]);
-
-  if (errorState.hasError) {
-    return (
-      <ErrorDisplay
-        error={errorState.error}
-        errorInfo={errorState.errorInfo}
-      />
-    );
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
-  return children;
-};
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('ErrorBoundary перехватил ошибку:', error, errorInfo);
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    });
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <ErrorDisplay
+          error={this.state.error}
+          errorInfo={this.state.errorInfo}
+          onReset={() => this.setState({ hasError: false, error: null, errorInfo: null })}
+        />
+      );
+    }
+
+    return this.props.children;
+  }
+}
 
 export default ErrorBoundary;
